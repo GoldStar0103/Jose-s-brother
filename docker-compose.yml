@@ -7,7 +7,7 @@
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: levelup-postgres
+    container_name: levelup-brother-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-levelup}

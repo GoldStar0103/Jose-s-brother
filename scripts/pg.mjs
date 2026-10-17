@@ -27,7 +27,9 @@ import net from 'node:net';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_DIR = join(ROOT, '.pgdata');
 const LOG_FILE = join(DATA_DIR, 'postgres.log');
-const PORT = Number(process.env.TEST_PG_PORT ?? 54329);
+// 54330, not Jose's 54329 — keeps the two projects' local clusters from
+// colliding or silently reusing each other's data if both run at once.
+const PORT = Number(process.env.TEST_PG_PORT ?? 54330);
 const USER = 'levelup';
 
 /** pnpm keeps the platform package under .pnpm, so resolve by walking. */
