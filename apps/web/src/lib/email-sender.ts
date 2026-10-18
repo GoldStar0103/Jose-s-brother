@@ -13,6 +13,7 @@
 
 import { connect as netConnect, type Socket } from 'node:net';
 import { connect as tlsConnect, type TLSSocket } from 'node:tls';
+import { FALLBACK_DOMAIN } from '@levelup/shared';
 
 export interface EmailSender {
   sendOtpCode(to: string, code: string): Promise<void>;
@@ -40,6 +41,12 @@ export interface SmtpConfig {
   user: string;
   pass: string;
   from: string;
+  /**
+   * EHLO's hostname is informational only — no SMTP server here has ever
+   * verified it against anything — but it must not hardcode whichever store
+   * this codebase was last cloned from.
+   */
+  ehloDomain: string;
 }
 
 /**
@@ -95,8 +102,9 @@ export function buildEmailSender(env = process.env): EmailSender {
 
   const port = Number(env.SMTP_PORT ?? 587);
   const secure = env.SMTP_SECURE === 'true' || port === 465;
+  const ehloDomain = env.PUBLIC_DOMAIN?.trim() || FALLBACK_DOMAIN;
 
-  return new SmtpEmailSender({ host, port, secure, user, pass, from });
+  return new SmtpEmailSender({ host, port, secure, user, pass, from, ehloDomain });
 }
 
 // ── line-buffered SMTP (AUTH PLAIN + STARTTLS / implicit TLS) ────────────────
@@ -187,13 +195,13 @@ async function sendSmtpMail(
   try {
     await ready;
     await session.expect(220, 'connect');
-    await session.command(`EHLO levelupstore.mx`, 250);
+    await session.command(`EHLO ${config.ehloDomain}`, 250);
 
     if (!config.secure) {
       await session.command('STARTTLS', 220);
       const tls = await upgradeToTls(socket, config.host);
       session.attach(tls);
-      await session.command(`EHLO levelupstore.mx`, 250);
+      await session.command(`EHLO ${config.ehloDomain}`, 250);
       await authenticateAndSend(session, config, mail);
       return;
     }

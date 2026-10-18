@@ -21,9 +21,9 @@ Throughout: `cd /srv/levelup` first, and `dc` means
 - DNS pointing at it. **Set this up first.** Caddy requests certificates on
   startup, and Let's Encrypt rate-limits failed attempts.
 
-#### DNS for levelupstore.mx (registered at Hostinger)
+#### DNS for yourdomain.mx (registered at Hostinger)
 
-hPanel → Domains → levelupstore.mx → **DNS / Nameservers** → DNS records.
+hPanel → Domains → yourdomain.mx → **DNS / Nameservers** → DNS records.
 Keep Hostinger's nameservers. Delete any existing `A` record for `@` and the
 `CNAME` for `www` that Hostinger creates by default (they point at its parking
 page), then add:
@@ -42,7 +42,7 @@ every phone on an IPv6 carrier, which in Mexico is most of them.
 Check from any machine before starting the stack:
 
 ```bash
-dig +short levelupstore.mx www.levelupstore.mx panel.levelupstore.mx
+dig +short yourdomain.mx www.yourdomain.mx panel.yourdomain.mx
 ```
 
 All three must print the VPS's address. Propagation is usually minutes on a
@@ -164,7 +164,7 @@ payments, so accounts are made from the server:
 
 ```bash
 dc --profile tools run --rm tools \
-  pnpm --filter @levelup/admin create-admin jose@levelupstore.mx 'una contraseña larga'
+  pnpm --filter @levelup/admin create-admin owner@yourdomain.mx 'una contraseña larga'
 ```
 
 Re-running it for an existing email resets that password, which is the
@@ -182,7 +182,7 @@ authenticator app was on is *why* they needed the reset. The owner can turn
 
 ```bash
 docker run --rm -v "$PWD/scripts:/scripts:ro" node:24-alpine \
-  node /scripts/smoke.mjs https://levelupstore.mx https://panel.levelupstore.mx
+  node /scripts/smoke.mjs https://yourdomain.mx https://panel.yourdomain.mx
 ```
 
 The server has no Node of its own — everything runs in containers — and the
@@ -212,7 +212,7 @@ still has to be *asked* to recrawl a new site; Search Console is that ask.
 
 1. Open https://search.google.com/search-console with any Google account that
    can later invite the owner (`contactolevelupmexico@gmail.com`).
-2. Add property → **URL prefix** → `https://levelupstore.mx`.
+2. Add property → **URL prefix** → `https://yourdomain.mx`.
 3. Choose **HTML tag**. Copy only the `content="…"` token into
    `GOOGLE_SITE_VERIFICATION` in `.env` (not the whole `<meta>`).
 4. Deploy / restart `web` so the tag is live, then click **Verify**.
@@ -221,7 +221,7 @@ still has to be *asked* to recrawl a new site; Search Console is that ask.
    mail.
 6. Sitemaps → add `sitemap.xml`. URL Inspection → request indexing on `/`.
 
-Do not verify `panel.levelupstore.mx` — it is `noindex` on purpose.
+Do not verify `panel.yourdomain.mx` — it is `noindex` on purpose.
 
 Then, and this is the one no script can do:
 
@@ -240,7 +240,7 @@ and **Transferencia** as the second tab.
 1. Stripe dashboard, **test mode** first. Developers → API keys → copy the
    secret key (`sk_test_…`) into `STRIPE_SECRET_KEY`.
 2. Developers → Webhooks → Add endpoint
-   `https://levelupstore.mx/api/webhooks/stripe`, with exactly these events:
+   `https://yourdomain.mx/api/webhooks/stripe`, with exactly these events:
    `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
    `checkout.session.async_payment_failed`, `checkout.session.expired`.
    Reveal the signing secret (`whsec_…`) into `STRIPE_WEBHOOK_SECRET`.
@@ -321,7 +321,7 @@ Then re-run the smoke test:
 
 ```bash
 docker run --rm -v "$PWD/scripts:/scripts:ro" node:24-alpine \
-  node /scripts/smoke.mjs https://levelupstore.mx https://panel.levelupstore.mx
+  node /scripts/smoke.mjs https://yourdomain.mx https://panel.yourdomain.mx
 ```
 
 Compose replaces containers one service at a time. The worker gets 120 seconds

@@ -7,6 +7,8 @@
  * obvious on the page instead of quietly shipping as fact.
  */
 
+import { FALLBACK_DOMAIN } from '@levelup/shared';
+
 export interface LegalIdentity {
   businessName: string;
   legalName: string | null;
@@ -30,7 +32,10 @@ export function legalIdentity(): LegalIdentity {
     address: orNull(process.env.LEGAL_ADDRESS),
     contactEmail: orNull(process.env.LEGAL_CONTACT_EMAIL),
     whatsapp: orNull(process.env.WHATSAPP_SUPPORT_NUMBER),
-    domain: process.env.PUBLIC_DOMAIN ?? 'levelupstore.mx',
+    // `||`, not `??`: a blank `PUBLIC_DOMAIN=` line in .env reads back as ''
+    // (set, not unset), which `??` would not catch — same bug `siteOrigin`
+    // guards against in site.ts.
+    domain: process.env.PUBLIC_DOMAIN?.trim() || FALLBACK_DOMAIN,
   };
 }
 

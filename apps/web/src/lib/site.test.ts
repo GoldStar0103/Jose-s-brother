@@ -47,10 +47,10 @@ describe('siteOrigin', () => {
   it('falls back rather than throwing on an unset or unusable value', () => {
     // This runs inside `metadataBase`, at module scope in the root layout. A
     // throw here takes down every page, not just the metadata.
-    expect(siteOrigin(undefined)).toBe('https://levelupstore.mx');
-    expect(siteOrigin('')).toBe('https://levelupstore.mx');
-    expect(siteOrigin('   ')).toBe('https://levelupstore.mx');
-    expect(siteOrigin('http://')).toBe('https://levelupstore.mx');
+    expect(siteOrigin(undefined)).toBe('https://example.com');
+    expect(siteOrigin('')).toBe('https://example.com');
+    expect(siteOrigin('   ')).toBe('https://example.com');
+    expect(siteOrigin('http://')).toBe('https://example.com');
   });
 
   it('drops any path, since an origin is what callers need', () => {
@@ -59,13 +59,15 @@ describe('siteOrigin', () => {
 });
 
 describe('siteUrl', () => {
+  // No PUBLIC_DOMAIN is set in this test environment, so these exercise
+  // siteOrigin()'s fallback (see above) rather than a configured domain.
   it('builds absolute URLs', () => {
-    expect(siteUrl('/')).toBe('https://levelupstore.mx/');
-    expect(siteUrl('/comprar/pack_insano')).toBe('https://levelupstore.mx/comprar/pack_insano');
-    expect(siteUrl('/sitemap.xml')).toBe('https://levelupstore.mx/sitemap.xml');
+    expect(siteUrl('/')).toBe('https://example.com/');
+    expect(siteUrl('/comprar/pack_insano')).toBe('https://example.com/comprar/pack_insano');
+    expect(siteUrl('/sitemap.xml')).toBe('https://example.com/sitemap.xml');
   });
 
   it('defaults to the root', () => {
-    expect(siteUrl()).toBe('https://levelupstore.mx/');
+    expect(siteUrl()).toBe('https://example.com/');
   });
 });

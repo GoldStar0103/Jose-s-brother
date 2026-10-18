@@ -1,7 +1,7 @@
 /**
  * Post-deploy smoke test.
  *
- *   node scripts/smoke.mjs https://levelupstore.mx https://panel.levelupstore.mx
+ *   node scripts/smoke.mjs https://yourdomain.mx https://panel.yourdomain.mx
  *
  * Exits 0 if the deployment is serving correctly, 1 otherwise. Safe to run
  * against production: every request is a GET, nothing is written, and no

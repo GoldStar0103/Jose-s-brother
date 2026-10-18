@@ -8,10 +8,12 @@
  * edits the env file to remember which format each consumer wants.
  */
 
-const FALLBACK = 'levelupstore.mx';
+import { FALLBACK_DOMAIN } from '@levelup/shared';
+
+const FALLBACK = FALLBACK_DOMAIN;
 
 /**
- * Accepts `levelupstore.mx`, `https://levelupstore.mx`, or either with a
+ * Accepts a bare domain, `https://` + that domain, or either with a
  * trailing slash, and always returns an origin with no trailing slash.
  *
  * http is preserved only for localhost, so a developer can point at

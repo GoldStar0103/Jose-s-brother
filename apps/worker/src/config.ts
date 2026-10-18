@@ -6,7 +6,7 @@
  * than one that refuses to start at all.
  */
 
-import { assertDryRunDatabaseIsSafe } from '@levelup/shared';
+import { assertDryRunDatabaseIsSafe, FALLBACK_DOMAIN } from '@levelup/shared';
 
 export interface WorkerConfig {
   databaseUrl: string;
@@ -92,7 +92,7 @@ function loadMeta(): WorkerConfig['meta'] {
   }
 
   // Bare hostname in the env file, as for the legal pages; Meta wants a URL.
-  const domain = (process.env.PUBLIC_DOMAIN?.trim() || 'levelupstore.mx')
+  const domain = (process.env.PUBLIC_DOMAIN?.trim() || FALLBACK_DOMAIN)
     .replace(/^https?:\/\//i, '')
     .replace(/\/+$/, '');
 
