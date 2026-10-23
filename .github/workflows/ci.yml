@@ -97,6 +97,11 @@ jobs:
           LEGAL_ADDRESS: Calle de Prueba 1, Ciudad de México
           LEGAL_CONTACT_EMAIL: ci@example.test
           WHATSAPP_SUPPORT_NUMBER: '520000000000'
+          # Required at render time (32+ chars) — without it every page that
+          # touches the customer session throws instead of rendering, which
+          # took down the homepage checks below. Throwaway, CI-only; not a
+          # real secret and not reused anywhere else.
+          CUSTOMER_SESSION_SECRET: 14b0f1feb0df4f0b7cb6bc33a0dd74c4ebaf26693110aca79af1792995ef3fac
         run: |
           mkdir -p "$UPLOAD_DIR"
           pnpm --filter @levelup/db migrate
