@@ -34,6 +34,7 @@ import {
   runSeasonClose,
   runSweepOnce,
   ShutdownSignal,
+  WalletAlertSchedule,
   type RunnerDeps,
 } from './runner.js';
 
@@ -64,6 +65,7 @@ async function main(): Promise<void> {
   };
 
   const catalogSchedule = new CatalogSyncSchedule(config.catalogSync.intervalMs);
+  const walletAlertSchedule = new WalletAlertSchedule();
 
   const levelPassStore = new DrizzleLevelPassStore(db);
   const seasonStore = new DrizzleSeasonStore(db);
@@ -112,6 +114,7 @@ async function main(): Promise<void> {
     while (!signal.requested) {
       await runSweepOnce(deps);
       await catalogSchedule.runIfDue(deps);
+      await walletAlertSchedule.checkIfDue(deps);
       if (conversions) await runConversions(conversions);
       await runLevelPassSync({
         store: levelPassStore,

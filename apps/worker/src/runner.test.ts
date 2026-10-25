@@ -26,6 +26,7 @@ import {
   runCatalogSync,
   runFulfillmentLoop,
   ShutdownSignal,
+  WalletAlertSchedule,
   type RunnerDeps,
 } from './runner.js';
 
@@ -388,7 +389,48 @@ describe('checkWallet', () => {
       },
     } as typeof deps.provider;
 
-    await expect(checkWallet({ ...deps, provider })).resolves.toBeUndefined();
+    await expect(checkWallet({ ...deps, provider })).resolves.toBe(false);
+  });
+});
+
+describe('WalletAlertSchedule', () => {
+  it('alerts once, then stays quiet until the cooldown passes', async () => {
+    const { deps, alerter } = harness([]);
+    const lowProvider = new ProviderSimulator({ initialBalanceUsd: 10 });
+    const schedule = new WalletAlertSchedule(60_000);
+
+    await schedule.checkIfDue({ ...deps, provider: lowProvider }, 0);
+    expect(alerter.sent).toHaveLength(1);
+
+    // Still within the cooldown — the identical alert this was built to stop.
+    await schedule.checkIfDue({ ...deps, provider: lowProvider }, 59_999);
+    expect(alerter.sent).toHaveLength(1);
+
+    await schedule.checkIfDue({ ...deps, provider: lowProvider }, 60_000);
+    expect(alerter.sent).toHaveLength(2);
+  });
+
+  it('clears the cooldown once a check after it elapses finds the wallet healthy', async () => {
+    const { deps, alerter } = harness([]);
+    const lowProvider = new ProviderSimulator({ initialBalanceUsd: 10 });
+    const healthyProvider = new ProviderSimulator({ initialBalanceUsd: 500 });
+    const schedule = new WalletAlertSchedule(60_000);
+
+    await schedule.checkIfDue({ ...deps, provider: lowProvider }, 0);
+    expect(alerter.sent).toHaveLength(1);
+
+    // Still inside the cooldown — recovery here is not even checked for.
+    await schedule.checkIfDue({ ...deps, provider: healthyProvider }, 30_000);
+    expect(alerter.sent).toHaveLength(1);
+
+    // Cooldown has elapsed and the wallet is healthy: no alert, but the
+    // cooldown clears immediately rather than extending it.
+    await schedule.checkIfDue({ ...deps, provider: healthyProvider }, 60_000);
+    expect(alerter.sent).toHaveLength(1);
+
+    // A later dip pages right away — no second cooldown window to wait out.
+    await schedule.checkIfDue({ ...deps, provider: lowProvider }, 60_001);
+    expect(alerter.sent).toHaveLength(2);
   });
 });
 

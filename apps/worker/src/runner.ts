@@ -222,7 +222,10 @@ export async function runSweepOnce(deps: RunnerDeps): Promise<void> {
   // hand; `alertStuckGatewayPayments` (engine/stuck-payments.ts) is kept,
   // unused, in case this needs to come back.
 
-  await checkWallet(deps);
+  // Wallet watch runs on its own cooldown (`WalletAlertSchedule`), driven
+  // from main.ts's sweep loop exactly like `CatalogSyncSchedule` — not every
+  // sweep, or it pages the same alert every 30 seconds while the balance
+  // stays low.
 }
 
 /**
@@ -232,7 +235,8 @@ export async function runSweepOnce(deps: RunnerDeps): Promise<void> {
  * get before paid orders start failing. Alerting early is what turns "orders
  * are failing" into "top up the wallet".
  */
-export async function checkWallet(deps: RunnerDeps): Promise<void> {
+/** @returns whether it sent a "wallet is low" alert, for `WalletAlertSchedule`. */
+export async function checkWallet(deps: RunnerDeps): Promise<boolean> {
   const { provider, alerter, queue, config } = deps;
   try {
     const balance = await provider.getBalance();
@@ -245,9 +249,41 @@ export async function checkWallet(deps: RunnerDeps): Promise<void> {
         thresholdUsd: config.provider.lowBalanceUsd,
         outstandingOrders: JSON.stringify(depth),
       });
+      return true;
     }
+    return false;
   } catch (err) {
     console.error(`[sweep] Could not read wallet balance: ${String(err)}`);
+    return false;
+  }
+}
+
+/** Re-alert at most this often while the wallet stays low. */
+export const WALLET_LOW_ALERT_COOLDOWN_MS = 60 * 60_000;
+
+/**
+ * Keeps `checkWallet` from paging the same "wallet is low" alert every single
+ * sweep (every `SWEEP_INTERVAL_MS`, by default 30s) for as long as the balance
+ * stays under threshold — which is exactly what happened in production: the
+ * Telegram channel got the identical alert every 30 seconds for hours. One
+ * alert per cooldown window is a nudge to go top up the provider; one every
+ * 30 seconds is noise that gets the channel muted.
+ *
+ * While a cooldown is active the wallet is not even re-read — the next check
+ * is simply skipped — so recovery is only noticed once the cooldown elapses.
+ * That check then clears the cooldown immediately if the balance is healthy,
+ * so a later dip pages right away rather than waiting out another full
+ * window on top of the one that just elapsed.
+ */
+export class WalletAlertSchedule {
+  private nextAlertAt: number | null = null;
+
+  constructor(private readonly cooldownMs: number = WALLET_LOW_ALERT_COOLDOWN_MS) {}
+
+  async checkIfDue(deps: RunnerDeps, now: number = Date.now()): Promise<void> {
+    if (this.nextAlertAt !== null && now < this.nextAlertAt) return;
+    const alerted = await checkWallet(deps);
+    this.nextAlertAt = alerted ? now + this.cooldownMs : null;
   }
 }
 
