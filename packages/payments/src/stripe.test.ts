@@ -95,8 +95,13 @@ describe('createCharge', () => {
     expect(body.get('metadata[order_id]')).toBe('ord-uuid-1');
     expect(body.get('payment_intent_data[metadata][order_number]')).toBe('LU-260910-AB12');
     expect(body.get('client_reference_id')).toBe('LU-260910-AB12');
-    expect(body.get('payment_method_types[0]')).toBe('card');
-    expect(body.get('payment_method_types[1]')).toBeNull();
+    // Stripe retired payment_method_types on Checkout Session creation;
+    // excluding everything else in our own method universe is what is left
+    // to offer card alone. See stripe.ts's own comment on this.
+    expect(body.get('excluded_payment_method_types[0]')).toBe('oxxo');
+    expect(body.get('excluded_payment_method_types[1]')).toBe('customer_balance');
+    expect(body.get('excluded_payment_method_types[2]')).toBeNull();
+    expect(body.get('payment_method_types[0]')).toBeNull();
     expect(body.get('locale')).toBe('es-419');
   });
 
@@ -125,8 +130,9 @@ describe('createCharge', () => {
     });
 
     const body = new URLSearchParams(calls[0]?.body);
-    expect(body.get('payment_method_types[0]')).toBe('oxxo');
-    expect(body.get('payment_method_types[1]')).toBeNull();
+    expect(body.get('excluded_payment_method_types[0]')).toBe('card');
+    expect(body.get('excluded_payment_method_types[1]')).toBe('customer_balance');
+    expect(body.get('excluded_payment_method_types[2]')).toBeNull();
     expect(body.get('payment_method_options[oxxo][expires_after_days]')).toBe('7');
     expect(body.get('payment_method_options[customer_balance]')).toBeNull();
   });
@@ -142,8 +148,9 @@ describe('createCharge', () => {
     expect(calls[0]?.headers['Idempotency-Key']).toBe('levelup-customer-ord-uuid-1');
 
     const body = new URLSearchParams(calls[1]?.body);
-    expect(body.get('payment_method_types[0]')).toBe('customer_balance');
-    expect(body.get('payment_method_types[1]')).toBeNull();
+    expect(body.get('excluded_payment_method_types[0]')).toBe('card');
+    expect(body.get('excluded_payment_method_types[1]')).toBe('oxxo');
+    expect(body.get('excluded_payment_method_types[2]')).toBeNull();
     expect(body.get('payment_method_options[customer_balance][funding_type]')).toBe('bank_transfer');
     expect(body.get('payment_method_options[customer_balance][bank_transfer][type]')).toBe(
       'mx_bank_transfer',

@@ -268,13 +268,12 @@ export class StripeGateway implements PaymentGateway {
     if (!requestedMethod || !this.supportedMethods.includes(requestedMethod)) {
       throw new GatewayError(`Stripe does not have ${input.method} enabled`, this.name, false);
     }
-    const methods: StripeMethod[] = [requestedMethod];
 
     const paymentMethodOptions: Record<string, unknown> = {};
-    if (methods.includes('oxxo')) {
+    if (requestedMethod === 'oxxo') {
       paymentMethodOptions.oxxo = { expires_after_days: this.oxxoExpiresAfterDays };
     }
-    if (methods.includes('spei')) {
+    if (requestedMethod === 'spei') {
       // `customer_balance` is Stripe's generic bank-transfer funding source;
       // `mx_bank_transfer` is the Mexican SPEI variant of it.
       paymentMethodOptions.customer_balance = {
@@ -291,7 +290,7 @@ export class StripeGateway implements PaymentGateway {
     // button pressed twice, or a retry after a network error) reuses it
     // instead of leaving orphaned Customers behind.
     let customerId: string | undefined;
-    if (methods.includes('spei')) {
+    if (requestedMethod === 'spei') {
       const customer = await this.request<{ id: string }>(
         'POST',
         '/customers',
@@ -301,6 +300,17 @@ export class StripeGateway implements PaymentGateway {
       customerId = customer.id;
     }
 
+    // Stripe retired `payment_method_types` on Checkout Session creation in
+    // favour of "dynamic payment methods" — Dashboard-enabled methods show
+    // automatically, and a session can no longer ask for one specific method
+    // directly. `excluded_payment_method_types` is the supported way left to
+    // get the same one-method-only result: name everything else in our own
+    // three-method universe and let Stripe show whatever is left, which is
+    // exactly the one the customer picked. See
+    // https://docs.stripe.com/payments/payment-methods/dynamic-payment-methods
+    const requestedWireType = STRIPE_WIRE_TYPE[requestedMethod];
+    const excludedWireTypes = Object.values(STRIPE_WIRE_TYPE).filter((t) => t !== requestedWireType);
+
     const params: Record<string, unknown> = {
       mode: 'payment',
       locale: 'es-419',
@@ -308,7 +318,7 @@ export class StripeGateway implements PaymentGateway {
       success_url: input.returnUrl,
       cancel_url: input.cancelUrl,
       expires_at: expiresAt,
-      payment_method_types: methods.map((m) => STRIPE_WIRE_TYPE[m]),
+      excluded_payment_method_types: excludedWireTypes,
       line_items: [
         {
           quantity: 1,
