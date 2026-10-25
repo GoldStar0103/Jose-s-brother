@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useRef, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   payWithCard,
@@ -17,46 +17,59 @@ import { setPixelUserData, trackPixel } from '../../../lib/pixel';
 import { BankIcon, CardIcon, StoreIcon } from '../../icons';
 
 /**
- * Send the customer to Stripe in a new tab, keeping this one on the order
- * page — Stripe's own hosted confirmation for OXXO/SPEI does not redirect
- * back on its own, so leaving the whole page there was a dead end.
+ * Send the customer to the gateway's hosted page in a new tab, keeping this
+ * one on the order page — Stripe's own hosted confirmation for OXXO/SPEI
+ * does not redirect back on its own, so leaving the whole page there was a
+ * dead end.
  *
- * The tab has to be opened *synchronously* inside the submit handler, before
- * the server action's network round trip — opening one after the fact, once
- * `checkoutUrl` arrives, is exactly the pattern browsers' popup blockers
- * exist to stop, since by then there is no user gesture left to point to.
- * Opening a blank tab now and pointing it at the real URL once it arrives
- * keeps it inside that gesture. If the popup was blocked anyway (some
- * browsers block even this), falling back to sending the whole tab, exactly
- * like before, beats leaving the customer stuck with no way to pay.
+ * This used to pre-open a blank tab synchronously in the submit handler and
+ * redirect it via `popup.location.href =` once `checkoutUrl` arrived — the
+ * redirect runs after the server action's async round trip, outside any
+ * user gesture, and iOS Safari silently drops a cross-tab navigation made
+ * that way: the blank tab opens (so it is never *blocked*) but never moves
+ * past `about:blank`, with no error and no fallback, since the code only
+ * handled the popup being blocked outright, not opening and then going
+ * nowhere. Confirmed in production and apparently present on LevelUp Store
+ * too, intermittently, from the same pattern.
+ *
+ * A real `<a target="_blank">`, tapped directly, carries a genuine click
+ * event no popup blocker on any platform treats as a popup at all — that is
+ * the one thing here that cannot silently fail. The cost is one more tap
+ * after the order is created; reliability wins over shaving it off.
  */
-function useStripeTabRedirect(state: CheckoutState) {
-  const popup = useRef<Window | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!state.checkoutUrl) return;
-    if (popup.current && !popup.current.closed) {
-      popup.current.location.href = state.checkoutUrl;
-      if (state.orderPageUrl) router.push(state.orderPageUrl);
-    } else {
-      window.location.href = state.checkoutUrl;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.checkoutUrl, state.orderPageUrl]);
-
-  return () => {
-    popup.current = window.open('about:blank', '_blank');
-  };
+function GatewayCheckoutButton({
+  state,
+  pending,
+  price,
+  onOpen,
+}: {
+  state: CheckoutState;
+  pending: boolean;
+  price: string;
+  /** Moves this tab to the order-tracking page once the real tab is on its way. */
+  onOpen: () => void;
+}) {
+  if (state.checkoutUrl) {
+    return (
+      <a className="btn primary wide" href={state.checkoutUrl} target="_blank" rel="noreferrer" onClick={onOpen}>
+        Continuar a pago seguro →
+      </a>
+    );
+  }
+  return (
+    <button className="btn primary wide" type="submit" disabled={pending}>
+      {pending ? 'Preparando pago…' : `Confirmar pedido — ${price}`}
+    </button>
+  );
 }
 
-/** Shown right above the button on any form that is about to pop up the gateway's own page. */
+/** Shown above the button on any form that ends in the gateway's own hosted page. */
 function GatewayTabNotice({ provider }: { provider: string }) {
   return (
     <div className="alert warn" style={{ marginBottom: 12 }}>
-      🪟 Al confirmar se abrirá una <strong>pestaña nueva</strong> para pagar en {provider}. Cuando
-      termines (o si solo ves los datos de pago), regresa a <strong>esta pestaña</strong> para ver
-      el estado de tu pedido.
+      🪟 Al confirmar, te daremos un botón para pagar en {provider} en una <strong>pestaña
+      nueva</strong>. Cuando termines (o si solo ves los datos de pago), regresa a <strong>esta
+      pestaña</strong> para ver el estado de tu pedido.
     </div>
   );
 }
@@ -291,12 +304,13 @@ export function Checkout({
     payWithMercadoPagoSpei,
     {},
   );
-  const openCardTab = useStripeTabRedirect(card);
-  const openOxxoTab = useStripeTabRedirect(stripeOxxo);
-  const openSpeiTab = useStripeTabRedirect(stripeSpei);
-  const openMpOxxoTab = useStripeTabRedirect(mpOxxo);
-  const openMpSpeiTab = useStripeTabRedirect(mpSpei);
+  const router = useRouter();
   const [step, setStep] = useState<Step>('datos');
+
+  /** Moves this tab to order tracking the moment the gateway tab is on its way. */
+  const goToOrderPage = (state: CheckoutState) => () => {
+    if (state.orderPageUrl) router.push(state.orderPageUrl);
+  };
 
   const found = validation.status === 'found';
 
@@ -754,120 +768,100 @@ export function Checkout({
           </dl>
 
           {payView === 'tarjeta' ? (
-            <form
-              action={cardAction}
-              onSubmit={(e) => {
-                openCardTab();
-                trackPaymentInfo(e.currentTarget);
-              }}
-            >
+            <form action={cardAction} onSubmit={(e) => trackPaymentInfo(e.currentTarget)}>
               <input type="hidden" name="comboKey" value={comboKey} />
               <input type="hidden" name="playerId" value={validation.playerId ?? ''} />
               {vaultOfferId && <input type="hidden" name="vaultOfferId" value={vaultOfferId} />}
 
-              {whatsappField(redirecting)}
+              {whatsappField(redirecting || Boolean(card.checkoutUrl))}
 
               <GatewayTabNotice provider="Stripe" />
 
               {card.error && <div className="alert bad">{card.error}</div>}
 
-              <button className="btn primary wide" type="submit" disabled={redirecting}>
-                {redirecting ? 'Abriendo pago seguro…' : `Confirmar pedido — ${price}`}
-              </button>
+              <GatewayCheckoutButton state={card} pending={redirecting} price={price} onOpen={goToOrderPage(card)} />
               <p className="hint center">
                 🔒 Pagas en la página segura de Stripe. Nunca vemos ni guardamos tu tarjeta.
               </p>
             </form>
           ) : payView === 'oxxo' && oxxoAutomatic === 'mercadopago' ? (
-            <form
-              action={mpOxxoAction}
-              onSubmit={(e) => {
-                openMpOxxoTab();
-                trackPaymentInfo(e.currentTarget);
-              }}
-            >
+            <form action={mpOxxoAction} onSubmit={(e) => trackPaymentInfo(e.currentTarget)}>
               <input type="hidden" name="comboKey" value={comboKey} />
               <input type="hidden" name="playerId" value={validation.playerId ?? ''} />
               {vaultOfferId && <input type="hidden" name="vaultOfferId" value={vaultOfferId} />}
 
-              {whatsappField(mpOxxoRedirecting)}
+              {whatsappField(mpOxxoRedirecting || Boolean(mpOxxo.checkoutUrl))}
 
               <GatewayTabNotice provider="Mercado Pago" />
 
               {mpOxxo.error && <div className="alert bad">{mpOxxo.error}</div>}
 
-              <button className="btn primary wide" type="submit" disabled={mpOxxoRedirecting}>
-                {mpOxxoRedirecting ? 'Abriendo pago seguro…' : `Confirmar pedido — ${price}`}
-              </button>
+              <GatewayCheckoutButton
+                state={mpOxxo}
+                pending={mpOxxoRedirecting}
+                price={price}
+                onOpen={goToOrderPage(mpOxxo)}
+              />
               <p className="hint center">🔒 Te damos tu referencia de depósito OXXO al continuar.</p>
             </form>
           ) : payView === 'oxxo' && oxxoAutomatic === 'stripe' ? (
-            <form
-              action={stripeOxxoAction}
-              onSubmit={(e) => {
-                openOxxoTab();
-                trackPaymentInfo(e.currentTarget);
-              }}
-            >
+            <form action={stripeOxxoAction} onSubmit={(e) => trackPaymentInfo(e.currentTarget)}>
               <input type="hidden" name="comboKey" value={comboKey} />
               <input type="hidden" name="playerId" value={validation.playerId ?? ''} />
               {vaultOfferId && <input type="hidden" name="vaultOfferId" value={vaultOfferId} />}
 
-              {whatsappField(oxxoRedirecting)}
+              {whatsappField(oxxoRedirecting || Boolean(stripeOxxo.checkoutUrl))}
 
               <GatewayTabNotice provider="Stripe" />
 
               {stripeOxxo.error && <div className="alert bad">{stripeOxxo.error}</div>}
 
-              <button className="btn primary wide" type="submit" disabled={oxxoRedirecting}>
-                {oxxoRedirecting ? 'Abriendo pago seguro…' : `Confirmar pedido — ${price}`}
-              </button>
+              <GatewayCheckoutButton
+                state={stripeOxxo}
+                pending={oxxoRedirecting}
+                price={price}
+                onOpen={goToOrderPage(stripeOxxo)}
+              />
               <p className="hint center">🔒 Stripe te da tu referencia de depósito OXXO al continuar.</p>
             </form>
           ) : payView === 'transferencia' && transferAutomatic === 'mercadopago' ? (
-            <form
-              action={mpSpeiAction}
-              onSubmit={(e) => {
-                openMpSpeiTab();
-                trackPaymentInfo(e.currentTarget);
-              }}
-            >
+            <form action={mpSpeiAction} onSubmit={(e) => trackPaymentInfo(e.currentTarget)}>
               <input type="hidden" name="comboKey" value={comboKey} />
               <input type="hidden" name="playerId" value={validation.playerId ?? ''} />
               {vaultOfferId && <input type="hidden" name="vaultOfferId" value={vaultOfferId} />}
 
-              {whatsappField(mpSpeiRedirecting)}
+              {whatsappField(mpSpeiRedirecting || Boolean(mpSpei.checkoutUrl))}
 
               <GatewayTabNotice provider="Mercado Pago" />
 
               {mpSpei.error && <div className="alert bad">{mpSpei.error}</div>}
 
-              <button className="btn primary wide" type="submit" disabled={mpSpeiRedirecting}>
-                {mpSpeiRedirecting ? 'Abriendo pago seguro…' : `Confirmar pedido — ${price}`}
-              </button>
+              <GatewayCheckoutButton
+                state={mpSpei}
+                pending={mpSpeiRedirecting}
+                price={price}
+                onOpen={goToOrderPage(mpSpei)}
+              />
               <p className="hint center">🔒 Te damos tu cuenta CLABE para SPEI al continuar.</p>
             </form>
           ) : payView === 'transferencia' && transferAutomatic === 'stripe' ? (
-            <form
-              action={stripeSpeiAction}
-              onSubmit={(e) => {
-                openSpeiTab();
-                trackPaymentInfo(e.currentTarget);
-              }}
-            >
+            <form action={stripeSpeiAction} onSubmit={(e) => trackPaymentInfo(e.currentTarget)}>
               <input type="hidden" name="comboKey" value={comboKey} />
               <input type="hidden" name="playerId" value={validation.playerId ?? ''} />
               {vaultOfferId && <input type="hidden" name="vaultOfferId" value={vaultOfferId} />}
 
-              {whatsappField(speiRedirecting)}
+              {whatsappField(speiRedirecting || Boolean(stripeSpei.checkoutUrl))}
 
               <GatewayTabNotice provider="Stripe" />
 
               {stripeSpei.error && <div className="alert bad">{stripeSpei.error}</div>}
 
-              <button className="btn primary wide" type="submit" disabled={speiRedirecting}>
-                {speiRedirecting ? 'Abriendo pago seguro…' : `Confirmar pedido — ${price}`}
-              </button>
+              <GatewayCheckoutButton
+                state={stripeSpei}
+                pending={speiRedirecting}
+                price={price}
+                onOpen={goToOrderPage(stripeSpei)}
+              />
               <p className="hint center">🔒 Stripe te da tu cuenta CLABE para SPEI al continuar.</p>
             </form>
           ) : (
