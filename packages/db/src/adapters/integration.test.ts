@@ -39,7 +39,7 @@ const MIGRATIONS = join(HERE, '..', '..', 'migrations');
  * `pg_ctl` (which drops privileges) holds stdout open for the daemon's
  * lifetime. Managing it out of band sidesteps both and matches how CI runs.
  */
-const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54329';
+const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
 const TEST_DB = 'levelup_test';
 
 /** Skip rather than fail when no database is reachable, so `pnpm -r test` stays green. */
