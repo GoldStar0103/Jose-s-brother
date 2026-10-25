@@ -4,14 +4,15 @@
     "private":  true,
     "type":  "module",
     "scripts":  {
-                    "start":  "tsx src/main.ts",
-                    "dev":  "tsx watch src/main.ts",
-                    "seed-test-order":  "tsx src/seed-test-order.ts",
-                    "reject-payment":  "tsx src/reject-payment.ts",
-                    "resume-order":  "tsx src/resume-order.ts",
+                    "start":  "pnpm run pre-start && node ../../scripts/with-root-env.mjs tsx src/main.ts",
+                    "dev":  "pnpm run pre-start && node ../../scripts/with-root-env.mjs tsx watch src/main.ts",
+                    "pre-start":  "node ../../scripts/with-root-env.mjs pnpm --filter @levelup/db migrate && node ../../scripts/with-root-env.mjs tsx src/sync-catalog.ts",
+                    "seed-test-order":  "node ../../scripts/with-root-env.mjs tsx src/seed-test-order.ts",
+                    "reject-payment":  "node ../../scripts/with-root-env.mjs tsx src/reject-payment.ts",
+                    "resume-order":  "node ../../scripts/with-root-env.mjs tsx src/resume-order.ts",
                     "typecheck":  "tsc --noEmit",
                     "test":  "vitest run",
-                    "sync-catalog":  "tsx src/sync-catalog.ts"
+                    "sync-catalog":  "node ../../scripts/with-root-env.mjs tsx src/sync-catalog.ts"
                 },
     "dependencies":  {
                          "@levelup/db":  "workspace:*",
