@@ -98,16 +98,16 @@ export function SettingsForm({ initial, missing, methodsEnabled }: Props) {
             inputMode="numeric"
             className="mono"
             placeholder="012 180 01234567890 1"
-            required
           />
         </label>
         <p className="hint">
           Verificamos el dígito de control antes de guardar, así que una CLABE mal copiada se
-          detecta aquí y no cuando un cliente intente pagarte.
+          detecta aquí y no cuando un cliente intente pagarte. Déjala vacía si solo recibes
+          depósitos en OXXO — pero necesitas al menos una de las dos.
         </p>
 
         <label className="field">
-          <span>Número para depósito en OXXO (opcional)</span>
+          <span>Número para depósito en OXXO</span>
           <input
             name="oxxo"
             defaultValue={initial.oxxo}
@@ -116,7 +116,10 @@ export function SettingsForm({ initial, missing, methodsEnabled }: Props) {
             placeholder="Déjalo vacío si no lo usas"
           />
         </label>
-        <p className="hint">Si lo dejas vacío, esa línea no aparece en la tienda.</p>
+        <p className="hint">
+          Si lo dejas vacío, esa línea no aparece en la tienda — pero necesitas al menos la CLABE
+          o este número.
+        </p>
 
         <label className="field">
           <span>Número de tarjeta (16 dígitos, opcional)</span>

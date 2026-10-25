@@ -1,10 +1,17 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import postgres from 'postgres';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import { createDb, type Database } from '../index.js';
 import {
+  getPaymentDetails,
   isValidCardNumber,
   isValidClabe,
   paymentDetailsFromEnv,
   reviewFxRate,
   reviewPaymentDetails,
+  savePaymentDetails,
 } from './payment-settings.js';
 
 /** Real CLABEs whose check digits are correct. */
@@ -93,6 +100,26 @@ describe('reviewPaymentDetails', () => {
     expect(details?.oxxo).toBeNull();
   });
 
+  it('accepts an OXXO-only configuration — no CLABE, no bank account at all', () => {
+    // The real bug: an owner who only takes OXXO deposits (no CLABE set up)
+    // used to be rejected outright, which made the storefront report no
+    // payment methods configured at all, OXXO included.
+    const { details, issues } = reviewPaymentDetails({
+      bank: 'SPIN by OXXO',
+      clabe: '',
+      holder: 'José Manuel Ramírez Sánchez',
+      oxxo: '2242170260285635',
+    });
+    expect(issues).toEqual([]);
+    expect(details).toMatchObject({ clabe: null, oxxo: '2242170260285635' });
+  });
+
+  it('rejects when neither CLABE nor OXXO is given — nothing to actually pay into', () => {
+    const { details, issues } = reviewPaymentDetails(draft({ clabe: '', oxxo: '' }));
+    expect(details).toBeNull();
+    expect(issues.some((i) => i.field === 'clabe' && /al menos uno/i.test(i.message))).toBe(true);
+  });
+
   it('treats the card number as optional', () => {
     const { details, issues } = reviewPaymentDetails(draft());
     expect(issues).toEqual([]);
@@ -179,7 +206,102 @@ describe('paymentDetailsFromEnv', () => {
     expect(paymentDetailsFromEnv({})).toBeNull();
     expect(paymentDetailsFromEnv({ PAY_BANK: 'BBVA' })).toBeNull();
     expect(paymentDetailsFromEnv({ PAY_BANK: 'BBVA', PAY_CLABE: VALID[0]! })).toBeNull();
+    // Neither CLABE nor OXXO: still nothing to actually pay into.
     expect(paymentDetailsFromEnv({ PAY_CLABE: '', PAY_BANK: 'BBVA', PAY_HOLDER: 'X' })).toBeNull();
+  });
+
+  it('accepts an OXXO-only bootstrap — this project\'s own real configuration', () => {
+    // PAY_CLABE deliberately blank: the account only has a SPIN by OXXO
+    // number, no bank CLABE. This used to make paymentDetailsFromEnv return
+    // null entirely, which took every payment method off the storefront, not
+    // just OXXO.
+    expect(
+      paymentDetailsFromEnv({
+        PAY_BANK: 'SPIN by OXXO',
+        PAY_CLABE: '',
+        PAY_HOLDER: 'José Manuel Ramírez Sánchez',
+        PAY_OXXO: '2242170260285635',
+      }),
+    ).toEqual({
+      bank: 'SPIN by OXXO',
+      clabe: null,
+      holder: 'José Manuel Ramírez Sánchez',
+      oxxo: '2242170260285635',
+      cardNumber: null,
+    });
+  });
+});
+
+/**
+ * `getPaymentDetails`/`savePaymentDetails` against real Postgres — the
+ * settings-table round trip, and `isPaymentDetails`'s own CLABE-vs-OXXO
+ * validation, which the pure-function tests above cannot reach since neither
+ * is exported.
+ */
+const HERE = dirname(fileURLToPath(import.meta.url));
+const MIGRATIONS = join(HERE, '..', '..', 'migrations');
+const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
+const TEST_DB = 'levelup_payment_settings_test';
+
+const PG_AVAILABLE = await (async () => {
+  const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
+  try {
+    await probe`SELECT 1`;
+    return true;
+  } catch {
+    return false;
+  } finally {
+    await probe.end({ timeout: 2 }).catch(() => undefined);
+  }
+})();
+
+let db: Database;
+let client: ReturnType<typeof createDb>['client'];
+
+beforeAll(async () => {
+  if (!PG_AVAILABLE) return;
+  const admin = postgres(`${BASE_URL}/postgres`, { max: 1 });
+  try {
+    await admin.unsafe(`DROP DATABASE IF EXISTS ${TEST_DB} WITH (FORCE)`);
+    await admin.unsafe(`CREATE DATABASE ${TEST_DB}`);
+  } finally {
+    await admin.end({ timeout: 5 });
+  }
+  ({ db, client } = createDb(`${BASE_URL}/${TEST_DB}`, { max: 5 }));
+  await migrate(db, { migrationsFolder: MIGRATIONS });
+}, 180_000);
+
+afterAll(async () => {
+  await client?.end({ timeout: 5 });
+}, 30_000);
+
+describe.skipIf(!PG_AVAILABLE)('getPaymentDetails / savePaymentDetails', () => {
+  it('saves and reads back an OXXO-only configuration, CLABE null throughout', async () => {
+    await savePaymentDetails(db, {
+      bank: 'SPIN by OXXO',
+      clabe: null,
+      holder: 'José Manuel Ramírez Sánchez',
+      oxxo: '2242170260285635',
+      cardNumber: null,
+    });
+    expect(await getPaymentDetails(db)).toEqual({
+      bank: 'SPIN by OXXO',
+      clabe: null,
+      holder: 'José Manuel Ramírez Sánchez',
+      oxxo: '2242170260285635',
+      cardNumber: null,
+    });
+  });
+
+  it('a later save overwrites the earlier one rather than merging', async () => {
+    await savePaymentDetails(db, {
+      bank: 'BBVA',
+      clabe: VALID[0]!,
+      holder: 'Titular',
+      oxxo: null,
+      cardNumber: null,
+    });
+    expect(await getPaymentDetails(db)).toMatchObject({ bank: 'BBVA', clabe: VALID[0] });
   });
 });
 

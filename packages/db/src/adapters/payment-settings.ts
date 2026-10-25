@@ -22,8 +22,14 @@ export const FX_RATE_KEY = 'fx_usd_mxn';
 export interface PaymentDetails {
   /** Bank name shown next to the CLABE, e.g. "BBVA". */
   bank: string;
-  /** 18-digit interbank account number. */
-  clabe: string;
+  /**
+   * 18-digit interbank account number. Null when the owner takes bank
+   * transfers only through OXXO's SPIN account and never set one up — CLABE
+   * and OXXO are independent ways to receive money, and requiring both was
+   * exactly the bug that made a SPIN-only configuration (no CLABE at all)
+   * silently report no payment methods configured at all, OXXO included.
+   */
+  clabe: string | null;
   /** Account holder, as it appears at the bank. */
   holder: string;
   /** Card or reference number for an OXXO deposit. Optional. */
@@ -113,20 +119,24 @@ export function reviewPaymentDetails(draft: Partial<PaymentDetails>): {
     issues.push({ field: 'holder', message: 'El nombre del titular es muy largo.' });
   }
 
+  // Optional, same as OXXO below — CLABE and OXXO are independent ways to
+  // receive money, and an owner who only takes OXXO deposits (no bank
+  // account set up at all) is a real, valid configuration, not a half-filled
+  // one. Format is still checked whenever something was actually typed.
   const clabe = digits(clabeRaw);
-  if (!clabe) {
-    issues.push({ field: 'clabe', message: 'Escribe la CLABE.' });
-  } else if (clabe.length !== 18) {
-    issues.push({
-      field: 'clabe',
-      message: `La CLABE debe tener 18 dígitos; ésta tiene ${clabe.length}.`,
-    });
-  } else if (!isValidClabe(clabe)) {
-    // Almost always a typo. Saying so is more useful than "inválida".
-    issues.push({
-      field: 'clabe',
-      message: 'La CLABE tiene 18 dígitos pero no es válida. Revisa que no falte o sobre un número.',
-    });
+  if (clabeRaw) {
+    if (clabe.length !== 18) {
+      issues.push({
+        field: 'clabe',
+        message: `La CLABE debe tener 18 dígitos; ésta tiene ${clabe.length}.`,
+      });
+    } else if (!isValidClabe(clabe)) {
+      // Almost always a typo. Saying so is more useful than "inválida".
+      issues.push({
+        field: 'clabe',
+        message: 'La CLABE tiene 18 dígitos pero no es válida. Revisa que no falte o sobre un número.',
+      });
+    }
   }
 
   const oxxo = digits(oxxoRaw);
@@ -134,6 +144,15 @@ export function reviewPaymentDetails(draft: Partial<PaymentDetails>): {
     issues.push({
       field: 'oxxo',
       message: 'El número de OXXO debe tener entre 10 y 19 dígitos, o déjalo vacío.',
+    });
+  }
+
+  // At least one way to actually receive the money, whatever combination —
+  // this is the one requirement that cannot be scoped to a single field.
+  if (!clabeRaw && !oxxoRaw) {
+    issues.push({
+      field: 'clabe',
+      message: 'Captura la CLABE, el número de OXXO, o ambos — necesitas al menos uno.',
     });
   }
 
@@ -156,7 +175,7 @@ export function reviewPaymentDetails(draft: Partial<PaymentDetails>): {
   if (issues.length > 0) return { details: null, issues };
 
   return {
-    details: { bank, clabe, holder, oxxo: oxxo || null, cardNumber: cardNumber || null },
+    details: { bank, clabe: clabe || null, holder, oxxo: oxxo || null, cardNumber: cardNumber || null },
     issues,
   };
 }
@@ -164,13 +183,17 @@ export function reviewPaymentDetails(draft: Partial<PaymentDetails>): {
 function isPaymentDetails(value: unknown): value is PaymentDetails {
   if (typeof value !== 'object' || value === null) return false;
   const v = value as Record<string, unknown>;
+  // CLABE is optional (an OXXO-only configuration is valid — see the field's
+  // own comment); OXXO is already optional. At least one of the two must be
+  // present, or there is no way to actually receive the money at all.
+  const hasClabe = typeof v.clabe === 'string' && v.clabe.trim() !== '';
+  const hasOxxo = typeof v.oxxo === 'string' && v.oxxo.trim() !== '';
   return (
     typeof v.bank === 'string' &&
-    typeof v.clabe === 'string' &&
     typeof v.holder === 'string' &&
     v.bank.trim() !== '' &&
-    v.clabe.trim() !== '' &&
-    v.holder.trim() !== ''
+    v.holder.trim() !== '' &&
+    (hasClabe || hasOxxo)
   );
 }
 
@@ -196,7 +219,7 @@ export async function getPaymentDetails(db: Database): Promise<PaymentDetails | 
     const v = row.value;
     return {
       bank: v.bank.trim(),
-      clabe: digits(v.clabe),
+      clabe: v.clabe ? digits(v.clabe) || null : null,
       holder: v.holder.trim(),
       oxxo: v.oxxo ? digits(String(v.oxxo)) || null : null,
       cardNumber: v.cardNumber ? digits(String(v.cardNumber)) || null : null,
@@ -211,12 +234,16 @@ export function paymentDetailsFromEnv(env = process.env): PaymentDetails | null 
   const bank = env.PAY_BANK?.trim();
   const clabe = env.PAY_CLABE ? digits(env.PAY_CLABE) : '';
   const holder = env.PAY_HOLDER?.trim();
-
-  if (!bank || !clabe || !holder) return null;
-
   const oxxo = env.PAY_OXXO ? digits(env.PAY_OXXO) : '';
+
+  // CLABE alone used to be required, which made an OXXO-only bootstrap (no
+  // bank account at all, just a SPIN by OXXO number) silently report no
+  // payment details configured — the OXXO option, and every other method
+  // that reads payTo !== null, vanished from the storefront along with it.
+  if (!bank || !holder || (!clabe && !oxxo)) return null;
+
   const cardNumber = env.PAY_CARD_NUMBER ? digits(env.PAY_CARD_NUMBER) : '';
-  return { bank, clabe, holder, oxxo: oxxo || null, cardNumber: cardNumber || null };
+  return { bank, clabe: clabe || null, holder, oxxo: oxxo || null, cardNumber: cardNumber || null };
 }
 
 export async function savePaymentDetails(db: Database, details: PaymentDetails): Promise<void> {

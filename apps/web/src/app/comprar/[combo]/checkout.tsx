@@ -76,7 +76,8 @@ function GatewayTabNotice({ provider }: { provider: string }) {
 
 interface PayTo {
   bank: string;
-  clabe: string;
+  /** Null when the owner only takes OXXO deposits and never set up a CLABE. */
+  clabe: string | null;
   holder: string;
   oxxo: string | null;
   cardNumber: string | null;
@@ -322,7 +323,11 @@ export function Checkout({
   // automatic gateways: Mercado Pago wins over Stripe's own OXXO when both are
   // configured, since Stripe's OXXO settlement via PPRO is the unreliable one
   // Mercado Pago was brought in to replace.
-  const manualTransfer = payTo !== null && transferEnabled;
+  // clabe !== null, not just payTo !== null: an OXXO-only configuration has
+  // payTo but no CLABE, and a "transferencia bancaria" box with a bank name
+  // but no account number to actually send money to is useless — that rail
+  // needs its own identifier, exactly as manualOxxo needs payTo.oxxo below.
+  const manualTransfer = payTo !== null && payTo.clabe !== null && transferEnabled;
   const manualOxxo = payTo !== null && payTo.oxxo !== null && oxxoEnabled;
   const oxxoAutomatic: 'mercadopago' | 'stripe' | null = mercadoPagoOxxoEnabled
     ? 'mercadopago'
@@ -716,7 +721,9 @@ export function Checkout({
                     display={groupCard(payTo.cardNumber)}
                   />
                 )}
-                <CopyRow label="CLABE bancaria" value={payTo.clabe} display={groupClabe(payTo.clabe)} />
+                {payTo.clabe && (
+                  <CopyRow label="CLABE bancaria" value={payTo.clabe} display={groupClabe(payTo.clabe)} />
+                )}
                 <div className="pay-row total">
                   <span>Monto exacto</span>
                   <strong>{price}</strong>
