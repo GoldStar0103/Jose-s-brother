@@ -70,7 +70,7 @@ export const CAMPAIGNS = [
     permanent: true,
     note: 'Entry offer. The trust-breaker for first-time buyers — always active.',
     combos: [
-      { key: 'mega_10', name: 'Mega Oferta 110', priceMxn: 10, advertised: 110, advertisedSource: CLIENT, recipe: [100] },
+      { key: 'mega_10', name: 'Mega Oferta 110', priceMxn: 15, advertised: 110, advertisedSource: CLIENT, recipe: [100] },
     ],
   },
   {
