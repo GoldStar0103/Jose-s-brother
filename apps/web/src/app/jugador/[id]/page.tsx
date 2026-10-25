@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPublicProfile } from '@levelup/db';
+import { siteName } from '@levelup/shared';
 import { getDb } from '../../../lib/server.js';
 import { avatarUrl, badgeArtworkUrl } from '../../../lib/assets.js';
 import { diamonds, initials } from '../../../lib/format.js';
@@ -36,7 +37,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           <h1 className="page-title" style={{ marginBottom: 0 }}>
             {name}
           </h1>
-          <p className="hint">LevelUp desde {profile.memberSinceYear}</p>
+          <p className="hint">{siteName()} desde {profile.memberSinceYear}</p>
         </div>
       </div>
 

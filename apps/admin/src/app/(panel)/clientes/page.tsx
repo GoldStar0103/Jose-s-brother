@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getCurrentSeason, listAdminCustomers } from '@levelup/db';
+import { siteName } from '@levelup/shared';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { diamonds } from '../../../lib/format';
@@ -30,7 +31,7 @@ export default async function ClientesPage({
     <>
       <h1>Clientes</h1>
       <p className="subtitle">
-        Cuentas Mi LevelUp con su avance en {season ? `la Temporada ${season.seasonNumber}` : 'la temporada'}.
+        Cuentas Mi {siteName()} con su avance en {season ? `la Temporada ${season.seasonNumber}` : 'la temporada'}.
         Abre una para ver su economía completa.
       </p>
 
@@ -60,7 +61,7 @@ export default async function ClientesPage({
         <div className="card empty">
           {params.q || checkpointLp !== undefined
             ? 'Ningún cliente coincide.'
-            : 'Todavía no hay cuentas Mi LevelUp.'}
+            : `Todavía no hay cuentas Mi ${siteName()}.`}
         </div>
       ) : (
         <div className="table-wrap">

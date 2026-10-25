@@ -128,6 +128,8 @@ interface Props {
   cancelledNotice: string | null;
   supportNumber: string;
   isLoggedIn: boolean;
+  /** Read server-side from LEGAL_BUSINESS_NAME — this is a client component. */
+  brandName: string;
 }
 
 /**
@@ -276,6 +278,7 @@ export function Checkout({
   cancelledNotice,
   supportNumber,
   isLoggedIn,
+  brandName,
 }: Props) {
   const [validation, validateAction, validating] = useActionState<ValidateState, FormData>(
     validatePlayer,
@@ -435,7 +438,7 @@ export function Checkout({
       {!isLoggedIn && (
         <div className="alert warn" style={{ marginBottom: 12 }}>
           Estás comprando como invitado.{' '}
-          <a href="/cuenta">Crea tu cuenta Mi LevelUp</a> — cualquier ID que recargues con la
+          <a href="/cuenta">Crea tu cuenta Mi {brandName}</a> — cualquier ID que recargues con la
           cuenta suma al Level Pass y La Bóveda. El ranking usa un solo ID.
         </div>
       )}

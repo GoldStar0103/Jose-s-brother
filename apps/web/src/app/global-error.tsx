@@ -36,8 +36,12 @@ export default function GlobalError({
         }}
       >
         <div style={{ maxWidth: 420, textAlign: 'center' }}>
+          {/* Not the configured brand name: this is a client component with
+              no access to server env, and the one job here — see the file's
+              own doc comment — is to depend on nothing that could also be
+              broken. A generic, non-branded label sidesteps that entirely. */}
           <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>
-            LEVELUP STORE
+            RECARGAS FREE FIRE
           </div>
 
           <p style={{ fontSize: 17, fontWeight: 700, marginTop: 22 }}>

@@ -13,7 +13,8 @@ import { getDb } from '../lib/server';
 import { diamonds, initials, mxn, roundDownSignificant } from '../lib/format';
 import { avatarUrl, flyerUrl } from '../lib/assets';
 import { socialLinks } from '../lib/social';
-import logo from '../assets/logo.webp';
+import { siteName } from '@levelup/shared';
+import logo from '../assets/logo.png';
 import heroAnnounce from '../assets/mascot/hero-announce.webp';
 import heroStars from '../assets/mascot/hero-stars.webp';
 import mascotIdle from '../assets/mascot/idle.webp';
@@ -63,7 +64,7 @@ const WHY_US = [
   {
     icon: HeadsetIcon,
     tone: 'pink',
-    title: 'Soporte LevelUp',
+    title: 'Soporte dedicado',
     text: 'Estamos contigo antes y después de tu recarga.',
   },
 ] as const;
@@ -163,9 +164,10 @@ export default async function HomePage() {
         <div className="hm-bar-brand">
           <img src={logo.src} width={44} height={44} alt="" decoding="async" />
           <div className="hm-bar-wordmark">
-            <span className="hm-bar-name">
-              LEVELUP <span className="grad">STORE</span>
-            </span>
+            {/* One styled word, not a two-part split like "LEVELUP STORE" —
+                the brand name is configurable and most won't split naturally
+                into a plain part and a highlighted suffix the way that one did. */}
+            <span className="hm-bar-name grad">{siteName().toUpperCase()}</span>
             <span className="hm-bar-place">MÉXICO</span>
           </div>
         </div>
@@ -334,7 +336,7 @@ export default async function HomePage() {
 
       <section>
         <h2 className="section-title-lg center">
-          ¿Por qué elegir <span className="grad">LevelUp Store</span>?
+          ¿Por qué elegir <span className="grad">{siteName()}</span>?
         </h2>
         <div className="why-grid">
           {WHY_US.map(({ icon: Icon, tone, title, text }) => (

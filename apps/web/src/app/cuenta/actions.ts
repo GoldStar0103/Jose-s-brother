@@ -33,6 +33,7 @@ import {
 } from '../../lib/customer-session.js';
 import { getDb, otpRequestLimiter } from '../../lib/server.js';
 import { buildEmailSender } from '../../lib/email-sender.js';
+import { siteName } from '@levelup/shared';
 
 const OTP_TTL_MS = 10 * 60_000;
 const OTP_MAX_ATTEMPTS = 5;
@@ -160,8 +161,8 @@ export async function completeSignup(_prev: CompleteSignupState, formData: FormD
       status: 'error',
       message:
         result.reason === 'player_id_taken'
-          ? 'Ese ID de Free Fire ya tiene una cuenta LevelUp.'
-          : 'Ese correo ya tiene una cuenta LevelUp.',
+          ? `Ese ID de Free Fire ya tiene una cuenta ${siteName()}.`
+          : `Ese correo ya tiene una cuenta ${siteName()}.`,
     };
   }
 

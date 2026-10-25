@@ -134,20 +134,34 @@ describe('verifyTotp — malformed input, never throws', () => {
 
 describe('otpauthUri', () => {
   it('produces a standard otpauth:// URI with the expected parameters', () => {
-    const uri = otpauthUri('JBSWY3DPEHPK3PXP', 'jose@levelupstore.mx');
+    // Issuer passed explicitly rather than relying on the default (which
+    // reads LEGAL_BUSINESS_NAME) — the default itself is covered below.
+    const uri = otpauthUri('JBSWY3DPEHPK3PXP', 'jose@levelupstore.mx', 'MONKEI');
     expect(uri).toMatch(/^otpauth:\/\/totp\//);
     expect(uri).toContain('secret=JBSWY3DPEHPK3PXP');
-    expect(uri).toContain('issuer=LevelUp%20Store');
+    expect(uri).toContain('issuer=MONKEI');
     expect(uri).toContain('algorithm=SHA1');
     expect(uri).toContain('digits=6');
     expect(uri).toContain('period=30');
     // Label is "Issuer:account", both percent-encoded.
-    expect(uri).toContain('LevelUp%20Store:jose%40levelupstore.mx');
+    expect(uri).toContain('MONKEI:jose%40levelupstore.mx');
   });
 
   it('accepts a custom issuer', () => {
     const uri = otpauthUri('JBSWY3DPEHPK3PXP', 'a@b.com', 'Custom Issuer');
     expect(uri).toContain('issuer=Custom%20Issuer');
     expect(uri).toContain('Custom%20Issuer:a%40b.com');
+  });
+
+  it('defaults the issuer to the configured brand name', () => {
+    const previous = process.env.LEGAL_BUSINESS_NAME;
+    process.env.LEGAL_BUSINESS_NAME = 'MONKEI';
+    try {
+      const uri = otpauthUri('JBSWY3DPEHPK3PXP', 'a@b.com');
+      expect(uri).toContain('issuer=MONKEI');
+    } finally {
+      if (previous === undefined) delete process.env.LEGAL_BUSINESS_NAME;
+      else process.env.LEGAL_BUSINESS_NAME = previous;
+    }
   });
 });

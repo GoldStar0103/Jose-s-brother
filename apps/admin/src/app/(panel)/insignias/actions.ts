@@ -9,6 +9,7 @@ import {
   setBadgeObtainable,
   type BadgeDefinitionDraft,
 } from '@levelup/db';
+import { siteName } from '@levelup/shared';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { storeBadgeArtwork } from '../../../lib/badge-artwork';
@@ -100,7 +101,7 @@ export async function awardBadge(_prev: AwardFormState, formData: FormData): Pro
 
   if (!result.ok) {
     const messages: Record<typeof result.reason, string> = {
-      player_not_found: 'No hay ninguna cuenta LevelUp con ese ID de Free Fire.',
+      player_not_found: `No hay ninguna cuenta ${siteName()} con ese ID de Free Fire.`,
       badge_not_found: 'Esa insignia ya no existe.',
       season_required: 'Esta insignia es por temporada — indica el número de temporada.',
       season_not_found: 'No existe esa temporada.',

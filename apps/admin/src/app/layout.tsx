@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
+import { siteName } from '@levelup/shared';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'LevelUp Store — Panel',
+  title: `${siteName()} — Panel`,
   description: 'Panel de administración de recargas',
   robots: { index: false, follow: false },
 };

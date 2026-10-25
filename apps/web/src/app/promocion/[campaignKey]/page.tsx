@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getStorefrontCampaign } from '@levelup/db';
+import { siteName } from '@levelup/shared';
 import { getDb } from '../../../lib/server';
 import { diamonds, mxn } from '../../../lib/format';
 import { flyerUrl } from '../../../lib/assets';
@@ -27,7 +28,7 @@ export async function generateMetadata({
   if (!campaign) return { title: 'Promoción no disponible' };
 
   return {
-    title: `${campaign.name} — LevelUp Store`,
+    title: `${campaign.name} — ${siteName()}`,
     alternates: { canonical: `/promocion/${campaign.key}` },
   };
 }

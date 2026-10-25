@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { findCustomerOrder, type CustomerOrder, type CustomerOrderStatus } from '@levelup/db';
+import { siteName } from '@levelup/shared';
 import { getCustomerSession } from '../../../lib/customer-session';
 import { callerIp, getDb, lookupLimiter } from '../../../lib/server';
 import { applyStripeReport, getStripe, STRIPE } from '../../../lib/stripe';
@@ -364,7 +365,7 @@ export default async function OrderPage({
 
       {!session && (
         <div className="card" style={{ marginBottom: 16 }}>
-          <h2 className="mini-title">Crea tu cuenta Mi LevelUp</h2>
+          <h2 className="mini-title">Crea tu cuenta Mi {siteName()}</h2>
           <p className="hint">
             Las próximas recargas con tu cuenta — en cualquier ID — suman al Level Pass y La
             Bóveda. El ranking usa el ID que ligues en tu perfil.

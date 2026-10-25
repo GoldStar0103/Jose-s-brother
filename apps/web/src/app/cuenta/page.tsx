@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getMyLevelUpOverview, getMyProfile, listMyOrders } from '@levelup/db';
+import { siteName } from '@levelup/shared';
 import { getCustomerSession } from '../../lib/customer-session.js';
 import { getDb } from '../../lib/server.js';
 import { avatarUrl } from '../../lib/assets.js';
@@ -10,7 +11,7 @@ import { CuentaForm } from './cuenta-form';
 import { logout } from './profile-actions';
 
 export const metadata: Metadata = {
-  title: 'Mi LevelUp',
+  title: `Mi ${siteName()}`,
   description: 'Tu progreso, tus insignias y tus recompensas.',
   alternates: { canonical: '/cuenta' },
 };
@@ -73,7 +74,7 @@ export default async function CuentaPage() {
   if (!profile) {
     return (
       <main className="page narrow">
-        <h1 className="page-title">Mi LevelUp</h1>
+        <h1 className="page-title">Mi {siteName()}</h1>
         <p className="page-sub">Tu sesión ya no es válida. Inicia sesión de nuevo.</p>
         <CuentaForm />
       </main>

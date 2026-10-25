@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { siteName } from '@levelup/shared';
 import { ogLogo } from '../lib/og-logo';
 
 /**
@@ -13,12 +14,19 @@ import { ogLogo } from '../lib/og-logo';
  * business making outbound requests to draw a picture — and when it fails it
  * fails by rendering nothing, silently.
  *
- * The logo leads, in place of a typed wordmark: it already says LEVELUP STORE,
- * and it is the thing a buyer will recognise again on the site itself. It is
- * compiled in rather than read from disk — see lib/og-logo-data.ts.
+ * The logo leads, in place of a typed wordmark: it already carries the brand
+ * name, and it is the thing a buyer will recognise again on the site itself.
+ * It is compiled in rather than read from disk — see lib/og-logo-data.ts.
  */
 
-export const alt = 'LevelUp Store — Recargas de diamantes para Free Fire';
+// Without this, Next prerenders this route at `next build` time — inside the
+// Docker build stage, which has no real .env secrets (see Dockerfile.next's
+// own comment on this) — and `alt` would freeze at whatever LEGAL_BUSINESS_NAME
+// happened to resolve to there, same trap the legal pages and sitemap hit
+// before `force-dynamic` was added to them too.
+export const dynamic = 'force-dynamic';
+
+export const alt = `${siteName()} — Recargas de diamantes para Free Fire`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 

@@ -15,6 +15,7 @@
  */
 
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
+import { siteName } from '@levelup/shared';
 
 const TIME_STEP_SECONDS = 30;
 const DIGITS = 6;
@@ -162,7 +163,7 @@ export function verifyTotp(
  * here — every mainstream app also accepts manual entry, so a URI is enough
  * and does not require pulling in a QR library.
  */
-export function otpauthUri(secretBase32: string, accountEmail: string, issuer = 'LevelUp Store'): string {
+export function otpauthUri(secretBase32: string, accountEmail: string, issuer = siteName()): string {
   const label = `${encodeURIComponent(issuer)}:${encodeURIComponent(accountEmail)}`;
   const query = [
     `secret=${encodeURIComponent(secretBase32)}`,

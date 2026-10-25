@@ -9,7 +9,8 @@ import { BottomNav } from './bottom-nav';
 import { WhatsappChannelPopup } from './whatsapp-channel-popup';
 import { whatsappChannelUrl } from '../lib/whatsapp-channel';
 import { legalIdentity, pending } from '../lib/legal';
-import logo from '../assets/logo.webp';
+import { siteName } from '@levelup/shared';
+import logo from '../assets/logo.png';
 import './globals.css';
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap' });
@@ -46,16 +47,19 @@ export async function generateMetadata(): Promise<Metadata> {
     ...(facebook ? { other: { 'facebook-domain-verification': facebook } } : {}),
   };
 
+  const brand = siteName();
+  const title = `${brand} — Recargas Free Fire`;
+
   return {
     metadataBase: new URL(siteOrigin()),
     title: {
-      default: 'LevelUp Store — Recargas Free Fire',
-      // Page titles read "Pack Insano · LevelUp Store" rather than repeating the
+      default: title,
+      // Page titles read "Pack Insano · <brand>" rather than repeating the
       // brand twice.
-      template: '%s · LevelUp Store',
+      template: `%s · ${brand}`,
     },
     description: DESCRIPTION,
-    applicationName: 'LevelUp Store',
+    applicationName: brand,
     // No `alternates.canonical` here on purpose. Metadata is inherited, so a
     // canonical of '/' in the root layout would make every page that does not
     // override it declare itself to be the homepage — which tells search engines
@@ -64,15 +68,15 @@ export async function generateMetadata(): Promise<Metadata> {
     ...(Object.keys(verification).length > 0 ? { verification } : {}),
     openGraph: {
       type: 'website',
-      siteName: 'LevelUp Store',
+      siteName: brand,
       locale: 'es_MX',
-      title: 'LevelUp Store — Recargas Free Fire',
+      title,
       description: DESCRIPTION,
       url: '/',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'LevelUp Store — Recargas Free Fire',
+      title,
       description: DESCRIPTION,
     },
   };
@@ -113,7 +117,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               loading="lazy"
               decoding="async"
             />
-            <span>LEVELUP STORE</span>
+            <span>{siteName().toUpperCase()}</span>
           </div>
           <div className="footer-links">
             <a href="/">Inicio</a>

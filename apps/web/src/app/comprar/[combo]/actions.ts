@@ -11,7 +11,7 @@ import {
   getStorefrontCombo,
 } from '@levelup/db';
 import { createOrder, rejectPayment, type CreateOrderFailure, type CreateOrderInput } from '@levelup/engine';
-import { validateUpload } from '@levelup/shared';
+import { siteName, validateUpload } from '@levelup/shared';
 import { ValidationUnsupportedError } from '@levelup/provider';
 import type { PaymentGateway } from '@levelup/payments';
 import { diamonds, mxn } from '../../../lib/format';
@@ -219,7 +219,7 @@ async function resolveVaultPurchase(formData: FormData): Promise<VaultPurchaseRe
   if (!session) {
     return {
       ok: false,
-      message: 'Tu sesión expiró. Inicia sesión de nuevo en Mi LevelUp para usar tu descuento de la Bóveda.',
+      message: `Tu sesión expiró. Inicia sesión de nuevo en Mi ${siteName()} para usar tu descuento de la Bóveda.`,
     };
   }
 

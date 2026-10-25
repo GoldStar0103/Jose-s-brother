@@ -1,42 +1,27 @@
-'use client';
+import { siteName } from '@levelup/shared';
+import logo from '../../assets/logo.png';
+import { LoginForm } from './login-form';
 
-import { useActionState } from 'react';
-import { login, type LoginState } from './actions';
-import logo from '../../assets/logo.webp';
+// Without this, Next prerenders this page as static HTML at `next build`
+// time — inside the Docker build stage, which has no real .env secrets — and
+// the brand name below would freeze at whatever LEGAL_BUSINESS_NAME resolved
+// to there. Same trap the legal pages hit before force-dynamic was added to
+// them too; /login/verify next door already has this for the same reason.
+export const dynamic = 'force-dynamic';
 
+// Server component so the brand header can read LEGAL_BUSINESS_NAME directly
+// — the interactive form below needs useActionState, which the brand text
+// itself does not, so only that part is a client component.
 export default function LoginPage() {
-  const [state, formAction, pending] = useActionState<LoginState, FormData>(login, {});
-
   return (
     <main className="login-page">
-      <form className="card login-card" action={formAction}>
+      <div className="card login-card">
         <div className="brand" style={{ padding: '0 0 18px' }}>
           <img src={logo.src} width={32} height={32} alt="" />
-          <span>LEVELUP STORE</span>
+          <span>{siteName().toUpperCase()}</span>
         </div>
-
-        {state.error && <div className="alert bad">{state.error}</div>}
-
-        <div className="field">
-          <label htmlFor="email">Correo</label>
-          <input id="email" name="email" type="email" autoComplete="username" required autoFocus />
-        </div>
-
-        <div className="field">
-          <label htmlFor="password">Contraseña</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-          />
-        </div>
-
-        <button className="btn primary" type="submit" disabled={pending} style={{ width: '100%' }}>
-          {pending ? 'Entrando…' : 'Entrar'}
-        </button>
-      </form>
+        <LoginForm />
+      </div>
     </main>
   );
 }

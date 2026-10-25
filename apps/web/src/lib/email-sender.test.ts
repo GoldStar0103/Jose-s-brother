@@ -44,8 +44,18 @@ describe('smtpEnvelopeAddress', () => {
 });
 
 describe('smtpFromHeader', () => {
-  it('wraps a bare mailbox', () => {
-    expect(smtpFromHeader('noreply@levelupstore.mx')).toBe('LevelUp Store <noreply@levelupstore.mx>');
+  it('wraps a bare mailbox in the configured brand name', () => {
+    expect(
+      smtpFromHeader('noreply@monkei.mx', { NODE_ENV: 'test', LEGAL_BUSINESS_NAME: 'MONKEI' }),
+    ).toBe('MONKEI <noreply@monkei.mx>');
+  });
+
+  it('falls back to a generic placeholder when no brand name is configured', () => {
+    // Never a real store's name — this codebase gets cloned for a new store,
+    // and a hardcoded one here would leak whichever store it came from.
+    expect(smtpFromHeader('noreply@example.com', { NODE_ENV: 'test' })).toBe(
+      'Mi Tienda <noreply@example.com>',
+    );
   });
 
   it('leaves a display-name From alone', () => {

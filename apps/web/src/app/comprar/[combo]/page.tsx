@@ -8,6 +8,7 @@ import {
   getPaymentMethodsEnabled,
   getStorefrontCombo,
 } from '@levelup/db';
+import { siteName } from '@levelup/shared';
 import { getDb } from '../../../lib/server';
 import { getCustomerSession } from '../../../lib/customer-session';
 import { applyStripeReport, getStripe, STRIPE } from '../../../lib/stripe';
@@ -189,6 +190,7 @@ export default async function BuyPage({
         cancelledNotice={cancelledNotice}
         supportNumber={supportNumber() ?? ''}
         isLoggedIn={session !== null}
+        brandName={siteName()}
       />
     </main>
   );

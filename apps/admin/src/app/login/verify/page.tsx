@@ -2,7 +2,8 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { readPurposeToken } from '../../../lib/auth';
 import { PENDING_2FA_COOKIE, PENDING_2FA_PURPOSE } from '../pending-2fa';
-import logo from '../../../assets/logo.webp';
+import { siteName } from '@levelup/shared';
+import logo from '../../../assets/logo.png';
 import { VerifyForm } from './verify-form';
 
 export const dynamic = 'force-dynamic';
@@ -28,7 +29,7 @@ export default async function VerifyTotpPage() {
       <div className="card login-card">
         <div className="brand" style={{ padding: '0 0 18px' }}>
           <img src={logo.src} width={32} height={32} alt="" />
-          <span>LEVELUP STORE</span>
+          <span>{siteName().toUpperCase()}</span>
         </div>
         <p className="hint" style={{ marginTop: 0 }}>
           Ingresa el código de 6 dígitos de tu app de autenticación.

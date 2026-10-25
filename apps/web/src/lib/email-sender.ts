@@ -13,7 +13,7 @@
 
 import { connect as netConnect, type Socket } from 'node:net';
 import { connect as tlsConnect, type TLSSocket } from 'node:tls';
-import { FALLBACK_DOMAIN } from '@levelup/shared';
+import { FALLBACK_DOMAIN, siteName } from '@levelup/shared';
 
 export interface EmailSender {
   sendOtpCode(to: string, code: string): Promise<void>;
@@ -65,18 +65,19 @@ export function smtpEnvelopeAddress(value: string): string {
   return candidate;
 }
 
-export function smtpFromHeader(from: string): string {
+export function smtpFromHeader(from: string, env: NodeJS.ProcessEnv = process.env): string {
   if (from.includes('<')) return from.trim();
-  return `LevelUp Store <${smtpEnvelopeAddress(from)}>`;
+  return `${siteName(env)} <${smtpEnvelopeAddress(from)}>`;
 }
 
 export class SmtpEmailSender implements EmailSender {
   constructor(private readonly config: SmtpConfig) {}
 
   async sendOtpCode(to: string, code: string): Promise<void> {
-    const subject = 'Tu código de LevelUp';
+    const brand = siteName();
+    const subject = `Tu código de ${brand}`;
     const text =
-      `Tu código para entrar a Mi LevelUp es ${code}.\n\n` +
+      `Tu código para entrar a Mi ${brand} es ${code}.\n\n` +
       `Caduca en 10 minutos. Si no lo pediste, ignora este correo.`;
     await sendSmtpMail(this.config, { to, subject, text });
   }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAccountingSummary, getSeasonRanges, mexicoCityTodayYmd } from '@levelup/db';
+import { siteName } from '@levelup/shared';
 import { getDb } from '../../../../lib/db';
 import { requireSession } from '../../../../lib/session';
 import { methodLabel, parseRangeKey, resolveRange } from '../range';
@@ -41,7 +42,7 @@ export async function GET(request: Request) {
   const summary = await getAccountingSummary(getDb(), range);
 
   const lines: string[] = [];
-  lines.push('LevelUp Store - Reporte de Contabilidad');
+  lines.push(`${siteName()} - Reporte de Contabilidad`);
   lines.push(`Rango,${rango}`);
   if (rango === 'personalizado') {
     lines.push(`Desde,${desde ?? ''}`);

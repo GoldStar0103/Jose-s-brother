@@ -7,7 +7,7 @@
  * obvious on the page instead of quietly shipping as fact.
  */
 
-import { FALLBACK_DOMAIN } from '@levelup/shared';
+import { FALLBACK_DOMAIN, siteName } from '@levelup/shared';
 
 export interface LegalIdentity {
   businessName: string;
@@ -26,7 +26,7 @@ const orNull = (value: string | undefined): string | null => {
 
 export function legalIdentity(): LegalIdentity {
   return {
-    businessName: process.env.LEGAL_BUSINESS_NAME ?? 'LevelUp Store',
+    businessName: siteName(),
     legalName: orNull(process.env.LEGAL_ENTITY_NAME),
     rfc: orNull(process.env.LEGAL_RFC),
     address: orNull(process.env.LEGAL_ADDRESS),
