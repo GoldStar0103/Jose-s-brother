@@ -15,9 +15,9 @@ import { avatarUrl, flyerUrl } from '../lib/assets';
 import { socialLinks } from '../lib/social';
 import { siteName } from '@levelup/shared';
 import logo from '../assets/logo.png';
-import heroAnnounce from '../assets/mascot/hero-announce.webp';
-import heroStars from '../assets/mascot/hero-stars.webp';
-import mascotIdle from '../assets/mascot/idle.webp';
+import heroAnnounce from '../assets/mascot/hero-announce.png';
+import heroStars from '../assets/mascot/hero-stars.png';
+import mascotIdle from '../assets/mascot/idle.png';
 import chestDiamonds from '../assets/mascot/chest-diamonds.png';
 import giftBox from '../assets/mascot/gift-box.png';
 import {

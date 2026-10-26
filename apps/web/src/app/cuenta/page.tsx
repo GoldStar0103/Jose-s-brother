@@ -6,7 +6,7 @@ import { getCustomerSession } from '../../lib/customer-session.js';
 import { getDb } from '../../lib/server.js';
 import { avatarUrl } from '../../lib/assets.js';
 import { diamonds, initials, mxn } from '../../lib/format.js';
-import mascot from '../../assets/mascot.webp';
+import mascot from '../../assets/mascot.png';
 import { CuentaForm } from './cuenta-form';
 import { logout } from './profile-actions';
 

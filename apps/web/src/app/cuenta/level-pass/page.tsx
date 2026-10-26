@@ -4,7 +4,7 @@ import { getMyLevelUpOverview } from '@levelup/db';
 import { getCustomerSession } from '../../../lib/customer-session.js';
 import { getDb } from '../../../lib/server.js';
 import { dateLabel, diamonds } from '../../../lib/format.js';
-import mascot from '../../../assets/mascot.webp';
+import mascot from '../../../assets/mascot.png';
 import { ChestMark, GemMark } from '../../icons';
 import { CuentaForm } from '../cuenta-form';
 
