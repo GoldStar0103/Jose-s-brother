@@ -4,7 +4,7 @@
 # when they flip to down (and once when they recover). Install in root's
 # crontab every few minutes:
 #
-#   */5 * * * * cd /srv/levelup && bash scripts/uptime-check.sh >> /var/log/levelup-uptime.log 2>&1
+#   */5 * * * * cd /srv/monkei && bash scripts/uptime-check.sh >> /var/log/monkei-uptime.log 2>&1
 #
 # This catches "compose is up but the site is 503" and similar. It does NOT
 # replace an external monitor: if the whole VPS is dead, this cron is dead too.
@@ -45,7 +45,7 @@ PUBLIC_DOMAIN="$(setting PUBLIC_DOMAIN '')"
 ADMIN_DOMAIN="$(setting ADMIN_DOMAIN '')"
 TOKEN="$(setting TELEGRAM_BOT_TOKEN '')"
 CHAT="$(setting TELEGRAM_ALERT_CHAT_ID '')"
-STATE_DIR="$(setting UPTIME_STATE_DIR '/var/lib/levelup')"
+STATE_DIR="$(setting UPTIME_STATE_DIR '/var/lib/monkei')"
 STATE_FILE="$STATE_DIR/uptime-state"
 
 if [ -z "$PUBLIC_DOMAIN" ]; then

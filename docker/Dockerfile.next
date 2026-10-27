@@ -3,7 +3,7 @@
 # One file for both, because they differ only in which workspace gets built.
 # Pass --build-arg APP=web or APP=admin.
 #
-#   docker build -f docker/Dockerfile.next --build-arg APP=web -t levelup-web .
+#   docker build -f docker/Dockerfile.next --build-arg APP=web -t monkei-web .
 #
 # Build context is the repository root: pnpm workspaces need the lockfile and
 # every package manifest to resolve, and the apps import @monkei/* from source.
@@ -75,7 +75,7 @@ COPY --from=build /repo/apps/${APP}/public ./apps/${APP}/public
 # volume with nothing to copy up from — and every comprobante/flyer write
 # failed with EACCES the moment a real deployment tried to use it, since the
 # app runs as the unprivileged `node` user below, not root.
-RUN mkdir -p /srv/levelup/uploads && chown -R node:node /srv/levelup/uploads
+RUN mkdir -p /srv/monkei/uploads && chown -R node:node /srv/monkei/uploads
 
 # node:alpine ships an unprivileged `node` user. The app itself never writes
 # outside that mounted volume.

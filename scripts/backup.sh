@@ -12,7 +12,7 @@
 #
 # Install as root's crontab on the VPS (`sudo crontab -e`). The server's clock
 # is UTC, so 10:15 is 04:15 in Mexico City:
-#   15 10 * * * cd /srv/levelup && bash scripts/backup.sh >> /var/log/levelup-backup.log 2>&1
+#   15 10 * * * cd /srv/monkei && bash scripts/backup.sh >> /var/log/monkei-backup.log 2>&1
 #
 # "bash scripts/..." rather than "./scripts/...": it works whether or not the
 # file is marked executable, which a repo committed from Windows usually does
@@ -29,7 +29,7 @@ set -euo pipefail
 
 # Settings come from the environment first, so a crontab line can override
 # anything; then from selected keys in ./.env (the same file compose reads,
-# which is why the cron line cd's into /srv/levelup); then the defaults below.
+# which is why the cron line cd's into /srv/monkei); then the defaults below.
 # cron starts with an almost empty environment, so without the .env step a
 # remote configured there would silently never be used.
 #
@@ -79,7 +79,7 @@ notify_backup_failure() {
   [ -n "$token" ] && [ -n "$chat" ] || return 0
   text="⚠️ Backup FAILED on ${domain}
 ${reason}
-Log: /var/log/levelup-backup.log"
+Log: /var/log/monkei-backup.log"
   curl -fsS --max-time 15 \
     -X POST "https://api.telegram.org/bot${token}/sendMessage" \
     --data-urlencode "chat_id=${chat}" \
@@ -87,7 +87,7 @@ Log: /var/log/levelup-backup.log"
     >/dev/null 2>&1 || echo "[backup] telegram alert could not be sent" >&2
 }
 
-DEST="${1:-/srv/levelup/backups}"
+DEST="${1:-/srv/monkei/backups}"
 KEEP_DAYS="$(setting BACKUP_KEEP_DAYS 14)"
 # e.g. gdrive:monkei-backups or r2:monkei-backups. Empty = no off-box copy.
 RCLONE_REMOTE="$(setting BACKUP_RCLONE_REMOTE '')"
@@ -95,8 +95,9 @@ REMOTE_KEEP_DAYS="$(setting BACKUP_REMOTE_RETENTION_DAYS 30)"
 COMPOSE="docker compose -f docker-compose.prod.yml"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 
-DB_USER="${POSTGRES_USER:-levelup}"
-DB_NAME="${POSTGRES_DB:-levelup}"
+# Prefer .env (cron has an empty environment). Defaults are for fresh installs.
+DB_USER="$(setting POSTGRES_USER monkei)"
+DB_NAME="$(setting POSTGRES_DB monkei)"
 
 mkdir -p "$DEST"
 
@@ -125,7 +126,7 @@ echo "[backup] database: $(du -h "$db_file" | cut -f1)"
 # Read straight from the named volume rather than a running container, so this
 # keeps working if the apps are down — which is exactly when a backup matters.
 docker run --rm \
-  -v levelup_uploads:/data:ro \
+  -v monkei_uploads:/data:ro \
   -v "$DEST":/backup \
   alpine:3 \
   tar czf "/backup/uploads-$STAMP.tar.gz.partial" -C /data .

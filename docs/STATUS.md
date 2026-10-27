@@ -21,9 +21,10 @@ in [RUNBOOK.md](RUNBOOK.md); brand separation lives in
 | GSC HTML verification token | Set; property verified |
 | Stripe / Mercado Pago / Meta | Keys present in `.env` |
 
-Infra names that **intentionally** stay `levelup` (compose project, volumes,
-`/srv/levelup`, OS user): see [ISOLATION.md](ISOLATION.md). Renaming them on a
-live VPS creates empty volumes and looks like a wiped store.
+Compose project, volumes and deploy path are **Monkei** (`name: monkei`,
+`/srv/monkei`, `monkei_*` volumes). See [ISOLATION.md](ISOLATION.md). Migrate
+an older `levelup_*` VPS with `scripts/migrate-infra-names.sh` — never flip
+the compose name alone.
 
 ---
 
@@ -34,7 +35,7 @@ live VPS creates empty volumes and looks like a wiped store.
 - [x] DNS, TLS (Caddy), storefront + panel live
 - [x] First admin, migrations, seed / catalog
 - [x] Worker fulfilment loop running
-- [x] Local backups under `/srv/levelup/backups`
+- [x] Local backups under `/srv/monkei/backups`
 - [x] Off-box rclone remote `gdrive:monkei-backups` (root rclone config)
 - [x] Backup failure → Telegram (`scripts/backup.sh`)
 - [x] Restore drill script (`scripts/restore-drill.sh`) — practise on scratch PG
@@ -48,6 +49,8 @@ live VPS creates empty volumes and looks like a wiped store.
       `done (local + gdrive:monkei-backups)`; Drive holds
       `db-20261027-130546.sql.gz` + matching uploads tarball
 - [x] `@monkei/*` rename + isolation docs committed / pushed to `origin/main`
+- [x] Compose project `name: monkei`, volumes `monkei_*`, deploy path
+      `/srv/monkei` (migrated live via `scripts/migrate-infra-names.sh`)
 
 ### Brand & isolation (Monkei ≠ LevelUp Store)
 
@@ -59,6 +62,7 @@ live VPS creates empty volumes and looks like a wiped store.
 - [x] Cookies `monkei_customer_session` / `monkei_admin_session`
 - [x] Payment idempotency keys `monkei-*`
 - [x] Local compose Postgres on `:5433` / `monkei-postgres`
+- [x] Compose / volumes / `/srv/monkei` infra names
 - [x] `docs/ISOLATION.md` rulebook
 
 ---

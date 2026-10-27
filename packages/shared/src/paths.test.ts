@@ -4,7 +4,7 @@ import { contentTypeForKey, safeStorageKey, uploadRoot } from './paths.js';
 
 describe('uploadRoot', () => {
   /** An absolute path that is correct on whichever platform runs the tests. */
-  const ABSOLUTE = resolve(sep, 'srv', 'levelup', 'uploads');
+  const ABSOLUTE = resolve(sep, 'srv', 'monkei', 'uploads');
 
   it('accepts an absolute path', () => {
     expect(uploadRoot(ABSOLUTE)).toBe(ABSOLUTE);

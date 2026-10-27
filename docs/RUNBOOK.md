@@ -9,7 +9,7 @@ wallets, domains or backup folders. See [ISOLATION.md](ISOLATION.md).
 For what is already live vs still open on this deployment, see
 [STATUS.md](STATUS.md).
 
-Throughout: `cd /srv/levelup` first, and `dc` means
+Throughout: `cd /srv/monkei` first, and `dc` means
 `docker compose -f docker-compose.prod.yml`.
 
 ---
@@ -88,7 +88,7 @@ bash /root/server-setup.sh
 
 It installs Docker from Docker's own repository, creates the deploy user
 `levelup` (sudo, docker) with root's keys, turns on the firewall, fail2ban,
-automatic security updates and swap, creates `/srv/levelup`, and last, turns
+automatic security updates and swap, creates `/srv/monkei`, and last, turns
 off password and root logins over SSH. Read the summary it ends with:
 
 - **SSH hardening: ON** — continue.
@@ -119,11 +119,11 @@ to do.
 
 #### Get the code
 
-The setup script already created `/srv/levelup`, owned by `levelup`, with
+The setup script already created `/srv/monkei`, owned by `levelup`, with
 `backups/` inside — and `git clone` refuses a directory that is not empty. So:
 
 ```bash
-cd /srv/levelup
+cd /srv/monkei
 git init
 git remote add origin <repo>
 git fetch origin
@@ -146,7 +146,7 @@ Edit `.env`. Everything is documented there; these must be right:
 | `TELEGRAM_*` | **the worker refuses to start without these.** Alerts are how a human learns an order needs review; running blind defeats the design |
 | `STRIPE_*` | optional — card payments. See [Card payments](#card-payments-stripe) below |
 | `META_*` | optional — Pixel and server-side purchase reporting. See [Meta](#meta-pixel-and-conversions-api) below |
-| `UPLOAD_DIR` | leave as `/srv/levelup/uploads` — it is a path inside the container |
+| `UPLOAD_DIR` | leave as `/srv/monkei/uploads` — it is a path inside the container |
 | `BACKUP_*` | leave for now — set up once the stack is running, see [Backups](#3-backups) |
 
 Then:
@@ -318,7 +318,7 @@ How it holds together, for whoever debugs it:
 > `./scripts/deploy.sh --help`.
 
 ```bash
-cd /srv/levelup
+cd /srv/monkei
 git pull
 dc up -d --build
 ```
@@ -357,14 +357,14 @@ from a backup instead.
 ## 3. Backups
 
 `scripts/backup.sh` dumps the database and the uploads volume into
-`/srv/levelup/backups` and keeps 14 days of them there. Install it in
+`/srv/monkei/backups` and keeps 14 days of them there. Install it in
 **root's** crontab — `sudo crontab -e`, not plain `crontab -e`: the log is in
 `/var/log` and the rclone login below is root's, so as `levelup` the job fails
 every night without a word.
 
 ```bash
 sudo crontab -e
-15 10 * * * cd /srv/levelup && bash scripts/backup.sh >> /var/log/levelup-backup.log 2>&1
+15 10 * * * cd /srv/monkei && bash scripts/backup.sh >> /var/log/monkei-backup.log 2>&1
 ```
 
 The server runs on UTC, so 10:15 is 04:15 in Mexico City. Run it once by hand
@@ -485,8 +485,8 @@ A failed night says `FAILED` in the log and nothing else tells anyone (§6).
 Look now and then:
 
 ```bash
-tail -n 20 /var/log/levelup-backup.log
-grep FAILED /var/log/levelup-backup.log
+tail -n 20 /var/log/monkei-backup.log
+grep FAILED /var/log/monkei-backup.log
 ```
 
 ### Restoring
@@ -507,7 +507,7 @@ Uploads:
 
 ```bash
 docker run --rm \
-  -v levelup_uploads:/data \
+  -v monkei_uploads:/data \
   -v "$PWD/backups":/backup:ro \
   alpine:3 \
   sh -c 'rm -rf /data/* && tar xzf /backup/uploads-YYYYMMDD-HHMMSS.tar.gz -C /data'
@@ -548,7 +548,7 @@ There is a disposable drill that does exactly that without touching production
 Postgres container, extracts uploads to `/tmp`, then deletes everything):
 
 ```bash
-cd /srv/levelup
+cd /srv/monkei
 bash scripts/restore-drill.sh
 ```
 
@@ -714,8 +714,8 @@ dc ps
 Check the panel and storefront see the same volume:
 
 ```bash
-dc exec admin ls -la /srv/levelup/uploads/flyers
-dc exec web   ls -la /srv/levelup/uploads/flyers
+dc exec admin ls -la /srv/monkei/uploads/flyers
+dc exec web   ls -la /srv/monkei/uploads/flyers
 ```
 
 Both must list the same files. If one is empty, `UPLOAD_DIR` differs between

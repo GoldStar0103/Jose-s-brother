@@ -1,6 +1,6 @@
 # Fulfilment worker.
 #
-#   docker build -f docker/Dockerfile.worker -t levelup-worker .
+#   docker build -f docker/Dockerfile.worker -t monkei-worker .
 #
 # Unlike the two Next apps this is not a standalone bundle. The worker runs its
 # TypeScript through tsx, which resolves the `.js` specifiers the workspace
@@ -48,8 +48,8 @@ COPY scripts/worker-healthcheck.mjs scripts/
 
 # Written by the heartbeat and read by the healthcheck. Owned by `node` because
 # the process drops to that user and still has to write here.
-RUN mkdir -p /var/run/levelup && chown node:node /var/run/levelup
-ENV WORKER_HEARTBEAT_FILE=/var/run/levelup/heartbeat
+RUN mkdir -p /var/run/monkei && chown node:node /var/run/monkei
+ENV WORKER_HEARTBEAT_FILE=/var/run/monkei/heartbeat
 
 USER node
 

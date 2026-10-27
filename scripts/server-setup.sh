@@ -10,7 +10,7 @@
 #   ssh root@<vps-ip>
 #   bash /root/server-setup.sh
 #
-# The deploy user is "levelup" unless you say otherwise:
+# The deploy user is "monkei" unless you say otherwise:
 #
 #   DEPLOY_USER=someone bash /root/server-setup.sh
 #
@@ -32,15 +32,15 @@ set -Eeuo pipefail
 # number is the difference between fixing it and starting over.
 trap 'printf "\n[setup] STOPPED at line %s: %s\n[setup] Fix the cause and re-run; the script is safe to re-run.\n" "$LINENO" "$BASH_COMMAND" >&2' ERR
 
-DEPLOY_USER="${DEPLOY_USER:-levelup}"
-APP_DIR="/srv/levelup"
+DEPLOY_USER="${DEPLOY_USER:-monkei}"
+APP_DIR="/srv/monkei"
 SWAP_FILE="/swapfile"
 # "00-" so it sorts before anything a provider image drops in: sshd keeps the
 # FIRST value it reads for each setting, and cloud images commonly ship
 # 50-cloud-init.conf with "PasswordAuthentication yes".
-SSHD_DROPIN="/etc/ssh/sshd_config.d/00-levelup-hardening.conf"
-SUDOERS_FILE="/etc/sudoers.d/90-levelup-deploy"
-F2B_JAIL="/etc/fail2ban/jail.d/levelup-sshd.local"
+SSHD_DROPIN="/etc/ssh/sshd_config.d/00-monkei-hardening.conf"
+SUDOERS_FILE="/etc/sudoers.d/90-monkei-deploy"
+F2B_JAIL="/etc/fail2ban/jail.d/monkei-sshd.local"
 # Docker's release signing key, as published on docs.docker.com. Checked so a
 # tampered download fails here rather than becoming a trusted apt source.
 DOCKER_GPG_FINGERPRINT="9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
@@ -297,7 +297,7 @@ if [ -z "$key_count" ]; then
   key_count=0
 fi
 
-# ── /srv/levelup ──────────────────────────────────────────────────────────────
+# ── /srv/monkei ──────────────────────────────────────────────────────────────
 # Owned by the deploy user so it can clone, pull and edit .env without sudo.
 # 0750: .env holds every secret the store has, and the default umask would
 # leave it world-readable. Backups are written by root's cron job and are 0600

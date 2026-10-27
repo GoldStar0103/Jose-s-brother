@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Deploy Monkei. Two subcommands, both meant to be run from
-# /srv/levelup as the `levelup` deploy user — the same `cd /srv/levelup`
+# /srv/monkei as the `levelup` deploy user — the same `cd /srv/monkei`
 # convention docs/RUNBOOK.md uses throughout, and how scripts/backup.sh is
 # invoked:
 #
@@ -107,7 +107,7 @@ env_file_value() {
 
 require_repo_root() {
   if [ ! -f "$COMPOSE_FILE" ]; then
-    die "no $COMPOSE_FILE in the current directory. Run this from the repo root: cd /srv/levelup && ./scripts/deploy.sh ..."
+    die "no $COMPOSE_FILE in the current directory. Run this from the repo root: cd /srv/monkei && ./scripts/deploy.sh ..."
   fi
 }
 
@@ -398,7 +398,7 @@ Usage:
   ./scripts/deploy.sh update
   ./scripts/deploy.sh --help
 
-Run from /srv/levelup (docs/RUNBOOK.md's `cd /srv/levelup` convention), as the
+Run from /srv/monkei (docs/RUNBOOK.md's `cd /srv/monkei` convention), as the
 `levelup` deploy user, with docker-compose.prod.yml and a filled-in .env
 already in this directory.
 

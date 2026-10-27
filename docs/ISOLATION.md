@@ -33,18 +33,33 @@ mode. Treat it as a security incident if it happens.
   are rebuilt from it with `node scripts/rebuild-brand-icons.mjs`.
 - "Level Pass" is a **product feature name**, not the LevelUp brand. Leave it.
 
-## What stays named `levelup` on the live Monkei VPS (on purpose)
+## Infra names (also Monkei)
 
-Renaming these on a running server creates **empty** Docker volumes and looks
-like a wiped store:
+Compose project, Docker volumes, deploy path and in-container upload path are
+**Monkei** — not LevelUp leftovers:
 
-- Compose project `name: levelup` → volumes `levelup_uploads`, `levelup_postgres_data`
-- Deploy path `/srv/levelup`
-- OS deploy user `levelup`
-- Historical Postgres role/database name if that is what `.env` already uses
+| Item | Value |
+|---|---|
+| Compose project | `name: monkei` |
+| Volumes | `monkei_postgres_data`, `monkei_uploads`, `monkei_caddy_*` |
+| Deploy path | `/srv/monkei` |
+| Upload mount | `/srv/monkei/uploads` |
+| Worker heartbeat | `/var/run/monkei/heartbeat` |
+| Ops logs | `/var/log/monkei-backup.log`, `/var/log/monkei-uptime.log` |
 
-Public brand is Monkei; those names are only Docker/OS plumbing. Documented
-again on `docker-compose.prod.yml`.
+Migrating an already-running VPS that still has `levelup_*` volumes /
+`/srv/levelup` is **`scripts/migrate-infra-names.sh`** (copies volumes, moves
+the tree, rewrites cron/.env, brings the stack back). Flipping `name:` alone
+creates empty volumes and looks like a wiped store.
+
+Still often left as historical Postgres plumbing inside `.env` (safe; not
+shared with LevelUp Store):
+
+- OS deploy user on an already-provisioned host may still be `levelup` (SSH);
+  new installs from `server-setup.sh` default to `monkei`.
+- `POSTGRES_USER` / `POSTGRES_DB` / `DATABASE_URL` may still say `levelup` if
+  that is how the cluster was first initialised — renaming the role is a
+  separate DB migration and is not required for brand isolation.
 
 ## Local development without collisions
 
@@ -58,7 +73,7 @@ If LevelUp and Monkei checkouts ever run on the **same** machine:
 
 ## Backups
 
-- Nightly job: `scripts/backup.sh` → local `/srv/levelup/backups` + off-box
+- Nightly job: `scripts/backup.sh` → local `/srv/monkei/backups` + off-box
   `BACKUP_RCLONE_REMOTE`.
 - Prefer a Drive folder named for **this** store (`gdrive:monkei-backups`).
   Do not write Monkei dumps into a LevelUp backup folder.
