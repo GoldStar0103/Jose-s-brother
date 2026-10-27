@@ -33,29 +33,53 @@ jobs:
       - name: Probe store + panel health
         id: health
         run: |
-          set -euo pipefail
+          set -uo pipefail
           fail=""
+
           check() {
             local name="$1" url="$2"
-            local code body
-            code="$(curl -sS --max-time 20 -o /tmp/body.json -w '%{http_code}' "$url" || echo 000)"
-            body="$(cat /tmp/body.json 2>/dev/null || true)"
-            if [ "$code" = "200" ] && echo "$body" | grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"'; then
-              echo "ok  $name ($url)"
-              return 0
-            fi
-            echo "DOWN $name HTTP $code — $url"
-            echo "body: ${body:0:200}"
+            local code="000" attempt=1
+            echo "::group::${name} ${url}"
+            while [ "$attempt" -le 3 ]; do
+              code="$(curl -sS --show-error --connect-timeout 10 --max-time 25 \
+                -H 'User-Agent: monkei-uptime-gha/1.0' \
+                -o /tmp/body.json -w '%{http_code}' \
+                "$url" 2>/tmp/curl.err || true)"
+              if [ -z "$code" ]; then code="000"; fi
+              echo "attempt=${attempt} http=${code}"
+              if [ -f /tmp/curl.err ] && [ -s /tmp/curl.err ]; then
+                echo "curl_stderr:"
+                cat /tmp/curl.err
+              fi
+              if [ -f /tmp/body.json ]; then
+                echo "body:"
+                head -c 300 /tmp/body.json || true
+                echo
+              fi
+              if [ "$code" = "200" ] && grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"' /tmp/body.json 2>/dev/null; then
+                echo "ok ${name}"
+                echo "::endgroup::"
+                return 0
+              fi
+              attempt=$((attempt + 1))
+              sleep 2
+            done
+            echo "DOWN ${name}"
             fail="${fail}${fail:+; }${name}"
+            echo "::endgroup::"
             return 0
           }
+
           check store https://monkei.mx/api/health
           check panel https://panel.monkei.mx/api/health
+
           if [ -n "$fail" ]; then
-            echo "failed=$fail" >> "$GITHUB_OUTPUT"
+            echo "failed=${fail}" >> "$GITHUB_OUTPUT"
+            echo "::error::External uptime failed for: ${fail}"
             exit 1
           fi
           echo "failed=" >> "$GITHUB_OUTPUT"
+          echo "All health endpoints ok"
 
       - name: Telegram on failure
         if: failure()
