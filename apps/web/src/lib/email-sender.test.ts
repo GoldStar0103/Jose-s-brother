@@ -21,9 +21,9 @@ describe('buildEmailSender', () => {
     const sender = buildEmailSender({
       NODE_ENV: 'production',
       SMTP_HOST: 'smtp.example.com',
-      SMTP_USER: 'noreply@levelupstore.mx',
+      SMTP_USER: 'noreply@monkei.mx',
       SMTP_PASS: 'secret',
-      SMTP_FROM: 'LevelUp <noreply@levelupstore.mx>',
+      SMTP_FROM: 'Monkei <noreply@monkei.mx>',
     });
     expect(sender).toBeInstanceOf(SmtpEmailSender);
   });
@@ -31,14 +31,14 @@ describe('buildEmailSender', () => {
 
 describe('smtpEnvelopeAddress', () => {
   it('keeps a bare mailbox', () => {
-    expect(smtpEnvelopeAddress('noreply@levelupstore.mx')).toBe('noreply@levelupstore.mx');
+    expect(smtpEnvelopeAddress('noreply@monkei.mx')).toBe('noreply@monkei.mx');
   });
 
   it('pulls the mailbox out of a display-name From', () => {
-    expect(smtpEnvelopeAddress('LevelUp <noreply@levelupstore.mx>')).toBe('noreply@levelupstore.mx');
+    expect(smtpEnvelopeAddress('Monkei <noreply@monkei.mx>')).toBe('noreply@monkei.mx');
   });
 
-  it('rejects junk so MAIL FROM cannot be sent as <LevelUp <addr>>', () => {
+  it('rejects junk so MAIL FROM cannot be sent as <Monkei <addr>>', () => {
     expect(() => smtpEnvelopeAddress('not-an-email')).toThrow(/not a mailbox/);
   });
 });
@@ -59,6 +59,6 @@ describe('smtpFromHeader', () => {
   });
 
   it('leaves a display-name From alone', () => {
-    expect(smtpFromHeader('LevelUp <noreply@levelupstore.mx>')).toBe('LevelUp <noreply@levelupstore.mx>');
+    expect(smtpFromHeader('Monkei <noreply@monkei.mx>')).toBe('Monkei <noreply@monkei.mx>');
   });
 });

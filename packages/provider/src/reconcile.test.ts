@@ -14,7 +14,7 @@ import { parseUsd, ValidationUnsupportedError, type UsdTenK } from './types.js';
 
 const usd = (n: number) => Math.round(n * 10_000) as UsdTenK;
 
-/** The six commodity SKUs, priced roughly at LevelUp's real cost structure. */
+/** The six commodity SKUs, priced roughly at Monkei's real cost structure. */
 const PRICES = {
   d100: 0.55,
   d310: 1.65,
@@ -36,7 +36,7 @@ const req = (productId: string, overrides = {}) => ({
   endpointKind: 'pins_recharge' as const,
   providerProductId: productId,
   playerId: '7288567050',
-  clientReference: 'LU-000123-1',
+  clientReference: 'MK-000123-1',
   ...overrides,
 });
 
@@ -299,7 +299,7 @@ describe('Mega Prime 48k — eight provider calls as one purchase', () => {
     sim.program({ mode: 'succeed' });
 
     for (let i = 0; i < 8; i++) {
-      const outcome = await sim.purchase(req('d5600', { clientReference: `LU-000900-${i}` }));
+      const outcome = await sim.purchase(req('d5600', { clientReference: `MK-000900-${i}` }));
       expect(outcome.kind).toBe('succeeded');
     }
 
@@ -321,7 +321,7 @@ describe('Mega Prime 48k — eight provider calls as one purchase', () => {
     let delivered = 0;
     for (let i = 0; i < 8; i++) {
       const before = await sim.getBalance();
-      const outcome = await sim.purchase(req('d5600', { clientReference: `LU-000901-${i}` }));
+      const outcome = await sim.purchase(req('d5600', { clientReference: `MK-000901-${i}` }));
       const after = await sim.getBalance();
 
       if (outcome.kind === 'succeeded') {

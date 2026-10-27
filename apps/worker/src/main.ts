@@ -18,9 +18,9 @@ import {
   DrizzleRecoveryStore,
   DrizzleSeasonStore,
   PostgresAdvisoryLock,
-} from '@levelup/db';
-import { InMemoryLock } from '@levelup/engine';
-import { RecargasAmericaProvider, ProviderSimulator } from '@levelup/provider';
+} from '@monkei/db';
+import { InMemoryLock } from '@monkei/engine';
+import { RecargasAmericaProvider, ProviderSimulator } from '@monkei/provider';
 import { ConsoleAlerter, TelegramAlerter } from './alerter.js';
 import { loadConfig } from './config.js';
 import { startHeartbeat } from './heartbeat.js';

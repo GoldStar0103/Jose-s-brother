@@ -1,5 +1,5 @@
 /**
- * Display formatting. Never arithmetic — money maths belongs in @levelup/shared.
+ * Display formatting. Never arithmetic — money maths belongs in @monkei/shared.
  */
 
 const MXN = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });

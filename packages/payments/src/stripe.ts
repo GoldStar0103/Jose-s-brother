@@ -2,7 +2,7 @@
  * Stripe adapter — hosted Checkout, card and optionally OXXO and SPEI.
  *
  * Hosted Checkout rather than Elements, for two reasons that both come from the
- * audience. Card numbers never touch LevelUp's servers or pages, so there is no
+ * audience. Card numbers never touch Monkei's servers or pages, so there is no
  * PCI surface to maintain on a one-VPS deployment. And a buyer who has been
  * scammed before sees a stripe.com page with their bank's own 3-D Secure
  * prompt, which is a stronger trust signal than anything this storefront could
@@ -295,7 +295,7 @@ export class StripeGateway implements PaymentGateway {
         'POST',
         '/customers',
         { email: input.customerEmail ?? undefined, metadata },
-        { idempotencyKey: `levelup-customer-${input.orderId}` },
+        { idempotencyKey: `monkei-customer-${input.orderId}` },
       );
       customerId = customer.id;
     }
@@ -350,7 +350,7 @@ export class StripeGateway implements PaymentGateway {
     // One session per order, however many times the button is pressed or the
     // request retried. Stripe replays the original response for 24h.
     const session = await this.request<StripeSession>('POST', '/checkout/sessions', params, {
-      idempotencyKey: `levelup-checkout-${input.orderId}`,
+      idempotencyKey: `monkei-checkout-${input.orderId}`,
     });
 
     if (!session.url) {

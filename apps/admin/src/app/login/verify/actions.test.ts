@@ -39,7 +39,7 @@ vi.mock('../../../lib/db', () => ({
   }),
 }));
 
-vi.mock('@levelup/db', () => ({ adminUsers: { id: 'id-column', totpLastStep: 'totp-last-step-column' } }));
+vi.mock('@monkei/db', () => ({ adminUsers: { id: 'id-column', totpLastStep: 'totp-last-step-column' } }));
 
 const { signPurposeToken } = await import('../../../lib/auth');
 const { totpCode } = await import('../../../lib/totp');
@@ -64,12 +64,12 @@ describe('verifyLoginTotp', () => {
     const adminUserId = 'admin-verify-1';
     mockUser = {
       id: adminUserId,
-      email: 'jose@levelupstore.mx',
+      email: 'jose@monkei.mx',
       active: true,
       totpSecret: TOTP_SECRET,
       totpLastStep: null,
     };
-    cookieStore.get.mockReturnValue({ value: pendingCookie(adminUserId, 'jose@levelupstore.mx') });
+    cookieStore.get.mockReturnValue({ value: pendingCookie(adminUserId, 'jose@monkei.mx') });
 
     const code = totpCode(TOTP_SECRET);
     const formData = new FormData();
@@ -81,19 +81,19 @@ describe('verifyLoginTotp', () => {
       expect.objectContaining({ totpLastStep: expect.any(Number) }),
     );
     expect(setSessionCookieMock).toHaveBeenCalledTimes(1);
-    expect(cookieStore.delete).toHaveBeenCalledWith('levelup_admin_pending_2fa');
+    expect(cookieStore.delete).toHaveBeenCalledWith('monkei_admin_pending_2fa');
   });
 
   it('rejects a wrong code without issuing a session', async () => {
     const adminUserId = 'admin-verify-2';
     mockUser = {
       id: adminUserId,
-      email: 'ana@levelupstore.mx',
+      email: 'ana@monkei.mx',
       active: true,
       totpSecret: TOTP_SECRET,
       totpLastStep: null,
     };
-    cookieStore.get.mockReturnValue({ value: pendingCookie(adminUserId, 'ana@levelupstore.mx') });
+    cookieStore.get.mockReturnValue({ value: pendingCookie(adminUserId, 'ana@monkei.mx') });
 
     const formData = new FormData();
     formData.set('code', '000000');
@@ -111,13 +111,13 @@ describe('verifyLoginTotp', () => {
     const step = Math.floor(at / 1000 / 30);
     mockUser = {
       id: adminUserId,
-      email: 'replay@levelupstore.mx',
+      email: 'replay@monkei.mx',
       active: true,
       totpSecret: TOTP_SECRET,
       // Already recorded as used, as if this exact code was accepted moments ago.
       totpLastStep: step,
     };
-    cookieStore.get.mockReturnValue({ value: pendingCookie(adminUserId, 'replay@levelupstore.mx') });
+    cookieStore.get.mockReturnValue({ value: pendingCookie(adminUserId, 'replay@monkei.mx') });
 
     const code = totpCode(TOTP_SECRET, 30, 6, at);
     const formData = new FormData();
@@ -137,12 +137,12 @@ describe('verifyLoginTotp', () => {
     const adminUserId = 'admin-verify-race';
     mockUser = {
       id: adminUserId,
-      email: 'race@levelupstore.mx',
+      email: 'race@monkei.mx',
       active: true,
       totpSecret: TOTP_SECRET,
       totpLastStep: null,
     };
-    cookieStore.get.mockReturnValue({ value: pendingCookie(adminUserId, 'race@levelupstore.mx') });
+    cookieStore.get.mockReturnValue({ value: pendingCookie(adminUserId, 'race@monkei.mx') });
     claimedRows = [];
 
     const code = totpCode(TOTP_SECRET);
@@ -169,14 +169,14 @@ describe('verifyLoginTotp', () => {
     const adminUserId = 'admin-verify-4';
     mockUser = {
       id: adminUserId,
-      email: 'x@levelupstore.mx',
+      email: 'x@monkei.mx',
       active: true,
       totpSecret: TOTP_SECRET,
       totpLastStep: null,
     };
     // Signed for the wrong purpose — must not be treated as a valid pending login.
     cookieStore.get.mockReturnValue({
-      value: signPurposeToken({ adminUserId, email: 'x@levelupstore.mx' }, SECRET, 'totp-enroll', 300),
+      value: signPurposeToken({ adminUserId, email: 'x@monkei.mx' }, SECRET, 'totp-enroll', 300),
     });
 
     const formData = new FormData();

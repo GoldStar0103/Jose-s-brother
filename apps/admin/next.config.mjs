@@ -16,13 +16,13 @@ const nextConfig = {
   experimental: { serverActions: { bodySizeLimit: '10mb' } },
 
   // See the storefront's config: tracing must start at the workspace root or
-  // the symlinked @levelup/* packages are left out of the standalone bundle.
+  // the symlinked @monkei/* packages are left out of the standalone bundle.
   output: 'standalone',
   outputFileTracingRoot: resolve(dirname(fileURLToPath(import.meta.url)), '../..'),
 
   // Workspace packages ship TypeScript source rather than a build artifact,
   // so Next has to compile them alongside the app.
-  transpilePackages: ['@levelup/db', '@levelup/engine', '@levelup/provider', '@levelup/shared'],
+  transpilePackages: ['@monkei/db', '@monkei/engine', '@monkei/provider', '@monkei/shared'],
 
   // postgres.js is a native-ish driver; bundling it into the server build
   // breaks its dynamic requires.

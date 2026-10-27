@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getMyLevelUpOverview, getMyProfile, listMyOrders } from '@levelup/db';
-import { siteName } from '@levelup/shared';
+import { getMyMonkeiOverview, getMyProfile, listMyOrders } from '@monkei/db';
+import { siteName } from '@monkei/shared';
 import { getCustomerSession } from '../../lib/customer-session.js';
 import { getDb } from '../../lib/server.js';
 import { avatarUrl } from '../../lib/assets.js';
@@ -67,7 +67,7 @@ export default async function CuentaPage() {
   const db = getDb();
   const [profile, overview, orders] = await Promise.all([
     getMyProfile(db, session.playerProfileId),
-    getMyLevelUpOverview(db, session.playerProfileId),
+    getMyMonkeiOverview(db, session.playerProfileId),
     listMyOrders(db, session.playerId, 10, session.playerProfileId),
   ]);
 

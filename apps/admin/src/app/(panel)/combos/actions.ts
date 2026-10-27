@@ -3,13 +3,13 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { eq } from 'drizzle-orm';
-import { campaigns, DrizzleCatalogAdminStore, getFxRate } from '@levelup/db';
+import { campaigns, DrizzleCatalogAdminStore, getFxRate } from '@monkei/db';
 import {
   reviewCampaignDraft,
   reviewComboDraft,
   type ComboDraftReview,
   type DraftIssue,
-} from '@levelup/engine';
+} from '@monkei/engine';
 import { getDb } from '../../../lib/db';
 import { storeFlyer } from '../../../lib/flyers';
 import { requireSession } from '../../../lib/session';

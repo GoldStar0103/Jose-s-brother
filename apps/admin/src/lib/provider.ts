@@ -17,7 +17,7 @@
  */
 
 import 'server-only';
-import { ProviderSimulator, RecargasAmericaProvider, type TopupProvider } from '@levelup/provider';
+import { ProviderSimulator, RecargasAmericaProvider, type TopupProvider } from '@monkei/provider';
 
 declare global {
   // eslint-disable-next-line no-var

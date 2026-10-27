@@ -15,7 +15,7 @@ import { getPaymentMethodsEnabled, savePaymentMethodsEnabled } from './payment-s
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_payment_methods_test';
+const TEST_DB = 'monkei_payment_methods_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });

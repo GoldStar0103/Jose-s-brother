@@ -17,7 +17,7 @@
  *     falls far below it. Those diamonds are in a real Free Fire account and
  *     cannot be taken back, and the money they cost was really spent, so its
  *     ledger expense stands too. Pretending otherwise would make the accounts
- *     say LevelUp still has money it does not have. The grant is reported
+ *     say Monkei still has money it does not have. The grant is reported
  *     back to the caller instead, so a human can see what the reversal could
  *     not undo.
  *

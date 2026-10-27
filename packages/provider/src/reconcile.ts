@@ -105,7 +105,7 @@ export function resolveAmbiguous(input: ReconcileInput): AmbiguousResolution {
  * Whether an ambiguous outcome may be retried automatically.
  *
  * Only ever true when the balance proves the call never landed. Anything else
- * risks double-delivering diamonds at LevelUp's expense, and diamonds cannot be
+ * risks double-delivering diamonds at Monkei's expense, and diamonds cannot be
  * clawed back once they reach a player's account.
  */
 export const isSafeToRetry = (r: AmbiguousResolution): boolean => r.verdict === 'not_charged';

@@ -54,7 +54,7 @@ export interface PendingApproval {
  * tell the difference — which is exactly how a real, successfully-paid card
  * order got rejected as "sin comprobante" 22 seconds after checkout started,
  * before Stripe's own confirmation could land (real incident, 2026-09-18,
- * order LU-260918-0RTQ — the customer's $750 MXN charge succeeded in Stripe
+ * order MK-260918-0RTQ — the customer's $750 MXN charge succeeded in Stripe
  * but the order was already cancelled here). This filter used to just be
  * `method != 'card'`, back when every Stripe order really was recorded as
  * 'card' regardless of which method actually settled it — once OXXO/SPEI

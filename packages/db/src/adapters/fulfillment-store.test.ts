@@ -20,7 +20,7 @@ import { DrizzleFulfillmentStore } from './fulfillment-store.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_fulfillment_store_test';
+const TEST_DB = 'monkei_fulfillment_store_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -63,7 +63,7 @@ async function order() {
   const [row] = await db
     .insert(orders)
     .values({
-      orderNumber: 'LU-260911-FS01',
+      orderNumber: 'MK-260911-FS01',
       playerId: '7288567050',
       comboKey: 'mega_10',
       comboSnapshot: {},

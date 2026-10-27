@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { addManualLedgerEntry, deleteManualLedgerEntry } from '@levelup/db';
+import { addManualLedgerEntry, deleteManualLedgerEntry } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 

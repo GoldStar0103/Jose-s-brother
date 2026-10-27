@@ -1,5 +1,5 @@
 {
-    "name": "@levelup/db",
+    "name": "@monkei/db",
     "version": "0.1.0",
     "private": true,
     "type": "module",
@@ -17,9 +17,9 @@
         "test": "vitest run"
     },
     "dependencies": {
-        "@levelup/engine": "workspace:*",
-        "@levelup/provider": "workspace:^",
-        "@levelup/shared": "workspace:*",
+        "@monkei/engine": "workspace:*",
+        "@monkei/provider": "workspace:^",
+        "@monkei/shared": "workspace:*",
         "drizzle-orm": "^0.36.0",
         "postgres": "^3.4.5"
     },

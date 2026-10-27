@@ -156,7 +156,7 @@ export async function getSeasonFunnel(db: Database, seasonId: string): Promise<S
 
 /**
  * The same figures for every season that has ever run, newest first — the
- * spec's "season comparison" report, which is what tells LevelUp whether a
+ * spec's "season comparison" report, which is what tells Monkei whether a
  * change to the ladder actually improved progression.
  */
 export async function listSeasonFunnels(db: Database): Promise<SeasonFunnel[]> {

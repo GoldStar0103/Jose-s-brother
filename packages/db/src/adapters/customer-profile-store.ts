@@ -1,5 +1,5 @@
 /**
- * Mi LevelUp: everything the logged-in customer's own dashboard, badge
+ * Mi MONKEI: everything the logged-in customer's own dashboard, badge
  * collection and order history need to read, plus profile editing.
  *
  * Public-facing reads (Top 50, a public player profile) are deliberately
@@ -74,7 +74,7 @@ export interface MyFeaturedBadge {
   sortOrder: number;
 }
 
-export interface MyLevelUpOverview {
+export interface MyMonkeiOverview {
   season: { id: string; seasonNumber: number; endsAt: Date } | null;
   lp: number;
   seasonalDiamonds: number;
@@ -85,7 +85,7 @@ export interface MyLevelUpOverview {
   featuredBadges: MyFeaturedBadge[];
 }
 
-export async function getMyLevelUpOverview(db: Database, playerProfileId: string): Promise<MyLevelUpOverview> {
+export async function getMyMonkeiOverview(db: Database, playerProfileId: string): Promise<MyMonkeiOverview> {
   const [season] = await db
     .select({ id: seasons.id, seasonNumber: seasons.seasonNumber, endsAt: seasons.endsAt })
     .from(seasons)
@@ -412,7 +412,7 @@ export interface PublicProfile {
 
 /**
  * Only what the spec's own privacy table allows public. Deliberately its own
- * query rather than a trimmed version of `getMyLevelUpOverview` — a function
+ * query rather than a trimmed version of `getMyMonkeiOverview` — a function
  * that could leak a private field through a forgotten select is a worse risk
  * than a little duplication. Never: legal name, email, phone, orders, money.
  */

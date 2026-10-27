@@ -9,8 +9,8 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { asc, eq, inArray, sql as raw } from 'drizzle-orm';
-import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@levelup/provider';
-import { createOrder, syncCatalog, type OrderItemStatus, type OrderStatus } from '@levelup/engine';
+import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@monkei/provider';
+import { createOrder, syncCatalog, type OrderItemStatus, type OrderStatus } from '@monkei/engine';
 import { createDb, type Database } from '../index.js';
 import {
   auditLog,
@@ -27,7 +27,7 @@ import { DrizzleOrderingStore } from './ordering-store.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_catalog_test';
+const TEST_DB = 'monkei_catalog_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -349,7 +349,7 @@ async function orderWith(
   const [order] = await db
     .insert(orders)
     .values({
-      orderNumber: `LU-T${String(++orderSeq).padStart(5, '0')}`,
+      orderNumber: `MK-T${String(++orderSeq).padStart(5, '0')}`,
       playerId: '7288567050',
       comboKey: 'chidos_200',
       comboSnapshot: snapshot,
@@ -545,7 +545,7 @@ describe.skipIf(!PG_AVAILABLE)('a provider product replaced by a new id', () => 
         denomination: 100,
         fromProviderProductId: '351',
         toProviderProductId: '901',
-        orderNumber: expect.stringMatching(/^LU-T/),
+        orderNumber: expect.stringMatching(/^MK-T/),
         itemStatus: 'queued',
         previousCostUsd: '0.7000',
         currentCostUsd: '0.7200',

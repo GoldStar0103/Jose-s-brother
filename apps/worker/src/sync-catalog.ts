@@ -11,17 +11,17 @@
  * The reporting and alerting are the worker's, from `catalog-report.ts`, so the
  * two can never disagree about what a result means.
  *
- *   pnpm --filter @levelup/worker sync-catalog
- *   WORKER_DRY_RUN=true pnpm --filter @levelup/worker sync-catalog
+ *   pnpm --filter @monkei/worker sync-catalog
+ *   WORKER_DRY_RUN=true pnpm --filter @monkei/worker sync-catalog
  *
  * Do not run the dry-run form against a real database: the simulator's catalog
  * has its own ids, and the sync would faithfully treat that as the provider
  * replacing every product.
  */
 
-import { createDb, DrizzleCatalogSyncStore, PostgresAdvisoryLock } from '@levelup/db';
-import { PROVIDER_LOCK_KEY, summariseSync, syncCatalog } from '@levelup/engine';
-import { ProviderSimulator, RecargasAmericaProvider } from '@levelup/provider';
+import { createDb, DrizzleCatalogSyncStore, PostgresAdvisoryLock } from '@monkei/db';
+import { PROVIDER_LOCK_KEY, summariseSync, syncCatalog } from '@monkei/engine';
+import { ProviderSimulator, RecargasAmericaProvider } from '@monkei/provider';
 import { ConsoleAlerter, TelegramAlerter } from './alerter.js';
 import { catalogSyncAlerts, describeSync } from './catalog-report.js';
 

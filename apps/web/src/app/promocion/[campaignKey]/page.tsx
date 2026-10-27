@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getStorefrontCampaign } from '@levelup/db';
-import { siteName } from '@levelup/shared';
+import { getStorefrontCampaign } from '@monkei/db';
+import { siteName } from '@monkei/shared';
 import { getDb } from '../../../lib/server';
 import { diamonds, mxn } from '../../../lib/format';
 import { flyerUrl } from '../../../lib/assets';

@@ -15,8 +15,8 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { eq, sql as raw } from 'drizzle-orm';
-import { createOrder, LEVEL_PASS_REWARD_COMBO_KEY } from '@levelup/engine';
-import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@levelup/provider';
+import { createOrder, LEVEL_PASS_REWARD_COMBO_KEY } from '@monkei/engine';
+import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@monkei/provider';
 import { createDb, type Database } from '../index.js';
 import {
   campaigns,
@@ -32,13 +32,13 @@ import { DrizzleCatalogSyncStore } from './catalog-sync-store.js';
 import { DrizzleOrderingStore } from './ordering-store.js';
 import { saveFxRate } from './payment-settings.js';
 import { mexicoCityDayRange } from './mexico-city-time.js';
-import { syncCatalog } from '@levelup/engine';
+import { syncCatalog } from '@monkei/engine';
 import { getAccountingSummary } from './accounting-queries.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_accounting_test';
+const TEST_DB = 'monkei_accounting_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -158,7 +158,7 @@ async function seedCompletedRewardOrder(playerId: string, completedAt: Date, cos
   const [order] = await db
     .insert(orders)
     .values({
-      orderNumber: `LU-REWARD-${playerId}`,
+      orderNumber: `MK-REWARD-${playerId}`,
       playerId,
       comboId: null,
       comboKey: LEVEL_PASS_REWARD_COMBO_KEY,

@@ -1,4 +1,4 @@
-/* LevelUp Store storefront.
+/* Monkei storefront.
    Mobile-first: almost all traffic is phones from TikTok, Instagram and
    WhatsApp. Desktop is the adaptation, not the baseline. */
 
@@ -596,7 +596,7 @@ input:focus { outline: 2px solid var(--accent-2); outline-offset: -1px; }
 .quote p { margin: 0 0 10px; font-size: 15px; }
 .quote footer { color: var(--muted); font-size: 13px; }
 
-/* Mi LevelUp: a featured badge or achievement, shown as a small pill. */
+/* Mi MONKEI: a featured badge or achievement, shown as a small pill. */
 .badge-pill {
   display: inline-flex; align-items: center; gap: 4px;
   background: var(--surface-2); border: 1px solid var(--border);
@@ -1414,7 +1414,7 @@ input:focus { outline: 2px solid var(--accent-2); outline-offset: -1px; }
   border-radius: 999px;
 }
 
-/* ── ¿por qué elegir LevelUp Store? ────────────────────────────────────── */
+/* ── ¿por qué elegir Monkei? ────────────────────────────────────── */
 
 .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
 .why-item h3 { font-size: 14px; margin: 8px 0 5px; letter-spacing: -0.01em; }

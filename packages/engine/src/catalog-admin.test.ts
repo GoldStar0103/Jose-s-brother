@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { UsdTenK } from '@levelup/provider';
+import type { UsdTenK } from '@monkei/provider';
 import {
   reviewCampaignDraft,
   reviewComboDraft,

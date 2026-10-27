@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useState } from 'react';
-import type { PendingApproval } from '@levelup/db';
+import type { PendingApproval } from '@monkei/db';
 import { orderWhatsappMessage, waUrl } from '../../../lib/whatsapp';
 import { approve, reject, type ActionResult } from './actions';
 

@@ -3,7 +3,7 @@
  *
  * Two boundaries are deliberate and load-bearing:
  *
- *   1. The recipe never crosses this line. LevelUp's whole differentiator is
+ *   1. The recipe never crosses this line. Monkei's whole differentiator is
  *      that customers see combos while competitors sell the six commodity
  *      denominations. Leaking that "Pack Insano" is 5,600 + 1,060 would hand a
  *      competitor the pricing model and let a customer price the parts.

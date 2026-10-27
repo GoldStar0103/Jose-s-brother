@@ -5,7 +5,7 @@ const overdue = (n: number): OverduePayment[] =>
   Array.from({ length: n }, (_, i) => ({
     orderId: `order-${i}`,
     paymentId: `payment-${i}`,
-    orderNumber: `LU-00000${i}`,
+    orderNumber: `MK-00000${i}`,
   }));
 
 function harness(rows: OverduePayment[], expire?: ExpiryStore['expirePayment']) {

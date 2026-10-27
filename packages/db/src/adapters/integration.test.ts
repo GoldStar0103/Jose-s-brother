@@ -19,9 +19,9 @@ import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { eq, sql as raw } from 'drizzle-orm';
-import { ProviderSimulator, type UsdTenK } from '@levelup/provider';
-import { fulfillOrder, InMemoryLock } from '@levelup/engine';
-import { MemoryAlerter } from '@levelup/engine/testing';
+import { ProviderSimulator, type UsdTenK } from '@monkei/provider';
+import { fulfillOrder, InMemoryLock } from '@monkei/engine';
+import { MemoryAlerter } from '@monkei/engine/testing';
 import { createDb, type Database } from '../index.js';
 import { baseProducts, campaigns, comboItems, combos, orderItems, orders, paymentEvents } from '../schema.js';
 import { DrizzleFulfillmentStore } from './fulfillment-store.js';
@@ -40,7 +40,7 @@ const MIGRATIONS = join(HERE, '..', '..', 'migrations');
  * lifetime. Managing it out of band sidesteps both and matches how CI runs.
  */
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_test';
+const TEST_DB = 'monkei_test';
 
 /** Skip rather than fail when no database is reachable, so `pnpm -r test` stays green. */
 const PG_AVAILABLE = await (async () => {
@@ -121,33 +121,33 @@ async function insertOrder(overrides: {
 
 describe.skipIf(!PG_AVAILABLE)('one_mega_oferta_per_player (partial unique index)', () => {
   it('rejects a second Mega Oferta for the same player', async () => {
-    await insertOrder({ orderNumber: 'LU-1', playerId: '7288567050', comboKey: 'mega_10' });
+    await insertOrder({ orderNumber: 'MK-1', playerId: '7288567050', comboKey: 'mega_10' });
 
     // The application check cannot hold this line on its own: OXXO settles
     // hours after checkout, so two orders can race past validation. This is
     // the constraint that actually stops it.
     await expect(
-      insertOrder({ orderNumber: 'LU-2', playerId: '7288567050', comboKey: 'mega_10' }),
+      insertOrder({ orderNumber: 'MK-2', playerId: '7288567050', comboKey: 'mega_10' }),
     ).rejects.toThrow(/one_mega_oferta_per_player|duplicate key/i);
   });
 
   it('allows a different player', async () => {
-    await insertOrder({ orderNumber: 'LU-1', playerId: '7288567050', comboKey: 'mega_10' });
+    await insertOrder({ orderNumber: 'MK-1', playerId: '7288567050', comboKey: 'mega_10' });
     await expect(
-      insertOrder({ orderNumber: 'LU-2', playerId: '9999999999', comboKey: 'mega_10' }),
+      insertOrder({ orderNumber: 'MK-2', playerId: '9999999999', comboKey: 'mega_10' }),
     ).resolves.toBeDefined();
   });
 
   it('does not constrain any other combo', async () => {
-    await insertOrder({ orderNumber: 'LU-1', playerId: '7288567050', comboKey: 'chidos_1700' });
+    await insertOrder({ orderNumber: 'MK-1', playerId: '7288567050', comboKey: 'chidos_1700' });
     await expect(
-      insertOrder({ orderNumber: 'LU-2', playerId: '7288567050', comboKey: 'chidos_1700' }),
+      insertOrder({ orderNumber: 'MK-2', playerId: '7288567050', comboKey: 'chidos_1700' }),
     ).resolves.toBeDefined();
   });
 
   it('frees the slot once the first order is cancelled', async () => {
     const first = await insertOrder({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       playerId: '7288567050',
       comboKey: 'mega_10',
     });
@@ -155,20 +155,20 @@ describe.skipIf(!PG_AVAILABLE)('one_mega_oferta_per_player (partial unique index
 
     // A cancelled order should not permanently burn the customer's one offer.
     await expect(
-      insertOrder({ orderNumber: 'LU-2', playerId: '7288567050', comboKey: 'mega_10' }),
+      insertOrder({ orderNumber: 'MK-2', playerId: '7288567050', comboKey: 'mega_10' }),
     ).resolves.toBeDefined();
   });
 
   it('still blocks while the first order is merely completed', async () => {
     const first = await insertOrder({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       playerId: '7288567050',
       comboKey: 'mega_10',
     });
     await db.update(orders).set({ status: 'completed' }).where(eq(orders.id, first.id));
 
     await expect(
-      insertOrder({ orderNumber: 'LU-2', playerId: '7288567050', comboKey: 'mega_10' }),
+      insertOrder({ orderNumber: 'MK-2', playerId: '7288567050', comboKey: 'mega_10' }),
     ).rejects.toThrow();
   });
 });
@@ -297,7 +297,7 @@ async function seedFulfillableOrder(itemCount: number, costUsd = '27.5000') {
   const [order] = await db
     .insert(orders)
     .values({
-      orderNumber: 'LU-000900',
+      orderNumber: 'MK-000900',
       playerId: '7288567050',
       comboId: combo!.id,
       comboKey: 'mega_prime_48k',

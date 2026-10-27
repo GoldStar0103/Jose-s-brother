@@ -1,4 +1,4 @@
-import type { EndpointKind, UsdTenK } from '@levelup/provider';
+import type { EndpointKind, UsdTenK } from '@monkei/provider';
 
 /**
  * Level Pass: the order-completion event flow, and reward delivery.
@@ -94,7 +94,7 @@ export interface LevelPassOrderFinancials {
   /** Paid diamonds actually delivered by this order — drives ranking, not LP. */
   diamonds: number;
   /**
-   * The signed-in Mi LevelUp account, when we know it. Level Pass / Vault
+   * The signed-in Mi MONKEI account, when we know it. Level Pass / Vault
    * credit this profile even if `playerId` is a different Free Fire ID.
    */
   buyerProfileId?: string | null;

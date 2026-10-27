@@ -1,4 +1,4 @@
-import { listActiveCombosForOffers, listVaultOffersForAdmin } from '@levelup/db';
+import { listActiveCombosForOffers, listVaultOffersForAdmin } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { mxn } from '../../../lib/format';

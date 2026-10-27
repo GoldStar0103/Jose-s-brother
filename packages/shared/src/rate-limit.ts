@@ -1,7 +1,7 @@
 /**
  * In-memory sliding-window rate limiter.
  *
- * Built for the player-ID validation endpoint. That call costs LevelUp nothing
+ * Built for the player-ID validation endpoint. That call costs Monkei nothing
  * directly, but it hits the provider on every lookup, and this audience —
  * teenagers poking at a Free Fire site — will hammer it. Left open it is both
  * a way to annoy the provider and a free ID-enumeration oracle.

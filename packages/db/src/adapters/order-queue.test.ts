@@ -18,7 +18,7 @@ import { DrizzleOrderQueue } from './order-queue.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_queue_test';
+const TEST_DB = 'monkei_queue_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -78,30 +78,30 @@ async function seedOrder(orderNumber: string, status: Status, ageSeconds = 0) {
 
 describe.skipIf(!PG_AVAILABLE)('claimNext', () => {
   it('claims a paid order and marks it processing', async () => {
-    await seedOrder('LU-1', 'payment_confirmed');
+    await seedOrder('MK-1', 'payment_confirmed');
 
     const claimed = await new DrizzleOrderQueue(db).claimNext(300_000);
 
-    expect(claimed?.orderNumber).toBe('LU-1');
-    const [row] = await db.select().from(orders).where(eq(orders.orderNumber, 'LU-1'));
+    expect(claimed?.orderNumber).toBe('MK-1');
+    const [row] = await db.select().from(orders).where(eq(orders.orderNumber, 'MK-1'));
     expect(row?.status).toBe('processing');
   });
 
   it('claims a partially delivered order so it can finish', async () => {
-    await seedOrder('LU-1', 'partially_delivered');
-    expect((await new DrizzleOrderQueue(db).claimNext(300_000))?.orderNumber).toBe('LU-1');
+    await seedOrder('MK-1', 'partially_delivered');
+    expect((await new DrizzleOrderQueue(db).claimNext(300_000))?.orderNumber).toBe('MK-1');
   });
 
   it('returns null when there is nothing to do', async () => {
-    await seedOrder('LU-1', 'pending_payment');
-    await seedOrder('LU-2', 'completed');
-    await seedOrder('LU-3', 'needs_review');
+    await seedOrder('MK-1', 'pending_payment');
+    await seedOrder('MK-2', 'completed');
+    await seedOrder('MK-3', 'needs_review');
 
     expect(await new DrizzleOrderQueue(db).claimNext(300_000)).toBeNull();
   });
 
   it('never hands the same order to two workers', async () => {
-    await seedOrder('LU-1', 'payment_confirmed');
+    await seedOrder('MK-1', 'payment_confirmed');
 
     // Two independent connections racing for one row.
     const [a, b] = await Promise.all([
@@ -114,8 +114,8 @@ describe.skipIf(!PG_AVAILABLE)('claimNext', () => {
   });
 
   it('hands two workers different orders rather than blocking', async () => {
-    await seedOrder('LU-1', 'payment_confirmed', 20);
-    await seedOrder('LU-2', 'payment_confirmed', 10);
+    await seedOrder('MK-1', 'payment_confirmed', 20);
+    await seedOrder('MK-2', 'payment_confirmed', 10);
 
     const [a, b] = await Promise.all([
       new DrizzleOrderQueue(db).claimNext(300_000),
@@ -126,36 +126,36 @@ describe.skipIf(!PG_AVAILABLE)('claimNext', () => {
   });
 
   it('takes the oldest order first', async () => {
-    await seedOrder('LU-new', 'payment_confirmed', 10);
-    await seedOrder('LU-old', 'payment_confirmed', 600);
+    await seedOrder('MK-new', 'payment_confirmed', 10);
+    await seedOrder('MK-old', 'payment_confirmed', 600);
 
-    expect((await new DrizzleOrderQueue(db).claimNext(300_000))?.orderNumber).toBe('LU-old');
+    expect((await new DrizzleOrderQueue(db).claimNext(300_000))?.orderNumber).toBe('MK-old');
   });
 
   it('leaves a healthy in-flight order alone', async () => {
     // Another worker is mid-combo on this one right now.
-    await seedOrder('LU-1', 'processing', 5);
+    await seedOrder('MK-1', 'processing', 5);
 
     expect(await new DrizzleOrderQueue(db).claimNext(300_000)).toBeNull();
   });
 
   it('recovers an order whose worker died', async () => {
-    await seedOrder('LU-1', 'processing', 900);
+    await seedOrder('MK-1', 'processing', 900);
 
     const claimed = await new DrizzleOrderQueue(db).claimNext(300_000);
 
-    expect(claimed?.orderNumber).toBe('LU-1');
+    expect(claimed?.orderNumber).toBe('MK-1');
     // Flagged so the worker can log that this was a recovery, not a fresh claim.
     expect(claimed?.recovered).toBe(true);
   });
 
   it('does not report a fresh claim as recovered', async () => {
-    await seedOrder('LU-1', 'payment_confirmed');
+    await seedOrder('MK-1', 'payment_confirmed');
     expect((await new DrizzleOrderQueue(db).claimNext(300_000))?.recovered).toBe(false);
   });
 
   it('refreshes updated_at so a claimed order stops looking stale', async () => {
-    await seedOrder('LU-1', 'processing', 900);
+    await seedOrder('MK-1', 'processing', 900);
     await new DrizzleOrderQueue(db).claimNext(300_000);
 
     // Immediately re-claiming would mean two workers on one order.
@@ -165,12 +165,12 @@ describe.skipIf(!PG_AVAILABLE)('claimNext', () => {
 
 describe.skipIf(!PG_AVAILABLE)('depth', () => {
   it('counts only the statuses that need attention', async () => {
-    await seedOrder('LU-1', 'payment_confirmed');
-    await seedOrder('LU-2', 'payment_confirmed');
-    await seedOrder('LU-3', 'processing');
-    await seedOrder('LU-4', 'needs_review');
-    await seedOrder('LU-5', 'completed');
-    await seedOrder('LU-6', 'pending_payment');
+    await seedOrder('MK-1', 'payment_confirmed');
+    await seedOrder('MK-2', 'payment_confirmed');
+    await seedOrder('MK-3', 'processing');
+    await seedOrder('MK-4', 'needs_review');
+    await seedOrder('MK-5', 'completed');
+    await seedOrder('MK-6', 'pending_payment');
 
     expect(await new DrizzleOrderQueue(db).depth()).toEqual({
       payment_confirmed: 2,

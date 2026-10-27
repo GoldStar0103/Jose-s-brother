@@ -12,8 +12,8 @@
 import { readFile, stat } from 'node:fs/promises';
 import { join, resolve, sep } from 'node:path';
 import { eq } from 'drizzle-orm';
-import { payments } from '@levelup/db';
-import { contentTypeForKey, safeStorageKey, uploadRoot } from '@levelup/shared';
+import { payments } from '@monkei/db';
+import { contentTypeForKey, safeStorageKey, uploadRoot } from '@monkei/shared';
 import { getDb } from '../../../../lib/db';
 import { getSession } from '../../../../lib/session';
 

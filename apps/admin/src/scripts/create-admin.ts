@@ -4,7 +4,7 @@
  * There is deliberately no sign-up page — this panel approves payments, so
  * accounts are created from the server by someone with shell access.
  *
- *   DATABASE_URL=... pnpm --filter @levelup/admin create-admin owner@yourdomain.mx "una contraseña larga"
+ *   DATABASE_URL=... pnpm --filter @monkei/admin create-admin owner@yourdomain.mx "una contraseña larga"
  *
  * Re-running this for an existing email resets the password AND clears any
  * 2FA (`totp_secret`/`totp_last_step`) on the account. This is a deliberate
@@ -23,7 +23,7 @@
  */
 
 import { eq } from 'drizzle-orm';
-import { adminUsers, createDb } from '@levelup/db';
+import { adminUsers, createDb } from '@monkei/db';
 import { hashPassword } from '../lib/auth';
 
 async function main(): Promise<void> {

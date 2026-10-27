@@ -55,7 +55,7 @@ export function normaliseEmail(raw: string): string | null {
 
 // ── sessions ──────────────────────────────────────────────────────────────────
 
-export const CUSTOMER_SESSION_COOKIE = 'levelup_customer_session';
+export const CUSTOMER_SESSION_COOKIE = 'monkei_customer_session';
 export const CUSTOMER_SESSION_TTL_SECONDS = 30 * 24 * 60 * 60; // 30 days — a loyalty account, not an admin panel.
 
 export interface CustomerSessionPayload {

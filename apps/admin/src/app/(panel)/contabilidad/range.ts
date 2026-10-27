@@ -7,7 +7,7 @@ import {
   mexicoCityYesterdayRange,
   type DateRange,
   type SeasonDateRange,
-} from '@levelup/db';
+} from '@monkei/db';
 
 /**
  * Shared by the on-screen report and its CSV export so a downloaded report

@@ -19,7 +19,7 @@ const item = (sequence: number, status: OrderItemStatus, attemptCount = 1): Revi
 
 const order = (items: ReviewItem[], status: OrderStatus = 'needs_review'): ReviewOrder => ({
   id: 'order-1',
-  orderNumber: 'LU-260910-AB12',
+  orderNumber: 'MK-260910-AB12',
   status,
   items,
 });
@@ -185,7 +185,7 @@ describe('applyReviewAction', () => {
       { orderId: 'order-1', adminUserId: 'admin-1', action: { kind: 'mark_item_delivered', itemId: 'item-1' } },
     );
 
-    expect(result).toEqual({ ok: true, orderNumber: 'LU-260910-AB12', nextStatus: 'completed' });
+    expect(result).toEqual({ ok: true, orderNumber: 'MK-260910-AB12', nextStatus: 'completed' });
     expect(store.applyReview).toHaveBeenCalledWith(
       expect.objectContaining({ audit: expect.objectContaining({ action: 'review.item_marked_delivered' }) }),
       'admin-1',

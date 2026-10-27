@@ -1,4 +1,4 @@
-import { listTestimonials } from '@levelup/db';
+import { listTestimonials } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { TestimonialsForm } from './testimonials-form';

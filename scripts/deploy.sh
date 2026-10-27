@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Deploy LevelUp Store. Two subcommands, both meant to be run from
+# Deploy Monkei. Two subcommands, both meant to be run from
 # /srv/levelup as the `levelup` deploy user — the same `cd /srv/levelup`
 # convention docs/RUNBOOK.md uses throughout, and how scripts/backup.sh is
 # invoked:
@@ -150,11 +150,11 @@ check_required_vars() {
   done
   # Two specific, real defaults from .env.example that a plain `cp` carries
   # straight into production if nobody edits them.
-  if [ "$(env_file_value POSTGRES_PASSWORD)" = "levelup_dev" ]; then
-    problems+=("POSTGRES_PASSWORD is still .env.example's dev default ('levelup_dev') — generate one, do not reuse anything")
+  if [ "$(env_file_value POSTGRES_PASSWORD)" = "monkei_dev" ]; then
+    problems+=("POSTGRES_PASSWORD is still .env.example's dev default ('monkei_dev') — generate one, do not reuse anything")
   fi
   case "$(env_file_value DATABASE_URL)" in
-    *levelup_dev@*) problems+=("DATABASE_URL still embeds the dev password ('levelup_dev')") ;;
+    *monkei_dev@*) problems+=("DATABASE_URL still embeds the dev password ('monkei_dev')") ;;
   esac
 
   if [ "${#problems[@]}" -gt 0 ]; then
@@ -262,7 +262,7 @@ cmd_init() {
     generated_password=true
   fi
 
-  # create-admin.ts: `pnpm --filter @levelup/admin create-admin <email> <password> [name]`.
+  # create-admin.ts: `pnpm --filter @monkei/admin create-admin <email> <password> [name]`.
   # Re-running for an existing email RESETS its password — the documented
   # account-recovery path (docs/RUNBOOK.md §1) — so this call is safe to repeat.
   #
@@ -271,9 +271,9 @@ cmd_init() {
   # by hand below instead.
   log "==> create first admin ($email)"
   run_quiet dc --profile tools run --rm tools \
-    pnpm --filter @levelup/admin create-admin "$email" "$password"
+    pnpm --filter @monkei/admin create-admin "$email" "$password"
   if [ "$QUIET_RC" -ne 0 ]; then
-    die "step failed: create first admin ($email) (exit $QUIET_RC). Command was: dc --profile tools run --rm tools pnpm --filter @levelup/admin create-admin $email <password redacted>"
+    die "step failed: create first admin ($email) (exit $QUIET_RC). Command was: dc --profile tools run --rm tools pnpm --filter @monkei/admin create-admin $email <password redacted>"
   fi
 
   if [ "$generated_password" = true ]; then

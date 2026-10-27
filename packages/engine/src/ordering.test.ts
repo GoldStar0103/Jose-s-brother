@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { UsdTenK } from '@levelup/provider';
+import type { UsdTenK } from '@monkei/provider';
 import {
   createOrder,
   defaultOrderNumber,
@@ -75,7 +75,7 @@ function harness(
     deps: {
       store,
       now: () => new Date('2026-09-15T12:00:00Z'),
-      generateOrderNumber: () => 'LU-260915-TEST',
+      generateOrderNumber: () => 'MK-260915-TEST',
     },
   };
 }
@@ -350,7 +350,7 @@ describe('Vault purchase', () => {
 describe('defaultOrderNumber', () => {
   it('is short enough to read over WhatsApp', () => {
     const number = defaultOrderNumber(new Date('2026-09-15T12:00:00Z'));
-    expect(number).toMatch(/^LU-260915-[0-9A-HJKMNP-TV-Z]{4}$/);
+    expect(number).toMatch(/^MK-260915-[0-9A-HJKMNP-TV-Z]{4}$/);
   });
 
   it('does not leak daily order volume the way a counter would', () => {

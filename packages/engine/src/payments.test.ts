@@ -13,7 +13,7 @@ const NOW = new Date('2026-09-15T12:00:00Z');
 
 const payable = (overrides: Partial<PayableOrder> = {}): PayableOrder => ({
   orderId: 'order-1',
-  orderNumber: 'LU-260915-AB12',
+  orderNumber: 'MK-260915-AB12',
   orderStatus: 'pending_payment',
   paymentId: 'pay-1',
   paymentStatus: 'pending',
@@ -244,7 +244,7 @@ describe('rejection', () => {
       // comprobante" 22 seconds after checkout started; the customer's $750
       // MXN charge succeeded in Stripe six minutes later, but the order was
       // already cancelled and the real approval got refused (order
-      // LU-260918-0RTQ). This is the guard that stops that specific mistake.
+      // MK-260918-0RTQ). This is the guard that stops that specific mistake.
       //
       // Real incident, 2026-09-23: this guard used to only check for 'card',
       // back when every Stripe order was recorded that way regardless of
@@ -297,7 +297,7 @@ describe('settling a gateway charge', () => {
       reference: 'pi_123',
     });
 
-    expect(result).toEqual({ action: 'approved', orderNumber: 'LU-260915-AB12' });
+    expect(result).toEqual({ action: 'approved', orderNumber: 'MK-260915-AB12' });
     expect(store.confirmPayment).toHaveBeenCalledWith(
       expect.objectContaining({ amountReceivedCents: 26_000, adminUserId: null, reference: 'pi_123' }),
     );

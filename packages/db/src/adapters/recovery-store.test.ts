@@ -19,7 +19,7 @@ import { DrizzleRecoveryStore } from './recovery-store.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_recovery_test';
+const TEST_DB = 'monkei_recovery_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -205,41 +205,41 @@ describe.skipIf(!PG_AVAILABLE)('findStuckGatewayPayments', () => {
 
   it('finds a pending OXXO payment created before the cutoff', async () => {
     const { orderId } = await seedGatewayPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       method: 'oxxo',
       ageSeconds: 7 * 3600,
     });
 
     const found = await store().findStuckGatewayPayments(cutoff(), 25);
     expect(found).toHaveLength(1);
-    expect(found[0]).toMatchObject({ orderId, orderNumber: 'LU-1', method: 'oxxo' });
+    expect(found[0]).toMatchObject({ orderId, orderNumber: 'MK-1', method: 'oxxo' });
     expect(found[0]?.pendingHours).toBeGreaterThanOrEqual(6);
   });
 
   it('finds a pending SPEI payment the same way', async () => {
-    await seedGatewayPayment({ orderNumber: 'LU-1', method: 'spei', ageSeconds: 7 * 3600 });
+    await seedGatewayPayment({ orderNumber: 'MK-1', method: 'spei', ageSeconds: 7 * 3600 });
     expect(await store().findStuckGatewayPayments(cutoff(), 25)).toHaveLength(1);
   });
 
   it('finds a Mercado Pago OXXO payment too — same PPRO settlement delay as Stripe', async () => {
     await seedGatewayPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       method: 'oxxo',
       gateway: 'mercadopago',
       ageSeconds: 7 * 3600,
     });
     const found = await store().findStuckGatewayPayments(cutoff(), 25);
     expect(found).toHaveLength(1);
-    expect(found[0]).toMatchObject({ orderNumber: 'LU-1', gateway: 'mercadopago', method: 'oxxo' });
+    expect(found[0]).toMatchObject({ orderNumber: 'MK-1', gateway: 'mercadopago', method: 'oxxo' });
   });
 
   it('leaves a payment alone before the cutoff', async () => {
-    await seedGatewayPayment({ orderNumber: 'LU-1', method: 'oxxo', ageSeconds: 3600 });
+    await seedGatewayPayment({ orderNumber: 'MK-1', method: 'oxxo', ageSeconds: 3600 });
     expect(await store().findStuckGatewayPayments(cutoff(), 25)).toHaveLength(0);
   });
 
   it('never flags a card payment — it settles in seconds or the customer abandoned it', async () => {
-    await seedGatewayPayment({ orderNumber: 'LU-1', method: 'card', ageSeconds: 7 * 3600 });
+    await seedGatewayPayment({ orderNumber: 'MK-1', method: 'card', ageSeconds: 7 * 3600 });
     expect(await store().findStuckGatewayPayments(cutoff(), 25)).toHaveLength(0);
   });
 
@@ -248,7 +248,7 @@ describe.skipIf(!PG_AVAILABLE)('findStuckGatewayPayments', () => {
     // schema.ts's own comment on that column, so this proves the exclusion is
     // the gateway check, not merely "the method happens not to match".
     await seedGatewayPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       method: 'oxxo',
       gateway: null,
       ageSeconds: 7 * 3600,
@@ -258,7 +258,7 @@ describe.skipIf(!PG_AVAILABLE)('findStuckGatewayPayments', () => {
 
   it('never flags one already paid', async () => {
     await seedGatewayPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       method: 'oxxo',
       paymentStatus: 'paid',
       ageSeconds: 7 * 3600,
@@ -268,7 +268,7 @@ describe.skipIf(!PG_AVAILABLE)('findStuckGatewayPayments', () => {
 
   it('never flags one already alerted on — once only, not every sweep', async () => {
     await seedGatewayPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       method: 'oxxo',
       ageSeconds: 7 * 3600,
       stuckAlertSentSecondsAgo: 60,
@@ -277,9 +277,9 @@ describe.skipIf(!PG_AVAILABLE)('findStuckGatewayPayments', () => {
   });
 
   it('respects the batch size and takes the oldest first', async () => {
-    await seedGatewayPayment({ orderNumber: 'LU-1', method: 'oxxo', ageSeconds: 7 * 3600 });
+    await seedGatewayPayment({ orderNumber: 'MK-1', method: 'oxxo', ageSeconds: 7 * 3600 });
     await seedGatewayPayment({
-      orderNumber: 'LU-2',
+      orderNumber: 'MK-2',
       method: 'oxxo',
       ageSeconds: 20 * 3600,
       comboKey: 'pack_insano',
@@ -287,14 +287,14 @@ describe.skipIf(!PG_AVAILABLE)('findStuckGatewayPayments', () => {
 
     const found = await store().findStuckGatewayPayments(cutoff(), 1);
     expect(found).toHaveLength(1);
-    expect(found[0]?.orderNumber).toBe('LU-2');
+    expect(found[0]?.orderNumber).toBe('MK-2');
   });
 });
 
 describe.skipIf(!PG_AVAILABLE)('markStuckAlertSent', () => {
   it('sets the timestamp so the next sweep skips it', async () => {
     const { paymentId } = await seedGatewayPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       method: 'oxxo',
       ageSeconds: 7 * 3600,
     });
@@ -311,7 +311,7 @@ describe.skipIf(!PG_AVAILABLE)('findOverduePayments', () => {
 
   it('finds an unpaid order past its deadline', async () => {
     const { orderId } = await seedPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       paymentStatus: 'pending',
       expiresInSeconds: -60,
     });
@@ -319,11 +319,11 @@ describe.skipIf(!PG_AVAILABLE)('findOverduePayments', () => {
     const found = await store().findOverduePayments(new Date(), 25);
     expect(found).toHaveLength(1);
     expect(found[0]?.orderId).toBe(orderId);
-    expect(found[0]?.orderNumber).toBe('LU-1');
+    expect(found[0]?.orderNumber).toBe('MK-1');
   });
 
   it('leaves an order alone before its deadline', async () => {
-    await seedPayment({ orderNumber: 'LU-1', paymentStatus: 'pending', expiresInSeconds: 3600 });
+    await seedPayment({ orderNumber: 'MK-1', paymentStatus: 'pending', expiresInSeconds: 3600 });
     expect(await store().findOverduePayments(new Date(), 25)).toHaveLength(0);
   });
 
@@ -332,7 +332,7 @@ describe.skipIf(!PG_AVAILABLE)('findOverduePayments', () => {
     // comprobante was uploaded — somebody has already sent real money and is
     // waiting on the panel. Expiring one of these cancels a paid order.
     await seedPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       paymentStatus: 'under_review',
       expiresInSeconds: -86_400,
     });
@@ -341,7 +341,7 @@ describe.skipIf(!PG_AVAILABLE)('findOverduePayments', () => {
 
   it('never expires a payment already paid', async () => {
     await seedPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       paymentStatus: 'paid',
       orderStatus: 'payment_confirmed',
       expiresInSeconds: -86_400,
@@ -351,13 +351,13 @@ describe.skipIf(!PG_AVAILABLE)('findOverduePayments', () => {
 
   it('ignores rows written before payments had deadlines', async () => {
     // A null expires_at is unknown, not infinitely overdue.
-    await seedPayment({ orderNumber: 'LU-1', paymentStatus: 'pending', expiresInSeconds: null });
+    await seedPayment({ orderNumber: 'MK-1', paymentStatus: 'pending', expiresInSeconds: null });
     expect(await store().findOverduePayments(new Date(), 25)).toHaveLength(0);
   });
 
   it('skips an order that is no longer pending_payment', async () => {
     await seedPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       paymentStatus: 'pending',
       orderStatus: 'cancelled',
       expiresInSeconds: -60,
@@ -366,9 +366,9 @@ describe.skipIf(!PG_AVAILABLE)('findOverduePayments', () => {
   });
 
   it('respects the batch size and takes the most overdue first', async () => {
-    await seedPayment({ orderNumber: 'LU-1', paymentStatus: 'pending', expiresInSeconds: -60 });
+    await seedPayment({ orderNumber: 'MK-1', paymentStatus: 'pending', expiresInSeconds: -60 });
     await seedPayment({
-      orderNumber: 'LU-2',
+      orderNumber: 'MK-2',
       paymentStatus: 'pending',
       expiresInSeconds: -600,
       comboKey: 'pack_insano',
@@ -376,7 +376,7 @@ describe.skipIf(!PG_AVAILABLE)('findOverduePayments', () => {
 
     const found = await store().findOverduePayments(new Date(), 1);
     expect(found).toHaveLength(1);
-    expect(found[0]?.orderNumber).toBe('LU-2');
+    expect(found[0]?.orderNumber).toBe('MK-2');
   });
 });
 
@@ -386,7 +386,7 @@ describe.skipIf(!PG_AVAILABLE)('expirePayment', () => {
     // cancelled or expired, so an abandoned attempt used to lock a customer out
     // of the entry offer permanently.
     const { orderId, paymentId } = await seedPayment({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       paymentStatus: 'pending',
       expiresInSeconds: -60,
     });
@@ -398,7 +398,7 @@ describe.skipIf(!PG_AVAILABLE)('expirePayment', () => {
 
     // The index permits a second attempt now.
     await expect(
-      seedPayment({ orderNumber: 'LU-2', paymentStatus: 'pending', expiresInSeconds: 3600 }),
+      seedPayment({ orderNumber: 'MK-2', paymentStatus: 'pending', expiresInSeconds: 3600 }),
     ).resolves.toBeDefined();
   });
 
@@ -410,7 +410,7 @@ describe.skipIf(!PG_AVAILABLE)('expirePayment', () => {
     // store already recorded as `paid` back to `expired` — a customer who
     // paid, with their order (`payment_confirmed`) never getting fulfilled.
     const { orderId, paymentId } = await seedPayment({
-      orderNumber: 'LU-raced',
+      orderNumber: 'MK-raced',
       paymentStatus: 'paid',
       orderStatus: 'payment_confirmed',
       expiresInSeconds: -60,
@@ -430,7 +430,7 @@ describe.skipIf(!PG_AVAILABLE)('expirePayment', () => {
 describe.skipIf(!PG_AVAILABLE)('findPendingProviderItems', () => {
   it('finds an item that has been PENDING long enough', async () => {
     const { itemId } = await seedItem({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       itemStatus: 'provider_pending',
       ageSeconds: 120,
       providerReference: 'REF-1',
@@ -450,27 +450,27 @@ describe.skipIf(!PG_AVAILABLE)('findPendingProviderItems', () => {
   it('leaves a freshly dispatched item alone', async () => {
     // The live run may still be handling this one; racing it is the bug the
     // age window exists to prevent.
-    await seedItem({ orderNumber: 'LU-1', itemStatus: 'provider_pending', ageSeconds: 2 });
+    await seedItem({ orderNumber: 'MK-1', itemStatus: 'provider_pending', ageSeconds: 2 });
 
     expect(await new DrizzleRecoveryStore(db).findPendingProviderItems(30_000, 25)).toHaveLength(0);
   });
 
   it('ignores items in any other state', async () => {
-    await seedItem({ orderNumber: 'LU-1', itemStatus: 'succeeded', ageSeconds: 600 });
-    await seedItem({ orderNumber: 'LU-2', itemStatus: 'queued', ageSeconds: 600 });
+    await seedItem({ orderNumber: 'MK-1', itemStatus: 'succeeded', ageSeconds: 600 });
+    await seedItem({ orderNumber: 'MK-2', itemStatus: 'queued', ageSeconds: 600 });
 
     expect(await new DrizzleRecoveryStore(db).findPendingProviderItems(30_000, 25)).toHaveLength(0);
   });
 
   it('skips abandoned orders', async () => {
     await seedItem({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       itemStatus: 'provider_pending',
       ageSeconds: 600,
       orderStatus: 'cancelled',
     });
     await seedItem({
-      orderNumber: 'LU-2',
+      orderNumber: 'MK-2',
       itemStatus: 'provider_pending',
       ageSeconds: 600,
       orderStatus: 'refund_required',
@@ -481,7 +481,7 @@ describe.skipIf(!PG_AVAILABLE)('findPendingProviderItems', () => {
 
   it('skips items with no synced cost', async () => {
     await seedItem({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       itemStatus: 'provider_pending',
       ageSeconds: 600,
       costUsd: null,
@@ -491,21 +491,21 @@ describe.skipIf(!PG_AVAILABLE)('findPendingProviderItems', () => {
   });
 
   it('returns oldest first and respects the batch limit', async () => {
-    await seedItem({ orderNumber: 'LU-new', itemStatus: 'provider_pending', ageSeconds: 60 });
-    await seedItem({ orderNumber: 'LU-old', itemStatus: 'provider_pending', ageSeconds: 900 });
-    await seedItem({ orderNumber: 'LU-mid', itemStatus: 'provider_pending', ageSeconds: 300 });
+    await seedItem({ orderNumber: 'MK-new', itemStatus: 'provider_pending', ageSeconds: 60 });
+    await seedItem({ orderNumber: 'MK-old', itemStatus: 'provider_pending', ageSeconds: 900 });
+    await seedItem({ orderNumber: 'MK-mid', itemStatus: 'provider_pending', ageSeconds: 300 });
 
     const found = await new DrizzleRecoveryStore(db).findPendingProviderItems(30_000, 2);
 
     expect(found).toHaveLength(2);
-    expect(found.map((i) => i.orderNumber)).toEqual(['LU-old', 'LU-mid']);
+    expect(found.map((i) => i.orderNumber)).toEqual(['MK-old', 'MK-mid']);
   });
 });
 
 describe.skipIf(!PG_AVAILABLE)('findStalledSendingItems', () => {
   it('finds an item a dead worker left mid-send', async () => {
     const { itemId } = await seedItem({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       itemStatus: 'sending',
       ageSeconds: 300,
       walletBeforeUsd: '150.0000',
@@ -522,7 +522,7 @@ describe.skipIf(!PG_AVAILABLE)('findStalledSendingItems', () => {
   });
 
   it('does not touch a call that is still in flight', async () => {
-    await seedItem({ orderNumber: 'LU-1', itemStatus: 'sending', ageSeconds: 3 });
+    await seedItem({ orderNumber: 'MK-1', itemStatus: 'sending', ageSeconds: 3 });
 
     expect(await new DrizzleRecoveryStore(db).findStalledSendingItems(30_000, 25)).toHaveLength(0);
   });
@@ -531,7 +531,7 @@ describe.skipIf(!PG_AVAILABLE)('findStalledSendingItems', () => {
     // The poller escalates these rather than guessing; the query must still
     // return them so somebody finds out.
     await seedItem({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       itemStatus: 'sending',
       ageSeconds: 300,
       walletBeforeUsd: null,
@@ -543,7 +543,7 @@ describe.skipIf(!PG_AVAILABLE)('findStalledSendingItems', () => {
   });
 
   it('does not confuse PENDING items with stalled sends', async () => {
-    await seedItem({ orderNumber: 'LU-1', itemStatus: 'provider_pending', ageSeconds: 600 });
+    await seedItem({ orderNumber: 'MK-1', itemStatus: 'provider_pending', ageSeconds: 600 });
 
     expect(await new DrizzleRecoveryStore(db).findStalledSendingItems(30_000, 25)).toHaveLength(0);
   });
@@ -552,7 +552,7 @@ describe.skipIf(!PG_AVAILABLE)('findStalledSendingItems', () => {
 describe.skipIf(!PG_AVAILABLE)('inherited fulfilment behaviour', () => {
   it('still loads orders through the base store', async () => {
     const { orderId } = await seedItem({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       itemStatus: 'queued',
       ageSeconds: 10,
     });
@@ -564,7 +564,7 @@ describe.skipIf(!PG_AVAILABLE)('inherited fulfilment behaviour', () => {
 
   it('still refuses a non-dispatchable item', async () => {
     const { itemId } = await seedItem({
-      orderNumber: 'LU-1',
+      orderNumber: 'MK-1',
       itemStatus: 'succeeded',
       ageSeconds: 10,
     });

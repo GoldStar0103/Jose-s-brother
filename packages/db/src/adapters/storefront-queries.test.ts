@@ -11,7 +11,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { eq, sql as raw } from 'drizzle-orm';
-import { createOrder } from '@levelup/engine';
+import { createOrder } from '@monkei/engine';
 import { createDb, type Database } from '../index.js';
 import { baseProducts, campaigns, comboItems, combos, orderItems, orders, payments } from '../schema.js';
 import { DrizzleOrderingStore } from './ordering-store.js';
@@ -28,7 +28,7 @@ import {
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_storefront_test';
+const TEST_DB = 'monkei_storefront_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -173,7 +173,7 @@ describe.skipIf(!PG_AVAILABLE)('listStorefront', () => {
 
   it('never exposes the recipe or the provider cost', async () => {
     // This is the differentiator: competitors sell the six base denominations,
-    // LevelUp sells bundles of them. Leaking the recipe gives that away.
+    // Monkei sells bundles of them. Leaking the recipe gives that away.
     const campaigns = await listStorefront(db);
     const combo = campaigns.flatMap((c) => c.combos).find((c) => c.key === 'pack_insano');
 
@@ -356,7 +356,7 @@ describe.skipIf(!PG_AVAILABLE)('findCustomerOrder', () => {
 
   it('refuses a guessed order number', async () => {
     await placeOrder();
-    expect(await findCustomerOrder(db, 'LU-260101-AAAA', '7288567050')).toBeNull();
+    expect(await findCustomerOrder(db, 'MK-260101-AAAA', '7288567050')).toBeNull();
   });
 
   it('tolerates casing and whitespace a customer would paste', async () => {

@@ -26,18 +26,18 @@ const nextConfig = {
    * `.next/standalone`, so the runtime image needs no node_modules and no
    * package manager. `outputFileTracingRoot` has to point at the workspace
    * root: without it Next traces from `apps/web` and misses the symlinked
-   * @levelup/* packages entirely, producing an image that builds cleanly and
+   * @monkei/* packages entirely, producing an image that builds cleanly and
    * crashes on first request.
    */
   output: 'standalone',
   outputFileTracingRoot: resolve(dirname(fileURLToPath(import.meta.url)), '../..'),
 
   transpilePackages: [
-    '@levelup/db',
-    '@levelup/engine',
-    '@levelup/payments',
-    '@levelup/provider',
-    '@levelup/shared',
+    '@monkei/db',
+    '@monkei/engine',
+    '@monkei/payments',
+    '@monkei/provider',
+    '@monkei/shared',
   ],
   serverExternalPackages: ['postgres'],
 

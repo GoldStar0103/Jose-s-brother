@@ -1,5 +1,5 @@
-import { listPendingApprovals } from '@levelup/db';
-import { siteName } from '@levelup/shared';
+import { listPendingApprovals } from '@monkei/db';
+import { siteName } from '@monkei/shared';
 import { getDb } from '../../lib/db';
 import { requireSession } from '../../lib/session';
 import { logout } from '../login/actions';

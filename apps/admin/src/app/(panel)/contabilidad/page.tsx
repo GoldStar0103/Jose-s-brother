@@ -4,7 +4,7 @@ import {
   getSeasonRanges,
   listManualLedgerEntries,
   mexicoCityTodayYmd,
-} from '@levelup/db';
+} from '@monkei/db';
 import { ManualEntries } from './manual-entries';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';

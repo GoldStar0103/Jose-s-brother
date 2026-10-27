@@ -18,8 +18,8 @@
  */
 
 import { eq } from 'drizzle-orm';
-import { checkRecipe } from '@levelup/shared/money';
-import type { LevelPassCheckpointConfig } from '@levelup/engine';
+import { checkRecipe } from '@monkei/shared/money';
+import type { LevelPassCheckpointConfig } from '@monkei/engine';
 import type { Database } from '../index.js';
 import { baseProducts, settings } from '../schema.js';
 

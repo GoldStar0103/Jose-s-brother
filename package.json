@@ -1,5 +1,5 @@
 {
-  "name": "levelup-store",
+  "name": "monkei-store",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@9.12.0",
@@ -7,22 +7,23 @@
     "node": ">=22"
   },
   "scripts": {
-    "db:generate": "pnpm --filter @levelup/db generate",
-    "db:migrate": "pnpm --filter @levelup/db migrate",
-    "db:seed": "pnpm --filter @levelup/db seed",
-    "db:studio": "pnpm --filter @levelup/db studio",
+    "db:generate": "pnpm --filter @monkei/db generate",
+    "db:migrate": "pnpm --filter @monkei/db migrate",
+    "db:seed": "pnpm --filter @monkei/db seed",
+    "db:studio": "pnpm --filter @monkei/db studio",
     "phase0": "node phase0/discover.mjs",
     "pg:start": "node scripts/pg.mjs start",
     "pg:stop": "node scripts/pg.mjs stop",
     "pg:status": "node scripts/pg.mjs status",
-    "typecheck": "pnpm --filter \"@levelup/*\" typecheck",
-    "test": "pnpm --filter \"@levelup/*\" test",
-    "worker": "pnpm --filter @levelup/worker start",
-    "worker:dev": "pnpm --filter @levelup/worker dev",
+    "typecheck": "pnpm --filter \"@monkei/*\" typecheck",
+    "test": "pnpm --filter \"@monkei/*\" test",
+    "worker": "pnpm --filter @monkei/worker start",
+    "worker:dev": "pnpm --filter @monkei/worker dev",
     "up": "docker compose up -d",
     "down": "docker compose down"
   },
   "devDependencies": {
+    "sharp": "^0.35.5",
     "typescript": "^5.6.3"
   }
 }

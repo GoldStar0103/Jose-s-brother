@@ -9,7 +9,7 @@ import { BottomNav } from './bottom-nav';
 import { WhatsappChannelPopup } from './whatsapp-channel-popup';
 import { whatsappChannelUrl } from '../lib/whatsapp-channel';
 import { legalIdentity, pending } from '../lib/legal';
-import { siteName } from '@levelup/shared';
+import { siteName } from '@monkei/shared';
 import logo from '../assets/logo.png';
 import './globals.css';
 
@@ -60,6 +60,14 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: DESCRIPTION,
     applicationName: brand,
+    // Served from apps/web/public (copied into the standalone image). The
+    // App Router icon.png route has been 404ing under standalone on this
+    // stack; public + explicit icons is the reliable path for Search Console
+    // and browser tabs.
+    icons: {
+      icon: [{ url: '/icon.png', type: 'image/png' }],
+      apple: [{ url: '/apple-icon.png', type: 'image/png' }],
+    },
     // No `alternates.canonical` here on purpose. Metadata is inherited, so a
     // canonical of '/' in the root layout would make every page that does not
     // override it declare itself to be the homepage — which tells search engines

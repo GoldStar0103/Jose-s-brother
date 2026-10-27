@@ -8,7 +8,7 @@
  */
 
 import { and, desc, eq, gte, inArray, isNull, ne, sql } from 'drizzle-orm';
-import { defaultOrderNumber, LEVEL_PASS_REWARD_COMBO_KEY } from '@levelup/engine';
+import { defaultOrderNumber, LEVEL_PASS_REWARD_COMBO_KEY } from '@monkei/engine';
 import type {
   GrantableRewardOrder,
   LevelPassCheckpointConfig,
@@ -20,8 +20,8 @@ import type {
   ResolvedRewardCatalogEntry,
   ResolvedRewardItem,
   RewardFulfillmentStore,
-} from '@levelup/engine';
-import { parseUsd } from '@levelup/provider';
+} from '@monkei/engine';
+import { parseUsd } from '@monkei/provider';
 import type { Database } from '../index.js';
 import {
   badgeDefinitions,

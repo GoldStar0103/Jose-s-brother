@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * Mi LevelUp: email OTP sign-in and account creation.
+ * Mi MONKEI: email OTP sign-in and account creation.
  *
  * Three steps, each its own action: request a code, verify it, and — only
  * for an email with no account yet — supply the Free Fire ID to create one.
@@ -17,7 +17,7 @@ import {
   findActiveOtpCode,
   findProfileByEmail,
   incrementOtpAttempts,
-} from '@levelup/db';
+} from '@monkei/db';
 import {
   createCustomerSessionToken,
   generateOtpCode,
@@ -33,7 +33,7 @@ import {
 } from '../../lib/customer-session.js';
 import { getDb, otpRequestLimiter } from '../../lib/server.js';
 import { buildEmailSender } from '../../lib/email-sender.js';
-import { siteName } from '@levelup/shared';
+import { siteName } from '@monkei/shared';
 
 const OTP_TTL_MS = 10 * 60_000;
 const OTP_MAX_ATTEMPTS = 5;

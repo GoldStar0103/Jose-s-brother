@@ -14,7 +14,7 @@
 
 import { readFile, stat } from 'node:fs/promises';
 import { join, resolve, sep } from 'node:path';
-import { contentTypeForKey, safeStorageKey, uploadRoot } from '@levelup/shared';
+import { contentTypeForKey, safeStorageKey, uploadRoot } from '@monkei/shared';
 import { AVATAR_PREFIX, BADGE_PREFIX, FLYER_PREFIX } from '../../../lib/assets';
 
 /** Images only. A PDF is a valid stored type but not something to inline here. */

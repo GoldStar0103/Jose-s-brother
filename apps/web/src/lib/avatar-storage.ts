@@ -9,7 +9,7 @@ import 'server-only';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { dirname } from 'node:path';
-import { avatarPath, validateImageUpload, type UploadRejection } from '@levelup/shared';
+import { avatarPath, validateImageUpload, type UploadRejection } from '@monkei/shared';
 import { resolveKey } from './storage.js';
 
 export type StoreAvatarResult = { ok: true; key: string } | { ok: false; rejection: UploadRejection };

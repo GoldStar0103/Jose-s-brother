@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ProviderSimulator, type UsdTenK } from '@levelup/provider';
-import { InMemoryLock, PROVIDER_LOCK_KEY } from '@levelup/engine';
+import { ProviderSimulator, type UsdTenK } from '@monkei/provider';
+import { InMemoryLock, PROVIDER_LOCK_KEY } from '@monkei/engine';
 import {
   MemoryAlerter,
   MemoryCatalogStore,
   MemoryStore,
   buildOrder,
-} from '@levelup/engine/testing';
+} from '@monkei/engine/testing';
 import type {
   AdvisoryLock,
   ExpiryStore,
@@ -16,7 +16,7 @@ import type {
   StoredProduct,
   StuckGatewayPayment,
   StuckPaymentStore,
-} from '@levelup/engine';
+} from '@monkei/engine';
 import { loadConfig } from './config.js';
 import {
   CATALOG_SYNC_RETRY_MS,
@@ -79,7 +79,7 @@ function testConfig(overrides: Record<string, string> = {}) {
 
 function harness(claims: Array<{ id: string; orderNumber: string; recovered: boolean } | null>) {
   const store = new QueueStore(
-    buildOrder({ orderNumber: 'LU-1', items: [['d100', 100, 0.55]] }),
+    buildOrder({ orderNumber: 'MK-1', items: [['d100', 100, 0.55]] }),
   );
   const alerter = new MemoryAlerter();
   const provider = new ProviderSimulator({ initialBalanceUsd: 500, prices: { d100: 0.55 } });
@@ -107,7 +107,7 @@ function harness(claims: Array<{ id: string; orderNumber: string; recovered: boo
 
 describe('runFulfillmentLoop', () => {
   it('claims and fulfils an available order', async () => {
-    const { deps, provider } = harness([{ id: 'order-1', orderNumber: 'LU-1', recovered: false }]);
+    const { deps, provider } = harness([{ id: 'order-1', orderNumber: 'MK-1', recovered: false }]);
 
     const result = await runFulfillmentLoop(deps, new ShutdownSignal(), { maxIterations: 2 });
 
@@ -149,7 +149,7 @@ describe('runFulfillmentLoop', () => {
 
   it('alerts and keeps going when fulfilment throws', async () => {
     const { deps, alerter } = harness([
-      { id: 'does-not-exist', orderNumber: 'LU-404', recovered: false },
+      { id: 'does-not-exist', orderNumber: 'MK-404', recovered: false },
     ]);
 
     const result = await runFulfillmentLoop(deps, new ShutdownSignal(), { maxIterations: 1 });
@@ -162,11 +162,11 @@ describe('runFulfillmentLoop', () => {
 
   it('logs a recovered order distinctly', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-    const { deps } = harness([{ id: 'order-1', orderNumber: 'LU-1', recovered: true }]);
+    const { deps } = harness([{ id: 'order-1', orderNumber: 'MK-1', recovered: true }]);
 
     await runFulfillmentLoop(deps, new ShutdownSignal(), { maxIterations: 1 });
 
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining('Recovered abandoned order LU-1'));
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('Recovered abandoned order MK-1'));
     warn.mockRestore();
   });
 });
@@ -174,7 +174,7 @@ describe('runFulfillmentLoop', () => {
 describe('runFulfillmentLoop and the catalog sync', () => {
   it('holds the order boundary for the whole of each order', async () => {
     // What keeps a re-point out of the gap between two calls of one combo.
-    const { deps } = harness([{ id: 'order-1', orderNumber: 'LU-1', recovered: false }]);
+    const { deps } = harness([{ id: 'order-1', orderNumber: 'MK-1', recovered: false }]);
     const boundary = vi.spyOn(deps.orderBoundary, 'withLock');
 
     await runFulfillmentLoop(deps, new ShutdownSignal(), { maxIterations: 1 });

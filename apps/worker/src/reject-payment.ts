@@ -3,15 +3,15 @@
  *
  * What "rechazar" in Aprobaciones does, for when there is no admin session at
  * hand to click it — e.g. reviewing a comprobante that was pulled and checked
- * outside the panel. Runs through the same @levelup/engine rejectPayment used
+ * outside the panel. Runs through the same @monkei/engine rejectPayment used
  * by the panel, so the same guards (no rejecting money that already arrived)
  * and the same audit log entry apply.
  *
- *   DATABASE_URL=... pnpm --filter @levelup/worker reject-payment <orderId> "<reason>" [adminUserId]
+ *   DATABASE_URL=... pnpm --filter @monkei/worker reject-payment <orderId> "<reason>" [adminUserId]
  */
 
-import { createDb, DrizzlePaymentStore } from '@levelup/db';
-import { rejectPayment } from '@levelup/engine';
+import { createDb, DrizzlePaymentStore } from '@monkei/db';
+import { rejectPayment } from '@monkei/engine';
 
 const orderId = process.argv[2];
 const reason = process.argv[3];

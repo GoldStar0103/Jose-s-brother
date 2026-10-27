@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import type { SeasonFunnel as SeasonFunnelData } from '@levelup/db';
+import type { SeasonFunnel as SeasonFunnelData } from '@monkei/db';
 import { diamonds, mxn } from '../../../lib/format';
 
 const pct = (value: number | null) => (value === null ? '—' : `${value.toFixed(1)}%`);

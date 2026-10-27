@@ -27,7 +27,7 @@
  * every checkout at step 1.
  *
  * Its product names are still free text. Turning that into the six base
- * denominations LevelUp actually builds combos from is guesswork on strings,
+ * denominations Monkei actually builds combos from is guesswork on strings,
  * so it lives here — one implementation, tested, shared by both the Phase 0
  * discovery script and the catalog sync.
  */
@@ -179,7 +179,7 @@ export function normaliseCatalogProduct(raw: RawCatalogProduct): ProviderProduct
  *      still lists it
  *   2. `games`         — direct top-up (player_id family); also validatable on
  *      today's catalog
- *   3. `pins_code`     — a redeemable code, which is not the product LevelUp sells
+ *   3. `pins_code`     — a redeemable code, which is not the product Monkei sells
  */
 export function rankProduct(product: ProviderProduct): number {
   if (product.endpointKind === 'pins_recharge') return 0;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ProviderSimulator, type UsdTenK } from '@levelup/provider';
+import { ProviderSimulator, type UsdTenK } from '@monkei/provider';
 import { pollPendingOrders, recoverStalledItems, type RecoveryStore, type StalledItem } from './poller.js';
 import { InMemoryLock } from './ports.js';
 import { buildOrder, MemoryAlerter, MemoryStore } from './testing.js';
@@ -22,7 +22,7 @@ class RecoveryMemoryStore extends MemoryStore implements RecoveryStore {
 
 const stalled = (overrides: Partial<StalledItem> = {}): StalledItem => ({
   orderId: 'order-1',
-  orderNumber: 'LU-000900',
+  orderNumber: 'MK-000900',
   itemId: 'item-1',
   providerReference: null,
   costUsd: usd(PRICES.d5600),
@@ -34,7 +34,7 @@ const stalled = (overrides: Partial<StalledItem> = {}): StalledItem => ({
 
 function harness(balanceUsd = 500) {
   const store = new RecoveryMemoryStore(
-    buildOrder({ orderNumber: 'LU-000900', items: [['d5600', 5600, PRICES.d5600]] }),
+    buildOrder({ orderNumber: 'MK-000900', items: [['d5600', 5600, PRICES.d5600]] }),
   );
   const alerter = new MemoryAlerter();
   const sim = new ProviderSimulator({ initialBalanceUsd: balanceUsd, prices: PRICES });
@@ -49,7 +49,7 @@ describe('pollPendingOrders', () => {
       endpointKind: 'games',
       providerProductId: 'd5600',
       playerId: '7288567050',
-      clientReference: 'LU-000900-0',
+      clientReference: 'MK-000900-0',
     });
     if (outcome.kind !== 'pending') throw new Error('unreachable');
 
@@ -68,7 +68,7 @@ describe('pollPendingOrders', () => {
       endpointKind: 'games',
       providerProductId: 'd5600',
       playerId: '7288567050',
-      clientReference: 'LU-000900-0',
+      clientReference: 'MK-000900-0',
     });
     if (outcome.kind !== 'pending') throw new Error('unreachable');
 
@@ -89,7 +89,7 @@ describe('pollPendingOrders', () => {
       endpointKind: 'games',
       providerProductId: 'd5600',
       playerId: '7288567050',
-      clientReference: 'LU-000900-0',
+      clientReference: 'MK-000900-0',
     });
     if (outcome.kind !== 'pending') throw new Error('unreachable');
 

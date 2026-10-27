@@ -54,7 +54,7 @@ function findBinDir() {
     }
   }
   throw new Error(
-    'Postgres binaries not found. Run: pnpm --filter @levelup/db add -D embedded-postgres',
+    'Postgres binaries not found. Run: pnpm --filter @monkei/db add -D embedded-postgres',
   );
 }
 

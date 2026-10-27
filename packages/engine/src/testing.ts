@@ -6,7 +6,7 @@
  * assert the write-before-call ordering that crash recovery depends on.
  */
 
-import type { UsdTenK } from '@levelup/provider';
+import type { UsdTenK } from '@monkei/provider';
 import type {
   Alerter,
   AlertLevel,
@@ -37,7 +37,7 @@ export interface BuildOrderOptions {
 export function buildOrder(options: BuildOrderOptions): OrderRecord {
   return {
     id: 'order-1',
-    orderNumber: options.orderNumber ?? 'LU-000123',
+    orderNumber: options.orderNumber ?? 'MK-000123',
     playerId: options.playerId ?? '7288567050',
     serverId: options.serverId ?? null,
     status: options.status ?? 'payment_confirmed',

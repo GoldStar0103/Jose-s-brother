@@ -18,7 +18,7 @@
  */
 
 import 'server-only';
-import { MercadoPagoGateway, type GatewayMethod } from '@levelup/payments';
+import { MercadoPagoGateway, type GatewayMethod } from '@monkei/payments';
 import { applyGatewayReport, type AppliedReport, type GatewayReport } from './gateway-report';
 
 export const MERCADOPAGO = 'mercadopago';

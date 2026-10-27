@@ -15,7 +15,7 @@ import {
   type ResolvedRewardCatalogEntry,
   type RewardFulfillmentStore,
 } from './level-pass.js';
-import type { UsdTenK } from '@levelup/provider';
+import type { UsdTenK } from '@monkei/provider';
 
 const CHECKPOINTS: LevelPassCheckpointConfig[] = [
   { lp: 60, rewardDiamonds: 110, costCents: 1_200, recipe: [{ baseProductId: 'bp-110', diamondsBase: 110 }] },
@@ -309,7 +309,7 @@ function rewardStoreHarness(overrides: Partial<RewardFulfillmentStore> = {}): Re
   return {
     findGrantableCheckpointEvents: vi.fn(async () => []),
     resolveRewardCatalog: vi.fn(async () => [catalogEntry()]),
-    createRewardOrder: vi.fn(async () => ({ created: true, orderId: 'order-r1', orderNumber: 'LU-TEST' })),
+    createRewardOrder: vi.fn(async () => ({ created: true, orderId: 'order-r1', orderNumber: 'MK-TEST' })),
     findCompletedRewardOrders: vi.fn(async () => []),
     grantReward: vi.fn(async () => undefined),
     ...overrides,
@@ -380,7 +380,7 @@ describe('createPendingRewardOrders', () => {
       createRewardOrder: vi
         .fn()
         .mockRejectedValueOnce(new Error('db down'))
-        .mockResolvedValueOnce({ created: true, orderId: 'order-r2', orderNumber: 'LU-TEST2' }),
+        .mockResolvedValueOnce({ created: true, orderId: 'order-r2', orderNumber: 'MK-TEST2' }),
     });
     const result = await createPendingRewardOrders({ store }, 50);
     expect(result).toEqual({ examined: 2, created: 1, unresolved: 0, failed: 1 });

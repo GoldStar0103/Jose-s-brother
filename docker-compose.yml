@@ -7,12 +7,13 @@
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: levelup-brother-postgres
+    # Distinct from any LevelUp Store local stack on the same machine.
+    container_name: monkei-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-levelup}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-levelup_dev}
-      POSTGRES_DB: ${POSTGRES_DB:-levelup}
+      POSTGRES_USER: ${POSTGRES_USER:-monkei}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-monkei_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-monkei}
       # Deterministic collation so ORDER BY behaves identically everywhere.
       POSTGRES_INITDB_ARGS: '--locale-provider=icu --icu-locale=es-MX'
     ports:
@@ -22,7 +23,7 @@ services:
     healthcheck:
       # The worker must not start against a database that is not accepting
       # connections — a half-started fulfilment worker is worse than none.
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-levelup} -d ${POSTGRES_DB:-levelup}']
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-monkei} -d ${POSTGRES_DB:-monkei}']
       interval: 5s
       timeout: 5s
       retries: 10

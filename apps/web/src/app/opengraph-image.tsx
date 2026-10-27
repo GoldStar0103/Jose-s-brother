@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { siteName } from '@levelup/shared';
+import { siteName } from '@monkei/shared';
 import { ogLogo } from '../lib/og-logo';
 
 /**

@@ -7,8 +7,8 @@
  */
 
 import 'server-only';
-import { createDb } from '@levelup/db';
-import { assertDryRunDatabaseIsSafe } from '@levelup/shared';
+import { createDb } from '@monkei/db';
+import { assertDryRunDatabaseIsSafe } from '@monkei/shared';
 
 declare global {
   // eslint-disable-next-line no-var

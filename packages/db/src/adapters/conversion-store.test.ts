@@ -16,7 +16,7 @@ import { DrizzleConversionStore } from './conversion-store.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_conversion_test';
+const TEST_DB = 'monkei_conversion_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -63,7 +63,7 @@ async function insert(overrides: Partial<typeof orders.$inferInsert> = {}) {
   const [row] = await db
     .insert(orders)
     .values({
-      orderNumber: `LU-260915-${String(n).padStart(4, '0')}`,
+      orderNumber: `MK-260915-${String(n).padStart(4, '0')}`,
       playerId: `72885670${String(n).padStart(2, '0')}`,
       comboKey: 'pack_insano',
       comboSnapshot: {},

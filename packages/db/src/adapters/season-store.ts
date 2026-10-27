@@ -1,7 +1,7 @@
 /** `SeasonStore` against real Postgres — see packages/engine/src/seasons.ts. */
 
 import { and, desc, eq, inArray, lte, sql } from 'drizzle-orm';
-import type { DueSeason, SeasonClosePlan, SeasonRankingRow, SeasonStore } from '@levelup/engine';
+import type { DueSeason, SeasonClosePlan, SeasonRankingRow, SeasonStore } from '@monkei/engine';
 import type { Database } from '../index.js';
 import {
   badgeDefinitions,

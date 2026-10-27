@@ -36,8 +36,8 @@
  *      the stored row is withdrawn from sale, and a human decides.
  */
 
-import type { ProviderProduct, TopupProvider, UsdTenK } from '@levelup/provider';
-import { mapDenominations, rankProduct } from '@levelup/provider';
+import type { ProviderProduct, TopupProvider, UsdTenK } from '@monkei/provider';
+import { mapDenominations, rankProduct } from '@monkei/provider';
 
 export interface StoredProduct {
   id: string;
@@ -293,7 +293,7 @@ export async function syncCatalog(deps: CatalogSyncDeps): Promise<CatalogSyncRes
       continue;
     }
 
-    // A redeemable code is not the product LevelUp sells. Store it as inactive
+    // A redeemable code is not the product Monkei sells. Store it as inactive
     // rather than silently wiring it into a "recarga directa" combo.
     if (product.endpointKind === 'pins_code') {
       missing.push(match.denomination);

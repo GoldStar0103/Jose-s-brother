@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { readPurposeToken } from '../../../lib/auth';
 import { PENDING_2FA_COOKIE, PENDING_2FA_PURPOSE } from '../pending-2fa';
-import { siteName } from '@levelup/shared';
+import { siteName } from '@monkei/shared';
 import logo from '../../../assets/logo.png';
 import { VerifyForm } from './verify-form';
 

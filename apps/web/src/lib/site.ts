@@ -8,7 +8,7 @@
  * edits the env file to remember which format each consumer wants.
  */
 
-import { FALLBACK_DOMAIN } from '@levelup/shared';
+import { FALLBACK_DOMAIN } from '@monkei/shared';
 
 const FALLBACK = FALLBACK_DOMAIN;
 

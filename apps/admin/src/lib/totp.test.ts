@@ -136,7 +136,7 @@ describe('otpauthUri', () => {
   it('produces a standard otpauth:// URI with the expected parameters', () => {
     // Issuer passed explicitly rather than relying on the default (which
     // reads LEGAL_BUSINESS_NAME) — the default itself is covered below.
-    const uri = otpauthUri('JBSWY3DPEHPK3PXP', 'jose@levelupstore.mx', 'MONKEI');
+    const uri = otpauthUri('JBSWY3DPEHPK3PXP', 'jose@monkei.mx', 'MONKEI');
     expect(uri).toMatch(/^otpauth:\/\/totp\//);
     expect(uri).toContain('secret=JBSWY3DPEHPK3PXP');
     expect(uri).toContain('issuer=MONKEI');
@@ -144,7 +144,7 @@ describe('otpauthUri', () => {
     expect(uri).toContain('digits=6');
     expect(uri).toContain('period=30');
     // Label is "Issuer:account", both percent-encoded.
-    expect(uri).toContain('MONKEI:jose%40levelupstore.mx');
+    expect(uri).toContain('MONKEI:jose%40monkei.mx');
   });
 
   it('accepts a custom issuer', () => {

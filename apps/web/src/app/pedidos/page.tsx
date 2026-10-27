@@ -28,8 +28,9 @@ export default function OrdersLookupPage() {
       <div className="card">
         <h2 className="mini-title">¿No tienes el número?</h2>
         <p className="hint">
-          Te lo mandamos al terminar tu compra. Empieza con <span className="mono">LU-</span> y
-          se ve así: <span className="mono">LU-260915-AB12</span>.
+          Te lo mandamos al terminar tu compra. Empieza con <span className="mono">MK-</span> y
+          se ve así: <span className="mono">MK-260915-AB12</span>. Pedidos anteriores pueden
+          empezar con <span className="mono">LU-</span> — también sirven.
         </p>
       </div>
     </main>

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { listMyBadges } from '@levelup/db';
+import { listMyBadges } from '@monkei/db';
 import { requireCustomerSession } from '../../../lib/customer-session.js';
 import { getDb } from '../../../lib/server.js';
 import { saveFeaturedBadges } from '../profile-actions';

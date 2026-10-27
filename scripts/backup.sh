@@ -28,16 +28,16 @@
 set -euo pipefail
 
 # Settings come from the environment first, so a crontab line can override
-# anything; then from the BACKUP_* lines of ./.env (the same file compose
-# reads, which is why the cron line cd's into /srv/levelup); then the defaults
-# below. cron starts with an almost empty environment, so without the .env
-# step a remote configured there would silently never be used.
+# anything; then from selected keys in ./.env (the same file compose reads,
+# which is why the cron line cd's into /srv/levelup); then the defaults below.
+# cron starts with an almost empty environment, so without the .env step a
+# remote configured there would silently never be used.
 #
 # .env is read, never sourced. It holds lines such as
 #   LEGAL_ADDRESS=Carretera Teloloapan - Apaxtla Km. 1, ...
-# which a shell would try to run as a command. And only BACKUP_* keys are
-# looked at, so editing some unrelated setting can never change what this
-# script does.
+# which a shell would try to run as a command. Only BACKUP_* and the Telegram
+# alert keys are looked at, so editing some unrelated setting can never change
+# what this script does.
 env_file_value() {
   local key="$1" file=".env" line value
   [ -r "$file" ] || return 0
@@ -67,9 +67,29 @@ setting() {
   printf '%s' "${value:-$default}"
 }
 
+# Pages a human when the night fails. Uses the same Telegram bot as the worker
+# so an unread log is not the only signal. A Telegram outage must never turn a
+# successful backup into a failed one — curl failures are swallowed.
+notify_backup_failure() {
+  local reason="$1"
+  local token chat domain text
+  token="$(setting TELEGRAM_BOT_TOKEN '')"
+  chat="$(setting TELEGRAM_ALERT_CHAT_ID '')"
+  domain="$(setting PUBLIC_DOMAIN 'monkei.mx')"
+  [ -n "$token" ] && [ -n "$chat" ] || return 0
+  text="⚠️ Backup FAILED on ${domain}
+${reason}
+Log: /var/log/levelup-backup.log"
+  curl -fsS --max-time 15 \
+    -X POST "https://api.telegram.org/bot${token}/sendMessage" \
+    --data-urlencode "chat_id=${chat}" \
+    --data-urlencode "text=${text}" \
+    >/dev/null 2>&1 || echo "[backup] telegram alert could not be sent" >&2
+}
+
 DEST="${1:-/srv/levelup/backups}"
 KEEP_DAYS="$(setting BACKUP_KEEP_DAYS 14)"
-# e.g. gdrive:levelup-backups or r2:levelup-backups. Empty = no off-box copy.
+# e.g. gdrive:monkei-backups or r2:monkei-backups. Empty = no off-box copy.
 RCLONE_REMOTE="$(setting BACKUP_RCLONE_REMOTE '')"
 REMOTE_KEEP_DAYS="$(setting BACKUP_REMOTE_RETENTION_DAYS 30)"
 COMPOSE="docker compose -f docker-compose.prod.yml"
@@ -124,6 +144,7 @@ find "$DEST" -maxdepth 1 -name 'uploads-*.tar.gz' -mtime "+$KEEP_DAYS" -delete
 # backups at the worst possible moment.
 if [ "$(stat -c%s "$db_file")" -lt 1024 ]; then
   echo "[backup] FAILED: database dump is suspiciously small" >&2
+  notify_backup_failure "database dump is suspiciously small (<1KB)"
   exit 1
 fi
 
@@ -145,6 +166,7 @@ fi
 remote_fail() {
   echo "[backup] FAILED: off-box copy to $RCLONE_REMOTE: $*" >&2
   echo "[backup] the local backup in $DEST is intact" >&2
+  notify_backup_failure "off-box copy to ${RCLONE_REMOTE}: $*"
   exit 1
 }
 

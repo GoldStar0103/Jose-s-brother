@@ -61,20 +61,20 @@ jobs:
       # Before the tests, not after: a failure here means the database tests
       # would have skipped and the build would have reported success.
       - name: Require a real Postgres
-        run: pnpm --filter @levelup/db exec node scripts/require-pg.mjs
+        run: pnpm --filter @monkei/db exec node scripts/require-pg.mjs
 
-      - run: pnpm -r --filter "@levelup/*" typecheck
+      - run: pnpm -r --filter "@monkei/*" typecheck
 
-      - run: pnpm -r --filter "@levelup/*" test
+      - run: pnpm -r --filter "@monkei/*" test
 
       # Catches what typecheck cannot: a page that only fails when Next
       # actually renders it, and anything that breaks the standalone output the
       # container images are built from.
       - name: Build the storefront
-        run: pnpm --filter @levelup/web exec next build
+        run: pnpm --filter @monkei/web exec next build
 
       - name: Build the admin panel
-        run: pnpm --filter @levelup/admin exec next build
+        run: pnpm --filter @monkei/admin exec next build
 
       # Typecheck and unit tests both pass on an app that cannot actually
       # serve a page. Every runtime bug this project has shipped — a storage
@@ -91,7 +91,7 @@ jobs:
           # Real-looking values: the point is to prove they reach the page, and
           # a blank one would fail the "no [PENDIENTE]" check for the wrong
           # reason. None of this is secret — it is printed on the legal pages.
-          LEGAL_BUSINESS_NAME: LevelUp Store CI
+          LEGAL_BUSINESS_NAME: Monkei CI
           LEGAL_ENTITY_NAME: Entidad De Prueba
           LEGAL_RFC: XAXX010101000
           LEGAL_ADDRESS: Calle de Prueba 1, Ciudad de México
@@ -104,8 +104,8 @@ jobs:
           CUSTOMER_SESSION_SECRET: 14b0f1feb0df4f0b7cb6bc33a0dd74c4ebaf26693110aca79af1792995ef3fac
         run: |
           mkdir -p "$UPLOAD_DIR"
-          pnpm --filter @levelup/db migrate
-          pnpm --filter @levelup/db seed
+          pnpm --filter @monkei/db migrate
+          pnpm --filter @monkei/db seed
           cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/static
           node apps/web/.next/standalone/apps/web/server.js &
           echo $! > /tmp/web.pid

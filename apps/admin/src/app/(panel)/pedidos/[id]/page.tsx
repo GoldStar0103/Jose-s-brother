@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getOrderDetail, getOrderLpSummary } from '@levelup/db';
+import { getOrderDetail, getOrderLpSummary } from '@monkei/db';
 import { getDb } from '../../../../lib/db';
 import { requireSession } from '../../../../lib/session';
 import { orderWhatsappMessage, waUrl } from '../../../../lib/whatsapp';

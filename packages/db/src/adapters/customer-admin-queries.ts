@@ -5,7 +5,7 @@
  * Deliberately a separate module from `customer-profile-store.ts`, which
  * serves the player's own screens and the public profile. Keeping the
  * admin-only numbers — profit generated, reward cost, retained profit — in a
- * file nothing customer-facing imports makes "never expose LevelUp's margins"
+ * file nothing customer-facing imports makes "never expose Monkei's margins"
  * a structural property rather than a review check on every new page.
  */
 

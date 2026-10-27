@@ -8,9 +8,9 @@
  */
 
 import { and, asc, eq, gt, notInArray, sql } from 'drizzle-orm';
-import { parseUsd } from '@levelup/provider';
-import type { ComboForOrder, NewOrder, OrderingStore, RecipeEntry } from '@levelup/engine';
-import { defaultOrderNumber } from '@levelup/engine';
+import { parseUsd } from '@monkei/provider';
+import type { ComboForOrder, NewOrder, OrderingStore, RecipeEntry } from '@monkei/engine';
+import { defaultOrderNumber } from '@monkei/engine';
 import type { Database } from '../index.js';
 import {
   baseProducts,

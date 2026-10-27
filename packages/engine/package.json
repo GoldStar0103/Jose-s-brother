@@ -1,5 +1,5 @@
 {
-  "name": "@levelup/engine",
+  "name": "@monkei/engine",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -13,8 +13,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@levelup/provider": "workspace:*",
-    "@levelup/shared": "workspace:*"
+    "@monkei/provider": "workspace:*",
+    "@monkei/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22",

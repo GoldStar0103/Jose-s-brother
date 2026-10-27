@@ -1,6 +1,6 @@
 'use server';
 
-import { reviewTestimonials, saveTestimonials, type TestimonialDraft } from '@levelup/db';
+import { reviewTestimonials, saveTestimonials, type TestimonialDraft } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 

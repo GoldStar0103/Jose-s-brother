@@ -14,7 +14,7 @@ import 'server-only';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { dirname, join, resolve, sep } from 'node:path';
-import { safeStorageKey, uploadRoot, validateUpload, type UploadRejection } from '@levelup/shared';
+import { safeStorageKey, uploadRoot, validateUpload, type UploadRejection } from '@monkei/shared';
 
 export type FlyerResult =
   | { ok: true; key: string }

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { listStorefront } from '@levelup/db';
+import { listStorefront } from '@monkei/db';
 import { getDb } from '../lib/server';
 import { siteUrl } from '../lib/site';
 

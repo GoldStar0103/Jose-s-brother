@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
-import { DrizzleCatalogAdminStore } from '@levelup/db';
-import type { ComboDraft } from '@levelup/engine';
+import { DrizzleCatalogAdminStore } from '@monkei/db';
+import type { ComboDraft } from '@monkei/engine';
 import { getDb } from '../../../../lib/db';
 import { requireSession } from '../../../../lib/session';
 import { ComboForm } from './combo-form';

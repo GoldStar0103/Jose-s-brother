@@ -17,7 +17,7 @@
  */
 
 import 'server-only';
-import { StripeGateway } from '@levelup/payments';
+import { StripeGateway } from '@monkei/payments';
 import { applyGatewayReport, type AppliedReport, type GatewayReport } from './gateway-report';
 
 export const STRIPE = 'stripe';

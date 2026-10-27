@@ -181,14 +181,14 @@ describe('paymentDetailsFromEnv', () => {
       paymentDetailsFromEnv({
         PAY_BANK: 'BBVA',
         PAY_CLABE: VALID[0]!,
-        PAY_HOLDER: 'LEVELUP STORE',
+        PAY_HOLDER: 'MONKEI',
         PAY_OXXO: '4189142000123456',
         PAY_CARD_NUMBER: '4242424242424242',
       }),
     ).toEqual({
       bank: 'BBVA',
       clabe: VALID[0],
-      holder: 'LEVELUP STORE',
+      holder: 'MONKEI',
       oxxo: '4189142000123456',
       cardNumber: '4242424242424242',
     });
@@ -241,7 +241,7 @@ describe('paymentDetailsFromEnv', () => {
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_payment_settings_test';
+const TEST_DB = 'monkei_payment_settings_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });

@@ -8,7 +8,7 @@
  */
 
 import { and, asc, eq, gt, isNotNull, isNull, lt, notInArray, sql } from 'drizzle-orm';
-import type { ConversionOrder, ConversionStore } from '@levelup/engine';
+import type { ConversionOrder, ConversionStore } from '@monkei/engine';
 import type { Database } from '../index.js';
 import { orders } from '../schema.js';
 

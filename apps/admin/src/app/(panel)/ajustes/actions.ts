@@ -10,7 +10,7 @@ import {
   saveFxRate,
   savePaymentDetails,
   savePaymentMethodsEnabled,
-} from '@levelup/db';
+} from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { readPurposeToken, signPurposeToken, verifyPassword } from '../../../lib/auth';
@@ -79,7 +79,7 @@ export async function saveSettings(
  * neither can be replayed as the other even though both are short-lived and
  * carry an `adminUserId`.
  */
-const PENDING_ENROLL_COOKIE = 'levelup_admin_pending_totp_enroll';
+const PENDING_ENROLL_COOKIE = 'monkei_admin_pending_totp_enroll';
 const PENDING_ENROLL_PURPOSE = 'totp-enroll';
 const PENDING_ENROLL_TTL_SECONDS = 5 * 60;
 

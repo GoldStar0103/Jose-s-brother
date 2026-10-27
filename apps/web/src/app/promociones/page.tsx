@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { listStorefront } from '@levelup/db';
+import { listStorefront } from '@monkei/db';
 import { getDb } from '../../lib/server';
 import { diamonds, mxn } from '../../lib/format';
 import { flyerUrl } from '../../lib/assets';

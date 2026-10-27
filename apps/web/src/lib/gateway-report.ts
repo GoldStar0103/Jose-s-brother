@@ -10,12 +10,12 @@
  * just be two copies of the same five steps drifting apart over time.
  */
 
-import { DrizzlePaymentStore, extendPaymentDeadline, findGatewayPayment } from '@levelup/db';
+import { DrizzlePaymentStore, extendPaymentDeadline, findGatewayPayment } from '@monkei/db';
 import {
   settleGatewayCharge,
   type GatewayChargeState,
   type GatewaySettlement,
-} from '@levelup/engine';
+} from '@monkei/engine';
 import { getDb } from './server';
 import { notifyOps } from './ops';
 import { notifyGatewaySale } from './telegram';

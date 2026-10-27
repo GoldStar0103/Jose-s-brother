@@ -26,7 +26,7 @@ const REQUEST = {
   endpointKind: 'pins_recharge' as const,
   providerProductId: '351',
   playerId: '182938102',
-  clientReference: 'LU-260911-AB12-0',
+  clientReference: 'MK-260911-AB12-0',
 };
 
 describe('buildPurchaseBody', () => {
@@ -40,11 +40,11 @@ describe('buildPurchaseBody', () => {
         endpointKind: 'pins_recharge',
         providerProductId: '5',
         playerId: '182938102',
-        clientReference: 'LU-260920-AB12-0',
+        clientReference: 'MK-260920-AB12-0',
       }),
     ).toEqual({
       path: '/buy/catalog',
-      body: { product_id: 5, manual_id: '182938102', client_name: 'LU-260920-AB12-0' },
+      body: { product_id: 5, manual_id: '182938102', client_name: 'MK-260920-AB12-0' },
     });
   });
 
@@ -55,7 +55,7 @@ describe('buildPurchaseBody', () => {
         providerProductId: '1',
         playerId: '182938102',
         serverId: 'na',
-        clientReference: 'LU-260920-AB12-0',
+        clientReference: 'MK-260920-AB12-0',
       }),
     ).toEqual({
       path: '/buy/catalog',
@@ -63,7 +63,7 @@ describe('buildPurchaseBody', () => {
         product_id: 1,
         player_id: '182938102',
         server_id: 'na',
-        client_name: 'LU-260920-AB12-0',
+        client_name: 'MK-260920-AB12-0',
       },
     });
   });
@@ -74,7 +74,7 @@ describe('buildPurchaseBody', () => {
         endpointKind: 'pins_code',
         providerProductId: '11',
         playerId: '182938102',
-        clientReference: 'LU-260920-AB12-0',
+        clientReference: 'MK-260920-AB12-0',
       }),
     ).toThrow(/delivers redeemable codes/);
   });

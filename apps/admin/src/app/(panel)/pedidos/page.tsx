@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { listOrders, type OrderFilter } from '@levelup/db';
+import { listOrders, type OrderFilter } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { dateTime, mxn, orderStatusLabel, statusTone } from '../../../lib/format';

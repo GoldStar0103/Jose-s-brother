@@ -1,5 +1,5 @@
 /**
- * LevelUp Store — catalog source of truth (Phase 0)
+ * Monkei — catalog source of truth (Phase 0)
  *
  * Every recipe here was transcribed from the client's "CONFIGURACIÓN DE PROMOCIONES"
  * message. Advertised diamond counts carry a provenance tag so we never silently
@@ -17,13 +17,13 @@ export const BONUS_PCT = 10;
  * The client's rule: flyer numbers are rounded for visual appeal and most
  * combos over-deliver by far more, so a handful short goes unremarked.
  *
- * Must stay in step with ACCEPTABLE_SHORTFALL_DIAMONDS in @levelup/shared —
+ * Must stay in step with ACCEPTABLE_SHORTFALL_DIAMONDS in @monkei/shared —
  * duplicated because this script is deliberately dependency-free so it can run
  * before anything is installed.
  */
 export const ACCEPTABLE_SHORTFALL = 10;
 
-/** The six commodity SKUs every competitor resells. LevelUp's raw material. */
+/** The six commodity SKUs every competitor resells. Monkei's raw material. */
 export const BASE_DENOMINATIONS = [100, 310, 520, 1060, 2180, 5600];
 
 /**
@@ -47,7 +47,7 @@ const ESTIMATE = 'estimate';
 /**
  * Competitor retail pricing (HydraUp, screenshot supplied by the client),
  * keyed by base denomination. These are what a customer pays elsewhere for the
- * same delivered diamonds — the yardstick LevelUp's combos are judged against.
+ * same delivered diamonds — the yardstick Monkei's combos are judged against.
  *
  * NOT provider cost. Real margin still needs the live catalog from Phase 0.
  */

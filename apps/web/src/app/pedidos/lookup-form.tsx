@@ -12,7 +12,7 @@ export function LookupForm() {
         <span>Número de pedido</span>
         <input
           name="orderNumber"
-          placeholder="LU-260915-AB12"
+          placeholder="MK-260915-AB12"
           className="mono"
           required
           autoFocus

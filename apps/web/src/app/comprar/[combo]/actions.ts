@@ -9,11 +9,11 @@ import {
   DrizzlePaymentStore,
   getPaymentDetails,
   getStorefrontCombo,
-} from '@levelup/db';
-import { createOrder, rejectPayment, type CreateOrderFailure, type CreateOrderInput } from '@levelup/engine';
-import { siteName, validateUpload } from '@levelup/shared';
-import { ValidationUnsupportedError } from '@levelup/provider';
-import type { PaymentGateway } from '@levelup/payments';
+} from '@monkei/db';
+import { createOrder, rejectPayment, type CreateOrderFailure, type CreateOrderInput } from '@monkei/engine';
+import { siteName, validateUpload } from '@monkei/shared';
+import { ValidationUnsupportedError } from '@monkei/provider';
+import type { PaymentGateway } from '@monkei/payments';
 import { diamonds, mxn } from '../../../lib/format';
 import { callerIp, getDb, getProvider, validationLimiter } from '../../../lib/server';
 import { getCustomerSession } from '../../../lib/customer-session';
@@ -390,7 +390,7 @@ const STRIPE_METHOD_COPY: Record<
  * restricted to exactly the one method they picked.
  *
  * Shared between Stripe (card/oxxo/spei) and Mercado Pago (oxxo/spei) —
- * both are a `PaymentGateway` from `@levelup/payments`, and every step here
+ * both are a `PaymentGateway` from `@monkei/payments`, and every step here
  * (reserve the order, open the charge, link it, or cancel on failure) is
  * identical regardless of which gateway is actually doing the work. Only
  * `gatewayName` and the per-method copy differ.
@@ -560,7 +560,7 @@ export async function payWithMercadoPagoSpei(
 }
 
 async function attachComprobante(orderId: string, key: string): Promise<void> {
-  const { payments } = await import('@levelup/db');
+  const { payments } = await import('@monkei/db');
   await getDb()
     .update(payments)
     .set({ comprobanteAssetUrl: key, status: 'under_review' })

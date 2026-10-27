@@ -14,10 +14,10 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { eq, sql as raw } from 'drizzle-orm';
-import { createOrder } from '@levelup/engine';
-import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@levelup/provider';
+import { createOrder } from '@monkei/engine';
+import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@monkei/provider';
 import { createDb, type Database } from '../index.js';
-import { LEVEL_PASS_REWARD_COMBO_KEY } from '@levelup/engine';
+import { LEVEL_PASS_REWARD_COMBO_KEY } from '@monkei/engine';
 import {
   badgeDefinitions,
   campaigns,
@@ -40,14 +40,14 @@ import { DrizzleCatalogSyncStore } from './catalog-sync-store.js';
 import { DrizzleOrderingStore } from './ordering-store.js';
 import { saveFxRate } from './payment-settings.js';
 import { saveLevelPassCheckpoints, DEFAULT_LEVEL_PASS_CHECKPOINTS } from './level-pass-settings.js';
-import { syncCatalog, syncLevelPass } from '@levelup/engine';
+import { syncCatalog, syncLevelPass } from '@monkei/engine';
 import { DrizzleLevelPassStore } from './level-pass-store.js';
-import type { LevelPassDecision } from '@levelup/engine';
+import type { LevelPassDecision } from '@monkei/engine';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_level_pass_test';
+const TEST_DB = 'monkei_level_pass_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -640,7 +640,7 @@ describe('findUnprocessedOrders', () => {
   it('excludes a completed Level Pass reward order — it must never generate recursive LP', async () => {
     await seedProfile('100001');
     await db.insert(orders).values({
-      orderNumber: 'LU-REWARD-1',
+      orderNumber: 'MK-REWARD-1',
       playerId: '100001',
       comboId: null,
       comboKey: LEVEL_PASS_REWARD_COMBO_KEY,

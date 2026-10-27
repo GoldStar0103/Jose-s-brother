@@ -38,7 +38,7 @@ export function PurchasePixel({
   comboKey: string | null;
 }) {
   useEffect(() => {
-    const key = `lu:purchase:${orderNumber}`;
+    const key = `mk:purchase:${orderNumber}`;
     try {
       if (window.localStorage.getItem(key)) return;
       window.localStorage.setItem(key, '1');

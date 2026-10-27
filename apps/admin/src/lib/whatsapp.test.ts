@@ -32,8 +32,8 @@ describe('waUrl', () => {
   });
 
   it('attaches an encoded message', () => {
-    expect(waUrl('5212345678', 'Hola, pedido LU-1.')).toBe(
-      'https://wa.me/5212345678?text=Hola%2C%20pedido%20LU-1.',
+    expect(waUrl('5212345678', 'Hola, pedido MK-1.')).toBe(
+      'https://wa.me/5212345678?text=Hola%2C%20pedido%20MK-1.',
     );
   });
 
@@ -48,29 +48,29 @@ describe('waUrl', () => {
 
 describe('orderWhatsappMessage', () => {
   it('builds a general opener with the order number', () => {
-    const message = orderWhatsappMessage({ orderNumber: 'LU-1042' }, 'general');
-    expect(message).toContain('LU-1042');
+    const message = orderWhatsappMessage({ orderNumber: 'MK-1042' }, 'general');
+    expect(message).toContain('MK-1042');
     expect(message.length).toBeGreaterThan(10);
   });
 
   it('mentions the combo when available', () => {
     const message = orderWhatsappMessage(
-      { orderNumber: 'LU-1042', comboName: 'Pack Insano', advertisedDiamonds: 7200 },
+      { orderNumber: 'MK-1042', comboName: 'Pack Insano', advertisedDiamonds: 7200 },
       'general',
     );
-    expect(message).toContain('LU-1042');
+    expect(message).toContain('MK-1042');
     expect(message).toContain('Pack Insano');
     expect(message).toContain('7200');
   });
 
   it('builds a mismatch opener that names the amount problem', () => {
-    const message = orderWhatsappMessage({ orderNumber: 'LU-2001' }, 'mismatch');
-    expect(message).toContain('LU-2001');
+    const message = orderWhatsappMessage({ orderNumber: 'MK-2001' }, 'mismatch');
+    expect(message).toContain('MK-2001');
     expect(message.toLowerCase()).toContain('monto');
   });
 
   it('includes both amounts in the mismatch opener when given', () => {
-    const message = orderWhatsappMessage({ orderNumber: 'LU-2001' }, 'mismatch', {
+    const message = orderWhatsappMessage({ orderNumber: 'MK-2001' }, 'mismatch', {
       receivedMxn: '$800.00',
       expectedMxn: '$860.00',
     });

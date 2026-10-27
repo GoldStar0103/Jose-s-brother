@@ -13,7 +13,7 @@
 
 import { connect as netConnect, type Socket } from 'node:net';
 import { connect as tlsConnect, type TLSSocket } from 'node:tls';
-import { FALLBACK_DOMAIN, siteName } from '@levelup/shared';
+import { FALLBACK_DOMAIN, siteName } from '@monkei/shared';
 
 export interface EmailSender {
   sendOtpCode(to: string, code: string): Promise<void>;

@@ -5,16 +5,16 @@ describe('siteOrigin', () => {
   it('adds the scheme to a bare hostname', () => {
     // PUBLIC_DOMAIN is configured bare, because the legal pages print it as
     // text. Every other consumer needs an absolute URL.
-    expect(siteOrigin('levelupstore.mx')).toBe('https://levelupstore.mx');
+    expect(siteOrigin('monkei.mx')).toBe('https://monkei.mx');
   });
 
   it('accepts a value that already has one', () => {
-    expect(siteOrigin('https://levelupstore.mx')).toBe('https://levelupstore.mx');
+    expect(siteOrigin('https://monkei.mx')).toBe('https://monkei.mx');
   });
 
   it('forces https, since that is what the site serves', () => {
     // A mixed-scheme og:image is dropped by scrapers.
-    expect(siteOrigin('http://levelupstore.mx')).toBe('https://levelupstore.mx');
+    expect(siteOrigin('http://monkei.mx')).toBe('https://monkei.mx');
   });
 
   it('keeps http for localhost so previews resolve in development', () => {
@@ -32,16 +32,16 @@ describe('siteOrigin', () => {
   });
 
   it('does not mistake a real domain that merely starts with "localhost"', () => {
-    expect(siteOrigin('localhost.levelupstore.mx')).toBe('https://localhost.levelupstore.mx');
+    expect(siteOrigin('localhost.monkei.mx')).toBe('https://localhost.monkei.mx');
   });
 
   it('strips trailing slashes and whitespace', () => {
-    expect(siteOrigin('  https://levelupstore.mx/  ')).toBe('https://levelupstore.mx');
-    expect(siteOrigin('levelupstore.mx//')).toBe('https://levelupstore.mx');
+    expect(siteOrigin('  https://monkei.mx/  ')).toBe('https://monkei.mx');
+    expect(siteOrigin('monkei.mx//')).toBe('https://monkei.mx');
   });
 
   it('keeps a non-default port', () => {
-    expect(siteOrigin('levelupstore.mx:8443')).toBe('https://levelupstore.mx:8443');
+    expect(siteOrigin('monkei.mx:8443')).toBe('https://monkei.mx:8443');
   });
 
   it('falls back rather than throwing on an unset or unusable value', () => {
@@ -54,7 +54,7 @@ describe('siteOrigin', () => {
   });
 
   it('drops any path, since an origin is what callers need', () => {
-    expect(siteOrigin('https://levelupstore.mx/tienda')).toBe('https://levelupstore.mx');
+    expect(siteOrigin('https://monkei.mx/tienda')).toBe('https://monkei.mx');
   });
 });
 

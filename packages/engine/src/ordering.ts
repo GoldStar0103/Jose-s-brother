@@ -3,7 +3,7 @@
  *
  * This is the business model in code. The customer buys "Mega Prime 48k" and
  * sees one purchase; internally it becomes eight calls to the provider. That
- * asymmetry is what lets LevelUp compete on perceived value rather than on the
+ * asymmetry is what lets Monkei compete on perceived value rather than on the
  * commodity price every competitor matches.
  *
  * Three things are frozen at creation and never re-read afterwards:
@@ -17,9 +17,9 @@
  *      change what an in-flight order expects to be charged.
  */
 
-import { checkRecipe } from '@levelup/shared/money';
-import type { UsdTenK } from '@levelup/provider';
-import type { EndpointKind } from '@levelup/provider';
+import { checkRecipe } from '@monkei/shared/money';
+import type { UsdTenK } from '@monkei/provider';
+import type { EndpointKind } from '@monkei/provider';
 // Payment concepts live in payments.ts; ordering only needs to record the
 // chosen method on the payment row it creates alongside the order.
 import type { PaymentMethod } from './payments.js';
@@ -182,7 +182,7 @@ const PLAYER_ID_PATTERN = /^\d{6,15}$/;
 const CROCKFORD = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 
 /**
- * `LU-YYMMDD-XXXX`. Short enough to read over WhatsApp, and the random tail
+ * `MK-YYMMDD-XXXX`. Short enough to read over WhatsApp, and the random tail
  * avoids leaking daily order volume to competitors the way a counter would.
  * Uniqueness is ultimately guaranteed by the unique index, not by this.
  */
@@ -194,7 +194,7 @@ export function defaultOrderNumber(now: Date = new Date()): string {
   for (let i = 0; i < 4; i++) {
     tail += CROCKFORD[Math.floor(Math.random() * CROCKFORD.length)];
   }
-  return `LU-${yy}${mm}${dd}-${tail}`;
+  return `MK-${yy}${mm}${dd}-${tail}`;
 }
 
 export async function createOrder(

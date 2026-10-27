@@ -10,6 +10,10 @@
 # the compose network and are unreachable from the internet — worth stating
 # because the admin panel approves payments, and the single most damaging
 # mistake available here is exposing its port "just to check something".
+#
+# Compose project name stays "levelup" forever on this VPS: renaming it would
+# create empty volumes (levelup_uploads / levelup_postgres_data) and look like
+# a wiped store. The public brand is Monkei; this name is only Docker's.
 
 name: levelup
 

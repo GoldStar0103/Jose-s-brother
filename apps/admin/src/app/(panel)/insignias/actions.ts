@@ -8,8 +8,8 @@ import {
   saveBadgeDefinition,
   setBadgeObtainable,
   type BadgeDefinitionDraft,
-} from '@levelup/db';
-import { siteName } from '@levelup/shared';
+} from '@monkei/db';
+import { siteName } from '@monkei/shared';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { storeBadgeArtwork } from '../../../lib/badge-artwork';

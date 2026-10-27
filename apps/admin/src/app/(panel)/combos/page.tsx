@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { listCombosForAdmin, DrizzleCatalogAdminStore } from '@levelup/db';
-import { ACCEPTABLE_SHORTFALL_DIAMONDS } from '@levelup/engine';
+import { listCombosForAdmin, DrizzleCatalogAdminStore } from '@monkei/db';
+import { ACCEPTABLE_SHORTFALL_DIAMONDS } from '@monkei/engine';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { diamonds, mxn, usd } from '../../../lib/format';

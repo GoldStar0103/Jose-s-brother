@@ -21,7 +21,7 @@ import { getAdminCustomerDetail, listAdminCustomers } from './customer-admin-que
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_customer_admin_test';
+const TEST_DB = 'monkei_customer_admin_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -112,7 +112,7 @@ async function seedOrderWithLp(
   const [order] = await db
     .insert(orders)
     .values({
-      orderNumber: `LU-${Math.random().toString(36).slice(2, 10)}`,
+      orderNumber: `MK-${Math.random().toString(36).slice(2, 10)}`,
       playerId,
       playerProfileId,
       comboKey: 'test_combo',
@@ -316,7 +316,7 @@ describe.skipIf(!PG_AVAILABLE)('getAdminCustomerDetail', () => {
     const ana = await seedPlayer('100001', { seasonId: season.id });
     // No playerProfileId — bought before the account existed.
     await db.insert(orders).values({
-      orderNumber: 'LU-GUEST-1',
+      orderNumber: 'MK-GUEST-1',
       playerId: '100001',
       comboKey: 'test_combo',
       comboSnapshot: { name: 'Pack Invitado' },
@@ -327,7 +327,7 @@ describe.skipIf(!PG_AVAILABLE)('getAdminCustomerDetail', () => {
 
     const detail = await getAdminCustomerDetail(db, ana.id);
 
-    expect(detail?.orders.map((o) => o.orderNumber)).toContain('LU-GUEST-1');
+    expect(detail?.orders.map((o) => o.orderNumber)).toContain('MK-GUEST-1');
   });
 
   it('reports the Vault and the ranking position', async () => {

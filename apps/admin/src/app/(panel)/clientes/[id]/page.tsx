@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getAdminCustomerDetail } from '@levelup/db';
+import { getAdminCustomerDetail } from '@monkei/db';
 import { getDb } from '../../../../lib/db';
 import { requireSession } from '../../../../lib/session';
 import { dateTime, diamonds, mxn, orderStatusLabel, statusTone } from '../../../../lib/format';

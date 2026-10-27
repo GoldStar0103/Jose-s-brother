@@ -15,7 +15,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { markPaymentEventProcessed, recordPaymentEvent } from '@levelup/db';
+import { markPaymentEventProcessed, recordPaymentEvent } from '@monkei/db';
 import { getDb } from '../../../../lib/server';
 import { applyMercadoPagoReport, getMercadoPago, MERCADOPAGO } from '../../../../lib/mercadopago';
 

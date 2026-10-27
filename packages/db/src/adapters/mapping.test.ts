@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { lockKeyFor } from './advisory-lock.js';
 import { toNumericString, toOrderItemRecord, toOrderRecord, type OrderItemRow } from './mapping.js';
-import type { UsdTenK } from '@levelup/provider';
+import type { UsdTenK } from '@monkei/provider';
 
 const row = (overrides: Partial<OrderItemRow> = {}): OrderItemRow => ({
   id: 'item-1',
@@ -18,7 +18,7 @@ const row = (overrides: Partial<OrderItemRow> = {}): OrderItemRow => ({
 
 const order = {
   id: 'order-1',
-  orderNumber: 'LU-000900',
+  orderNumber: 'MK-000900',
   playerId: '7288567050',
   serverId: null,
   status: 'payment_confirmed' as const,

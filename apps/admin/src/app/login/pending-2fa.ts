@@ -13,7 +13,7 @@
  * `SESSION_COOKIE`, signed with `signPurposeToken` (not `createSessionToken`)
  * so it can never itself function as a logged-in session — see auth.ts.
  */
-export const PENDING_2FA_COOKIE = 'levelup_admin_pending_2fa';
+export const PENDING_2FA_COOKIE = 'monkei_admin_pending_2fa';
 export const PENDING_2FA_PURPOSE = 'login-2fa';
 /**
  * Five minutes: long enough to open an authenticator app, short enough that

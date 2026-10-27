@@ -5,7 +5,7 @@ import {
   getFxRate,
   getPaymentDetails,
   getPaymentMethodsEnabled,
-} from '@levelup/db';
+} from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { SettingsForm } from './settings-form';

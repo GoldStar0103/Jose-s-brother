@@ -1,4 +1,4 @@
-# LevelUp Store
+# Monkei
 
 Free Fire diamond top-ups for the Mexican market. Mobile-first storefront, an
 admin panel the owner runs the business from, and a worker that does the actual
@@ -12,7 +12,7 @@ thing. That shapes more of this codebase than any technical constraint.
 
 ## The one idea worth understanding first
 
-LevelUp buys six commodity SKUs from RecargasAmérica — 100, 310, 520, 1060,
+Monkei buys six commodity SKUs from RecargasAmérica — 100, 310, 520, 1060,
 2180 and 5600 diamonds, each with a 10% bonus — and repackages them into 19
 combos across five campaigns. **A customer makes one purchase; behind it, up to
 eight separate provider calls run.**
@@ -55,8 +55,10 @@ packages/
   payments/  gateway port, webhook signature verification, Stripe adapter
 phase0/      live API discovery, and the transcribed combo catalog
 docker/      images and the Caddy config
-docs/        RUNBOOK.md — deploy, restore, what to do when something breaks
-             MANUAL.md  — the owner's guide, in Spanish
+docs/        STATUS.md    — done vs open (start here for project state)
+             RUNBOOK.md   — deploy, restore, what to do when something breaks
+             MANUAL.md    — the owner's guide, in Spanish
+             ISOLATION.md — Monkei vs LevelUp Store boundaries
 ```
 
 `engine` holds the business rules and performs no I/O; `db` provides the
@@ -87,9 +89,9 @@ docker compose up -d          # Postgres, or use pnpm pg:start (no Docker needed
 pnpm db:migrate
 pnpm db:seed                  # 19 combos from phase0/catalog.mjs
 
-pnpm --filter @levelup/web dev      # storefront  :3000
-pnpm --filter @levelup/admin dev    # panel       :3001
-pnpm --filter @levelup/admin create-admin
+pnpm --filter @monkei/web dev      # storefront  :3000
+pnpm --filter @monkei/admin dev    # panel       :3001
+pnpm --filter @monkei/admin create-admin
 WORKER_DRY_RUN=true pnpm worker     # simulated provider — spends no money
 ```
 
@@ -100,7 +102,7 @@ Use it. The real one spends real balance.
 The seed links recipes to `base_products`, which are populated by the provider
 catalog sync rather than seeded, so a fresh database will report unlinked
 recipe items until that runs. The worker runs it at startup and hourly;
-`pnpm --filter @levelup/worker sync-catalog` runs it now.
+`pnpm --filter @monkei/worker sync-catalog` runs it now.
 
 ### Commands
 
@@ -110,8 +112,8 @@ recipe items until that runs. The worker runs it at startup and hourly;
 | `pnpm typecheck` | strict, with `noUncheckedIndexedAccess` |
 | `pnpm pg:start` / `pg:stop` | local Postgres from npm binaries, no Docker |
 | `pnpm db:migrate` / `db:seed` / `db:studio` | schema and data |
-| `pnpm --filter @levelup/worker seed-test-order <combo> --approve` | put a real order through the real path |
-| `pnpm --filter @levelup/worker sync-catalog` | provider catalog sync, now — the worker also runs it hourly |
+| `pnpm --filter @monkei/worker seed-test-order <combo> --approve` | put a real order through the real path |
+| `pnpm --filter @monkei/worker sync-catalog` | provider catalog sync, now — the worker also runs it hourly |
 | `node phase0/discover.mjs` | probe the live provider API |
 | `node scripts/smoke.mjs <store-url> [panel-url]` | verify a running deployment — read-only, no credentials |
 

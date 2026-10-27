@@ -172,8 +172,8 @@ await check('comprobantes are not publicly reachable', async () => {
   // The single most damaging thing this deployment could get wrong: customer
   // bank receipts served to anyone who guesses a URL.
   const attempts = [
-    '/media/comprobantes/LU-000001/x.jpg',
-    '/media/flyers/../comprobantes/LU-000001/x.jpg',
+    '/media/comprobantes/MK-000001/x.jpg',
+    '/media/flyers/../comprobantes/MK-000001/x.jpg',
   ];
   for (const path of attempts) {
     const { status } = await get(`${STORE}${path}`);
@@ -183,7 +183,7 @@ await check('comprobantes are not publicly reachable', async () => {
 });
 
 await check('order pages are marked noindex', async () => {
-  const { headers } = await get(`${STORE}/pedido/LU-000000?id=0`);
+  const { headers } = await get(`${STORE}/pedido/MK-000000?id=0`);
   const tag = headers.get('x-robots-tag') ?? '';
   // The URL carries a player ID and the page shows what they bought.
   return tag.includes('noindex') ? { ok: true } : { detail: `X-Robots-Tag: ${tag || '(absent)'}` };

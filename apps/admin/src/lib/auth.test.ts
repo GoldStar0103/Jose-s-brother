@@ -9,7 +9,7 @@ import {
 } from './auth';
 
 const SECRET = 'a'.repeat(48);
-const session = { adminUserId: 'admin-1', email: 'jose@levelupstore.mx' };
+const session = { adminUserId: 'admin-1', email: 'jose@monkei.mx' };
 
 describe('password hashing', () => {
   it('accepts the correct password', async () => {
@@ -115,10 +115,10 @@ describe('session tokens', () => {
 
 describe('purpose-bound tokens (2FA pending state)', () => {
   it('round-trips a payload for the purpose it was signed with', () => {
-    const token = signPurposeToken({ adminUserId: 'admin-1', email: 'jose@levelupstore.mx' }, SECRET, 'login-2fa', 300);
+    const token = signPurposeToken({ adminUserId: 'admin-1', email: 'jose@monkei.mx' }, SECRET, 'login-2fa', 300);
     expect(readPurposeToken(token, SECRET, 'login-2fa')).toMatchObject({
       adminUserId: 'admin-1',
-      email: 'jose@levelupstore.mx',
+      email: 'jose@monkei.mx',
     });
   });
 
@@ -126,7 +126,7 @@ describe('purpose-bound tokens (2FA pending state)', () => {
     // This is the whole point: a pending-login token must not double as a
     // pending-enrollment token, or (critically) as a session token, even if
     // the payload shape happens to line up.
-    const token = signPurposeToken({ adminUserId: 'admin-1', email: 'jose@levelupstore.mx' }, SECRET, 'login-2fa', 300);
+    const token = signPurposeToken({ adminUserId: 'admin-1', email: 'jose@monkei.mx' }, SECRET, 'login-2fa', 300);
     expect(readPurposeToken(token, SECRET, 'totp-enroll')).toBeNull();
   });
 

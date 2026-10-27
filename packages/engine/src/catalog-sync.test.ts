@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@levelup/provider';
+import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@monkei/provider';
 import {
   summariseSync,
   syncCatalog,

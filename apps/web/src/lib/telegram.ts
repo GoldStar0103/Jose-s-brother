@@ -4,8 +4,8 @@
  * Deliberately not the engine's `Alerter` (info/warn/critical across every
  * fulfilment failure mode): that abstraction belongs to the worker, the only
  * thing that already depends on it, and reaching for it here would make
- * `@levelup/shared` depend on `@levelup/engine` — which already depends on
- * `@levelup/shared` for `checkRecipe`. One storefront event with nothing to
+ * `@monkei/shared` depend on `@monkei/engine` — which already depends on
+ * `@monkei/shared` for `checkRecipe`. One storefront event with nothing to
  * choose a level for does not need that abstraction; a plain function does.
  *
  * Optional by design, the opposite of the worker's own alerts: the worker

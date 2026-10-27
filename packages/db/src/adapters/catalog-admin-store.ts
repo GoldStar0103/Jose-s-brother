@@ -11,8 +11,8 @@
  */
 
 import { and, asc, eq, ne, sql } from 'drizzle-orm';
-import { parseUsd } from '@levelup/provider';
-import type { AvailableProduct, CampaignDraft, ComboDraft } from '@levelup/engine';
+import { parseUsd } from '@monkei/provider';
+import type { AvailableProduct, CampaignDraft, ComboDraft } from '@monkei/engine';
 import type { Database } from '../index.js';
 import { auditLog, baseProducts, campaigns, comboItems, combos } from '../schema.js';
 

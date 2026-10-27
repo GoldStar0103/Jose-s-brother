@@ -39,7 +39,7 @@ vi.mock('../../lib/db', () => ({
 }));
 
 // Only the table reference `eq()` needs — never queried against a real DB here.
-vi.mock('@levelup/db', () => ({ adminUsers: { email: 'email-column' } }));
+vi.mock('@monkei/db', () => ({ adminUsers: { email: 'email-column' } }));
 
 const { hashPassword } = await import('../../lib/auth');
 const { login } = await import('./actions');
@@ -56,14 +56,14 @@ describe('login — admins with no 2FA are unaffected', () => {
   it('issues a session immediately and redirects to / — same as before 2FA existed', async () => {
     mockUser = {
       id: 'admin-no-2fa',
-      email: 'jose@levelupstore.mx',
+      email: 'jose@monkei.mx',
       passwordHash: await hashPassword(PASSWORD),
       active: true,
       totpSecret: null,
     };
 
     const formData = new FormData();
-    formData.set('email', 'jose@levelupstore.mx');
+    formData.set('email', 'jose@monkei.mx');
     formData.set('password', PASSWORD);
 
     await expect(login({}, formData)).rejects.toThrow('REDIRECT:/');
@@ -84,14 +84,14 @@ describe('login — an admin with 2FA enabled gets a pending step instead', () =
   it('does not issue a session, sets a pending cookie, and redirects to /login/verify', async () => {
     mockUser = {
       id: 'admin-with-2fa',
-      email: 'ana@levelupstore.mx',
+      email: 'ana@monkei.mx',
       passwordHash: await hashPassword(PASSWORD),
       active: true,
       totpSecret: 'JBSWY3DPEHPK3PXP',
     };
 
     const formData = new FormData();
-    formData.set('email', 'ana@levelupstore.mx');
+    formData.set('email', 'ana@monkei.mx');
     formData.set('password', PASSWORD);
 
     await expect(login({}, formData)).rejects.toThrow('REDIRECT:/login/verify');
@@ -99,7 +99,7 @@ describe('login — an admin with 2FA enabled gets a pending step instead', () =
     expect(setSessionCookieMock).not.toHaveBeenCalled();
     expect(cookieStore.set).toHaveBeenCalledTimes(1);
     const [cookieName] = cookieStore.set.mock.calls[0]!;
-    expect(cookieName).toBe('levelup_admin_pending_2fa');
+    expect(cookieName).toBe('monkei_admin_pending_2fa');
   });
 });
 
@@ -113,14 +113,14 @@ describe('login — wrong password', () => {
   it('returns the generic failure and never sets any cookie, 2FA or not', async () => {
     mockUser = {
       id: 'admin-1',
-      email: 'jose@levelupstore.mx',
+      email: 'jose@monkei.mx',
       passwordHash: await hashPassword(PASSWORD),
       active: true,
       totpSecret: null,
     };
 
     const formData = new FormData();
-    formData.set('email', 'jose@levelupstore.mx');
+    formData.set('email', 'jose@monkei.mx');
     formData.set('password', 'not the password');
 
     const result = await login({}, formData);

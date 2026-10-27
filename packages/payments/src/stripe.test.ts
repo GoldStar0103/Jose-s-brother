@@ -3,7 +3,7 @@ import { signPayload } from './signature.js';
 import { formEncode, StripeGateway } from './stripe.js';
 import { GatewayError } from './types.js';
 
-const SECRET = 'whsec_test_levelup';
+const SECRET = 'whsec_test_monkei';
 const NOW_MS = 1_760_000_000_000;
 const NOW_S = Math.floor(NOW_MS / 1000);
 
@@ -42,12 +42,12 @@ function gateway(fetchImpl: typeof fetch, extra: Partial<ConstructorParameters<t
 
 const chargeInput = {
   orderId: 'ord-uuid-1',
-  orderNumber: 'LU-260910-AB12',
+  orderNumber: 'MK-260910-AB12',
   amountCents: 26_000,
   method: 'card' as const,
   description: 'Descuentos Chidos 1700 — 1,700 diamantes',
-  returnUrl: 'https://levelupstore.mx/pedido/LU-260910-AB12?id=123456789',
-  cancelUrl: 'https://levelupstore.mx/comprar/dc_1700?cancelado=LU-260910-AB12&id=123456789',
+  returnUrl: 'https://monkei.mx/pedido/MK-260910-AB12?id=123456789',
+  cancelUrl: 'https://monkei.mx/comprar/dc_1700?cancelado=MK-260910-AB12&id=123456789',
 };
 
 describe('formEncode', () => {
@@ -93,8 +93,8 @@ describe('createCharge', () => {
     expect(body.get('line_items[0][price_data][currency]')).toBe('mxn');
     expect(body.get('line_items[0][price_data][unit_amount]')).toBe('26000');
     expect(body.get('metadata[order_id]')).toBe('ord-uuid-1');
-    expect(body.get('payment_intent_data[metadata][order_number]')).toBe('LU-260910-AB12');
-    expect(body.get('client_reference_id')).toBe('LU-260910-AB12');
+    expect(body.get('payment_intent_data[metadata][order_number]')).toBe('MK-260910-AB12');
+    expect(body.get('client_reference_id')).toBe('MK-260910-AB12');
     // Stripe retired payment_method_types on Checkout Session creation;
     // excluding everything else in our own method universe is what is left
     // to offer card alone. See stripe.ts's own comment on this.
@@ -113,7 +113,7 @@ describe('createCharge', () => {
     await gw.createCharge(chargeInput);
     await gw.createCharge(chargeInput);
 
-    expect(calls[0]?.headers['Idempotency-Key']).toBe('levelup-checkout-ord-uuid-1');
+    expect(calls[0]?.headers['Idempotency-Key']).toBe('monkei-checkout-ord-uuid-1');
     expect(calls[1]?.headers['Idempotency-Key']).toBe(calls[0]?.headers['Idempotency-Key']);
   });
 
@@ -145,7 +145,7 @@ describe('createCharge', () => {
     await gateway(impl, { methods: ['card', 'spei'] }).createCharge({ ...chargeInput, method: 'spei' });
 
     expect(calls[0]?.url).toBe('https://api.stripe.com/v1/customers');
-    expect(calls[0]?.headers['Idempotency-Key']).toBe('levelup-customer-ord-uuid-1');
+    expect(calls[0]?.headers['Idempotency-Key']).toBe('monkei-customer-ord-uuid-1');
 
     const body = new URLSearchParams(calls[1]?.body);
     expect(body.get('excluded_payment_method_types[0]')).toBe('card');

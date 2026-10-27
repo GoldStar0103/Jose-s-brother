@@ -1,4 +1,4 @@
-import { siteName } from '@levelup/shared';
+import { siteName } from '@monkei/shared';
 import logo from '../../assets/logo.png';
 import { LoginForm } from './login-form';
 

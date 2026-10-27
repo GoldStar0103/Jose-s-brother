@@ -25,7 +25,7 @@
  * connection dies, and Postgres releases the lock. No stuck queue.
  */
 
-import type { AdvisoryLock } from '@levelup/engine';
+import type { AdvisoryLock } from '@monkei/engine';
 import type { Sql } from 'postgres';
 
 /** Namespace for this application's locks, so keys cannot collide with anyone else's. */

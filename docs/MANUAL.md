@@ -1,4 +1,4 @@
-# Manual de LevelUp Store
+# Manual de Monkei
 
 Guía para operar la tienda desde el panel. No necesitas saber nada técnico ni
 llamar a nadie para hacer cualquier cosa de aquí.
@@ -149,9 +149,9 @@ Al crear o editar una insignia puedes **subir su imagen** desde tu
 computadora (JPG, PNG o WEBP). También queda la casilla de URL por si algún
 día las guardas en otro lado; si subes un archivo, se usa ese.
 
-### Cuentas de cliente (Mi LevelUp)
+### Cuentas de cliente (Mi MONKEI)
 
-Los jugadores entran a **Mi LevelUp** en la tienda con su **correo**: piden
+Los jugadores entran a **Mi MONKEI** en la tienda con su **correo**: piden
 un código, lo escriben, y si es la primera vez también ponen su ID de Free
 Fire. El WhatsApp del checkout sigue siendo solo para contactarlos.
 
@@ -187,7 +187,7 @@ devoluciones) no se tocan, porque son el registro de algo que ya pasó.
 
 ### Ver a un cliente por dentro
 
-En **Clientes** está la lista de las cuentas Mi LevelUp, ordenada por quién
+En **Clientes** está la lista de las cuentas Mi MONKEI, ordenada por quién
 más ha recargado esta temporada. Puedes buscar por nombre, por ID de Free
 Fire o por correo.
 

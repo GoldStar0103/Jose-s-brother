@@ -10,7 +10,7 @@
  * swallowed — losing an alert is bad, crashing mid-combo is worse.
  */
 
-import type { Alerter, AlertLevel } from '@levelup/engine';
+import type { Alerter, AlertLevel } from '@monkei/engine';
 
 const ICONS: Record<AlertLevel, string> = {
   info: 'i',

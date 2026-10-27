@@ -1,13 +1,13 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import type { ConversionOrder } from '@levelup/engine';
+import type { ConversionOrder } from '@monkei/engine';
 import { buildPurchaseEvent, MetaConversionsReporter, normaliseMxPhone } from './meta-capi.js';
 
 const sha = (v: string) => createHash('sha256').update(v).digest('hex');
 
 const order: ConversionOrder = {
   orderId: 'order-1',
-  orderNumber: 'LU-260915-AB12',
+  orderNumber: 'MK-260915-AB12',
   eventId: '6f1c0b7e-0000-4000-8000-000000000001',
   comboKey: 'pack_insano',
   priceMxnCents: 86_000,
@@ -40,7 +40,7 @@ describe('normaliseMxPhone', () => {
 });
 
 describe('buildPurchaseEvent', () => {
-  const event = buildPurchaseEvent(order, 'https://levelupstore.mx');
+  const event = buildPurchaseEvent(order, 'https://monkei.mx');
 
   it('carries the order’s own event_id so Meta dedupes it with the browser Pixel', () => {
     expect(event.event_id).toBe(order.eventId);
@@ -69,9 +69,9 @@ describe('buildPurchaseEvent', () => {
       currency: 'MXN',
       value: 860,
       content_ids: ['pack_insano'],
-      order_id: 'LU-260915-AB12',
+      order_id: 'MK-260915-AB12',
     });
-    expect(event.event_source_url).toBe('https://levelupstore.mx/comprar/pack_insano');
+    expect(event.event_source_url).toBe('https://monkei.mx/comprar/pack_insano');
   });
 });
 
@@ -88,7 +88,7 @@ describe('MetaConversionsReporter', () => {
       reporter: new MetaConversionsReporter({
         pixelId: '1234567890123456',
         accessToken: 'EAAB-token',
-        siteOrigin: 'https://levelupstore.mx',
+        siteOrigin: 'https://monkei.mx',
         testEventCode,
         fetch: fetchImpl,
       }),

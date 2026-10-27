@@ -3,8 +3,8 @@
 import { and, eq, isNull, lt, or } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { createRateLimiter, type RateLimiter } from '@levelup/shared';
-import { adminUsers } from '@levelup/db';
+import { createRateLimiter, type RateLimiter } from '@monkei/shared';
+import { adminUsers } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { createSessionToken, readPurposeToken } from '../../../lib/auth';
 import { verifyTotp } from '../../../lib/totp';

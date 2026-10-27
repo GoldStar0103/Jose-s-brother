@@ -20,7 +20,7 @@ import {
   type PurchaseOutcome,
   type TopupProvider,
   type UsdTenK,
-} from '@levelup/provider';
+} from '@monkei/provider';
 import type { Alerter, AdvisoryLock, Clock, FulfillmentStore, OrderRecord } from './ports.js';
 import { systemClock } from './ports.js';
 import { assertTransition, deriveOrderStatus, type OrderStatus } from './states.js';

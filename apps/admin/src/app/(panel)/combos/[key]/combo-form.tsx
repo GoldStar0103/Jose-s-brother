@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useEffect, useRef, useState } from 'react';
-import type { ComboDraft } from '@levelup/engine';
+import type { ComboDraft } from '@monkei/engine';
 import { previewCombo, saveCombo, type ComboFormState } from '../actions';
 
 interface Props {

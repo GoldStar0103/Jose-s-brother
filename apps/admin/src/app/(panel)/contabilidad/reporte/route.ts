@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getAccountingSummary, getSeasonRanges, mexicoCityTodayYmd } from '@levelup/db';
-import { siteName } from '@levelup/shared';
+import { getAccountingSummary, getSeasonRanges, mexicoCityTodayYmd } from '@monkei/db';
+import { siteName } from '@monkei/shared';
 import { getDb } from '../../../../lib/db';
 import { requireSession } from '../../../../lib/session';
 import { methodLabel, parseRangeKey, resolveRange } from '../range';

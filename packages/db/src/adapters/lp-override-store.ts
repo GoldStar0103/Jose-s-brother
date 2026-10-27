@@ -8,7 +8,7 @@
  */
 
 import { and, eq, isNull, sql } from 'drizzle-orm';
-import { planLpOverride, type LpOverridePlan, type ReversibleCheckpoint } from '@levelup/engine';
+import { planLpOverride, type LpOverridePlan, type ReversibleCheckpoint } from '@monkei/engine';
 import type { Database } from '../index.js';
 import {
   auditLog,

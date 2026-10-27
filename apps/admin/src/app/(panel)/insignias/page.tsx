@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { listBadgeDefinitions } from '@levelup/db';
+import { listBadgeDefinitions } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 

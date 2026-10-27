@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getMyLevelUpOverview } from '@levelup/db';
+import { getMyMonkeiOverview } from '@monkei/db';
 import { getCustomerSession } from '../../../lib/customer-session.js';
 import { getDb } from '../../../lib/server.js';
 import { dateLabel, diamonds } from '../../../lib/format.js';
@@ -44,7 +44,7 @@ export default async function LevelPassPage() {
     );
   }
 
-  const overview = await getMyLevelUpOverview(getDb(), session.playerProfileId);
+  const overview = await getMyMonkeiOverview(getDb(), session.playerProfileId);
 
   if (!overview.season) {
     return (

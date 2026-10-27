@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getCurrentSeason, listAdminCustomers } from '@levelup/db';
-import { siteName } from '@levelup/shared';
+import { getCurrentSeason, listAdminCustomers } from '@monkei/db';
+import { siteName } from '@monkei/shared';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { diamonds } from '../../../lib/format';

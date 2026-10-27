@@ -26,7 +26,7 @@ import { saveLevelPassCheckpoints } from './level-pass-settings.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_lp_override_test';
+const TEST_DB = 'monkei_lp_override_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -99,7 +99,7 @@ async function creditedOrder(awardedLp: number, currentLp = awardedLp) {
   const [order] = await db
     .insert(orders)
     .values({
-      orderNumber: `LU-${Math.random().toString(36).slice(2, 10)}`,
+      orderNumber: `MK-${Math.random().toString(36).slice(2, 10)}`,
       playerId: '100001',
       playerProfileId: profileId,
       comboKey: 'test_combo',
@@ -144,7 +144,7 @@ describe.skipIf(!PG_AVAILABLE)('overrideOrderLp', () => {
     const [order] = await db
       .insert(orders)
       .values({
-        orderNumber: 'LU-NOLP',
+        orderNumber: 'MK-NOLP',
         playerId: '100001',
         comboKey: 'test_combo',
         comboSnapshot: { name: 'Pack' },

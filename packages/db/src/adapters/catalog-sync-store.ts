@@ -7,7 +7,7 @@
  */
 
 import { and, eq, inArray, notInArray, sql } from 'drizzle-orm';
-import { parseUsd } from '@levelup/provider';
+import { parseUsd } from '@monkei/provider';
 import type {
   CatalogSyncStore,
   OrderItemStatus,
@@ -16,7 +16,7 @@ import type {
   Repoint,
   RepointOutcome,
   StoredProduct,
-} from '@levelup/engine';
+} from '@monkei/engine';
 import type { Database } from '../index.js';
 import { auditLog, baseProducts, comboItems, combos, orderItems, orders } from '../schema.js';
 import { toNumericString } from './mapping.js';

@@ -7,7 +7,7 @@ import { startHeartbeat } from './heartbeat.js';
 let dir: string;
 
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), 'levelup-hb-'));
+  dir = mkdtempSync(join(tmpdir(), 'monkei-hb-'));
 });
 
 afterEach(() => {

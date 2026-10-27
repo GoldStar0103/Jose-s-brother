@@ -11,7 +11,7 @@
  */
 
 import { and, desc, eq, ne } from 'drizzle-orm';
-import type { PayableOrder, PaymentStore, PaymentState } from '@levelup/engine';
+import type { PayableOrder, PaymentStore, PaymentState } from '@monkei/engine';
 import type { Database } from '../index.js';
 import { auditLog, orders, payments } from '../schema.js';
 

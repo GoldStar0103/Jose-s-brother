@@ -10,7 +10,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { eq, sql as raw } from 'drizzle-orm';
-import { applyReviewAction, type ReviewAction } from '@levelup/engine';
+import { applyReviewAction, type ReviewAction } from '@monkei/engine';
 import { createDb, type Database } from '../index.js';
 import { adminUsers, auditLog, orderItems, orders } from '../schema.js';
 import { DrizzleOrderQueue } from './order-queue.js';
@@ -19,7 +19,7 @@ import { DrizzleReviewStore } from './review-store.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_review_test';
+const TEST_DB = 'monkei_review_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -60,7 +60,7 @@ beforeEach(async () => {
   await db.execute(raw`TRUNCATE orders, order_items, audit_log, admin_users RESTART IDENTITY CASCADE`);
   const [admin] = await db
     .insert(adminUsers)
-    .values({ email: 'dueno@levelupstore.mx', passwordHash: 'x' })
+    .values({ email: 'dueno@monkei.mx', passwordHash: 'x' })
     .returning({ id: adminUsers.id });
   adminId = admin!.id;
 });
@@ -72,7 +72,7 @@ async function stuckOrder(itemStatuses: ItemStatus[], attempts = 3) {
   const [order] = await db
     .insert(orders)
     .values({
-      orderNumber: 'LU-260910-REV1',
+      orderNumber: 'MK-260910-REV1',
       playerId: '7288567050',
       comboKey: 'mega_prime_12k',
       comboSnapshot: {},
@@ -178,7 +178,7 @@ describe.skipIf(!PG_AVAILABLE)('compare-and-set', () => {
     const loaded = await store.loadForReview(order.id);
     await db.update(orderItems).set({ status: 'failed' }).where(eq(orderItems.id, items[1]!.id));
 
-    const { planReview } = await import('@levelup/engine');
+    const { planReview } = await import('@monkei/engine');
     const planned = planReview(loaded!, { kind: 'mark_item_delivered', itemId: items[1]!.id });
     if (!planned.ok) throw new Error('expected a plan');
 

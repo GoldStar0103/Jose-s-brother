@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { siteName } from '@levelup/shared';
+import { siteName } from '@monkei/shared';
 import './globals.css';
 
 export const metadata: Metadata = {

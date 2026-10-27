@@ -14,7 +14,7 @@
  * useful to do and blocking would just stack timers behind it.
  */
 
-import { resolveAmbiguous, type TopupProvider, type UsdTenK } from '@levelup/provider';
+import { resolveAmbiguous, type TopupProvider, type UsdTenK } from '@monkei/provider';
 import type { Alerter, AdvisoryLock, Clock, FulfillmentStore } from './ports.js';
 import { systemClock } from './ports.js';
 import { PROVIDER_LOCK_KEY } from './fulfillment.js';

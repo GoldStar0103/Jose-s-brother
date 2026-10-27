@@ -12,7 +12,7 @@
  */
 
 import { createHash } from 'node:crypto';
-import type { ConversionOrder, ConversionReporter, ReportOutcome } from '@levelup/engine';
+import type { ConversionOrder, ConversionReporter, ReportOutcome } from '@monkei/engine';
 
 export interface MetaCapiOptions {
   pixelId: string;

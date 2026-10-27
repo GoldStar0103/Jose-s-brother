@@ -14,7 +14,7 @@ import 'server-only';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { dirname, join, normalize, resolve, sep } from 'node:path';
-import { comprobantePath, uploadRoot, validateUpload, type UploadRejection } from '@levelup/shared';
+import { comprobantePath, uploadRoot, validateUpload, type UploadRejection } from '@monkei/shared';
 
 export type StoreResult =
   | { ok: true; key: string; byteLength: number }

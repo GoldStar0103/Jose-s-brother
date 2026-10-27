@@ -60,7 +60,7 @@ export interface SeasonClosePlan {
  * default a player gets only their single highest-tier badge for the season
  * — not Top 50 *and* Top 10 *and* Top 3 simultaneously — matching the spec's
  * stated default, which it also calls out as something to make configurable
- * later if LevelUp wants cumulative badges instead.
+ * later if Monkei wants cumulative badges instead.
  */
 export function rankingBadgeKey(position: number): string | null {
   if (position === 1) return 'season_champion';

@@ -1,12 +1,12 @@
 {
-    "name":  "@levelup/worker",
+    "name":  "@monkei/worker",
     "version":  "0.1.0",
     "private":  true,
     "type":  "module",
     "scripts":  {
                     "start":  "pnpm run pre-start && node ../../scripts/with-root-env.mjs tsx src/main.ts",
                     "dev":  "pnpm run pre-start && node ../../scripts/with-root-env.mjs tsx watch src/main.ts",
-                    "pre-start":  "node ../../scripts/with-root-env.mjs pnpm --filter @levelup/db migrate && node ../../scripts/with-root-env.mjs tsx src/sync-catalog.ts",
+                    "pre-start":  "node ../../scripts/with-root-env.mjs pnpm --filter @monkei/db migrate && node ../../scripts/with-root-env.mjs tsx src/sync-catalog.ts",
                     "seed-test-order":  "node ../../scripts/with-root-env.mjs tsx src/seed-test-order.ts",
                     "reject-payment":  "node ../../scripts/with-root-env.mjs tsx src/reject-payment.ts",
                     "resume-order":  "node ../../scripts/with-root-env.mjs tsx src/resume-order.ts",
@@ -15,10 +15,10 @@
                     "sync-catalog":  "node ../../scripts/with-root-env.mjs tsx src/sync-catalog.ts"
                 },
     "dependencies":  {
-                         "@levelup/db":  "workspace:*",
-                         "@levelup/engine":  "workspace:*",
-                         "@levelup/provider":  "workspace:*",
-                         "@levelup/shared":  "workspace:*",
+                         "@monkei/db":  "workspace:*",
+                         "@monkei/engine":  "workspace:*",
+                         "@monkei/provider":  "workspace:*",
+                         "@monkei/shared":  "workspace:*",
                          "drizzle-orm":  "^0.36.0"
                      },
     "devDependencies":  {

@@ -11,7 +11,7 @@ const NOW = new Date('2026-09-15T12:00:00Z');
 
 const order = (overrides: Partial<ConversionOrder> = {}): ConversionOrder => ({
   orderId: 'order-1',
-  orderNumber: 'LU-260915-AB12',
+  orderNumber: 'MK-260915-AB12',
   eventId: '6f1c0b7e-0000-4000-8000-000000000001',
   comboKey: 'mega_10',
   priceMxnCents: 1_000,

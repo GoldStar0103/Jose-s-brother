@@ -11,8 +11,8 @@
  * combo is never on sale.
  */
 
-import { ACCEPTABLE_SHORTFALL_DIAMONDS, checkRecipe } from '@levelup/shared/money';
-import type { UsdTenK } from '@levelup/provider';
+import { ACCEPTABLE_SHORTFALL_DIAMONDS, checkRecipe } from '@monkei/shared/money';
+import type { UsdTenK } from '@monkei/provider';
 
 /** The maximum an order can reasonably take: 8 calls at ~1.5s pacing is ~12s. */
 export const MAX_RECOMMENDED_CALLS = 8;

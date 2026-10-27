@@ -19,7 +19,7 @@ function setEnv(token: string | undefined, chatId: string | undefined) {
   else process.env.TELEGRAM_ALERT_CHAT_ID = chatId;
 }
 
-const NOTICE = { orderNumber: 'LU-260912-AB12', comboName: 'Pack Huesito', price: '$185 MXN' };
+const NOTICE = { orderNumber: 'MK-260912-AB12', comboName: 'Pack Huesito', price: '$185 MXN' };
 
 describe('notifyNewOrder', () => {
   it('posts to the configured bot and chat with the order details', async () => {
@@ -33,7 +33,7 @@ describe('notifyNewOrder', () => {
     expect(url).toBe('https://api.telegram.org/bottest-token/sendMessage');
     const body = JSON.parse(init!.body as string);
     expect(body.chat_id).toBe('12345');
-    expect(body.text).toContain('LU-260912-AB12');
+    expect(body.text).toContain('MK-260912-AB12');
     expect(body.text).toContain('Pack Huesito');
     expect(body.text).toContain('$185 MXN');
   });
@@ -79,7 +79,7 @@ describe('notifyGatewaySale', () => {
       expect(fetchImpl).toHaveBeenCalledTimes(1);
       const [, init] = fetchImpl.mock.calls[0]!;
       const body = JSON.parse(init!.body as string);
-      expect(body.text).toContain('LU-260912-AB12');
+      expect(body.text).toContain('MK-260912-AB12');
       expect(body.text).toContain('Pack Huesito');
       expect(body.text).toContain('$185 MXN');
       expect(body.text).not.toContain('esperando aprobación');

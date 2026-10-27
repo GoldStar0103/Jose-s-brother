@@ -25,7 +25,7 @@ describe('flyerUrl', () => {
     // The whole reason uploads live outside the web root. A receipt shows a
     // name, a bank account and an amount; it must not become public because
     // someone pasted a key into the wrong column.
-    expect(flyerUrl('comprobantes/LU-260909-RVBH/abc.jpg')).toBeNull();
+    expect(flyerUrl('comprobantes/MK-260909-RVBH/abc.jpg')).toBeNull();
   });
 
   it.each([
@@ -67,7 +67,7 @@ describe('avatarUrl', () => {
   });
 
   it('refuses a key outside the avatars/ prefix — including comprobantes and flyers', () => {
-    expect(avatarUrl('comprobantes/LU-1/abc.jpg')).toBeNull();
+    expect(avatarUrl('comprobantes/MK-1/abc.jpg')).toBeNull();
     expect(avatarUrl('flyers/promo/abc.jpg')).toBeNull();
   });
 
@@ -98,7 +98,7 @@ describe('badgeArtworkUrl', () => {
   });
 
   it('refuses a key outside badges/ — this column is admin-editable', () => {
-    expect(badgeArtworkUrl('comprobantes/LU-1/abc.jpg')).toBeNull();
+    expect(badgeArtworkUrl('comprobantes/MK-1/abc.jpg')).toBeNull();
     expect(badgeArtworkUrl('avatars/abc/def.jpg')).toBeNull();
   });
 

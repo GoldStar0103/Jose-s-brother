@@ -11,7 +11,7 @@
  */
 
 import { and, desc, eq } from 'drizzle-orm';
-import { pesosToCentavos, checkRecipe } from '@levelup/shared/money';
+import { pesosToCentavos, checkRecipe } from '@monkei/shared/money';
 import { CAMPAIGNS } from '../../../phase0/catalog.mjs';
 import { createDb } from './index.js';
 import { campaigns, combos, comboItems, baseProducts, settings } from './schema.js';

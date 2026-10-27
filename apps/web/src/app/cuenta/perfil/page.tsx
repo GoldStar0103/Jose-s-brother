@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getLinkedIdState, getMyProfile } from '@levelup/db';
+import { getLinkedIdState, getMyProfile } from '@monkei/db';
 import { requireCustomerSession } from '../../../lib/customer-session.js';
 import { getDb } from '../../../lib/server.js';
 import { avatarUrl } from '../../../lib/assets.js';

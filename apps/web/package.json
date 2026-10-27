@@ -1,5 +1,5 @@
 {
-  "name": "@levelup/web",
+  "name": "@monkei/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,11 +10,11 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@levelup/db": "workspace:*",
-    "@levelup/engine": "workspace:*",
-    "@levelup/payments": "workspace:*",
-    "@levelup/provider": "workspace:*",
-    "@levelup/shared": "workspace:*",
+    "@monkei/db": "workspace:*",
+    "@monkei/engine": "workspace:*",
+    "@monkei/payments": "workspace:*",
+    "@monkei/provider": "workspace:*",
+    "@monkei/shared": "workspace:*",
     "drizzle-orm": "^0.36.0",
     "next": "^15.0.3",
     "react": "^18.3.1",

@@ -5,7 +5,7 @@
  * Useful locally, and on the client's staging environment when they want to
  * watch a combo run end to end before trusting it with money.
  *
- *   DATABASE_URL=... TEST_PLAYER_ID=... pnpm --filter @levelup/worker seed-test-order mega_prime_48k --approve
+ *   DATABASE_URL=... TEST_PLAYER_ID=... pnpm --filter @monkei/worker seed-test-order mega_prime_48k --approve
  *
  * TEST_PLAYER_ID has no default. Every Free Fire ID is a real account —
  * there is no such thing as a made-up one that is safe to guess — and this
@@ -15,8 +15,8 @@
  * they actually control or expect, rather than trusting a stale fallback.
  */
 
-import { createDb, DrizzleOrderingStore, DrizzlePaymentStore } from '@levelup/db';
-import { approvePayment, createOrder } from '@levelup/engine';
+import { createDb, DrizzleOrderingStore, DrizzlePaymentStore } from '@monkei/db';
+import { approvePayment, createOrder } from '@monkei/engine';
 
 const comboKey = process.argv[2] ?? 'mega_prime_48k';
 const approve = process.argv.includes('--approve');

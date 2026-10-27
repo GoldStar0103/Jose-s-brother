@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { UsdTenK } from '@levelup/provider';
-import type { CatalogSyncResult } from '@levelup/engine';
+import type { UsdTenK } from '@monkei/provider';
+import type { CatalogSyncResult } from '@monkei/engine';
 import { catalogSyncAlerts, describeSync } from './catalog-report.js';
 
 const usd = (n: number) => Math.round(n * 10_000) as UsdTenK;

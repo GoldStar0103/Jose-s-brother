@@ -15,7 +15,7 @@
  */
 
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
-import { siteName } from '@levelup/shared';
+import { siteName } from '@monkei/shared';
 
 const TIME_STEP_SECONDS = 30;
 const DIGITS = 6;

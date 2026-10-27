@@ -10,7 +10,7 @@
  * started from package.json, which only ever sees real OS environment
  * variables. This is the same loader wired in front of those.
  *
- *   node scripts/with-root-env.mjs pnpm --filter @levelup/db migrate
+ *   node scripts/with-root-env.mjs pnpm --filter @monkei/db migrate
  */
 
 import { spawn } from 'node:child_process';

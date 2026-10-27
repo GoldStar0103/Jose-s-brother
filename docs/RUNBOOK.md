@@ -1,7 +1,13 @@
 # Runbook
 
-Deploying and operating LevelUp Store. Written to be followed by someone who
+Deploying and operating Monkei. Written to be followed by someone who
 did not build it, at 3am, under pressure.
+
+Monkei is a separate store from LevelUp Store — never share credentials,
+wallets, domains or backup folders. See [ISOLATION.md](ISOLATION.md).
+
+For what is already live vs still open on this deployment, see
+[STATUS.md](STATUS.md).
 
 Throughout: `cd /srv/levelup` first, and `dc` means
 `docker compose -f docker-compose.prod.yml`.
@@ -164,7 +170,7 @@ payments, so accounts are made from the server:
 
 ```bash
 dc --profile tools run --rm tools \
-  pnpm --filter @levelup/admin create-admin owner@yourdomain.mx 'una contraseña larga'
+  pnpm --filter @monkei/admin create-admin owner@yourdomain.mx 'una contraseña larga'
 ```
 
 Re-running it for an existing email resets that password, which is the
@@ -537,6 +543,18 @@ Do a restore into a scratch environment once, before you need it — from the
 off-box copy, since that is the one you will be using when it counts. A backup
 nobody has restored is a hypothesis.
 
+There is a disposable drill that does exactly that without touching production
+(fetches the newest pair from `BACKUP_RCLONE_REMOTE`, restores into a throwaway
+Postgres container, extracts uploads to `/tmp`, then deletes everything):
+
+```bash
+cd /srv/levelup
+bash scripts/restore-drill.sh
+```
+
+It must print `[drill] PASS`. Re-run it after any change to the backup script
+or the rclone remote.
+
 ---
 
 ## 4. When something is wrong
@@ -670,7 +688,7 @@ says the change is live, and again whenever an alert above arrives:
    and 349 (100 → 5,600 diamonds).
 3. Sync now rather than waiting for the hour:
    ```bash
-   dc --profile tools run --rm tools pnpm --filter @levelup/worker sync-catalog
+   dc --profile tools run --rm tools pnpm --filter @monkei/worker sync-catalog
    ```
    It is safe with the worker running. It prints each replacement as
    `100: 351 -> 901 ($0.70 -> $0.72)` and exits non-zero if it is blocked or
@@ -763,17 +781,22 @@ Nothing here requires a developer, which is the point.
 
 Being explicit so none of it is discovered during an incident:
 
-- The off-box backup login. The nightly job copies backups off the server, but
-  only once the one-time rclone setup in §3 is done and `BACKUP_RCLONE_REMOTE`
-  is set. Until then the log says so every night, and nobody reads it.
-- Backup failure alerting. A failed backup or upload ends in `FAILED` in
-  `/var/log/levelup-backup.log`; nothing sends that anywhere. Read the log.
 - Docker upgrades and reboots. Ubuntu's security updates install themselves;
   Docker's do not, and nothing reboots for a new kernel. Both restart every
   container, so do them by hand at a quiet hour — stop the worker cleanly
   first (§2). `/var/run/reboot-required` exists when a reboot is due.
 - Migrations on deploy. Deliberate, but it means remembering.
-- Uptime alerting. The healthchecks restart containers; nothing tells a human
-  the site was down. Point any external monitor at `/api/health`.
+- External uptime monitoring. `scripts/uptime-check.sh` (cron every 5 minutes)
+  pages Telegram when the store or panel `/api/health` goes down while the VPS
+  itself is still up. It cannot see a dead VPS — for that, point any external
+  monitor (UptimeRobot, Better Stack, …) at
+  `https://$PUBLIC_DOMAIN/api/health` as well.
 - Certificate expiry alerting. Caddy renews automatically; `TLS_EMAIL` is the
   fallback if renewal ever stops.
+
+Already wired (so they are not "discovered during an incident"):
+
+- Off-box backups via rclone once `BACKUP_RCLONE_REMOTE` is set (§3).
+- Backup failure alerting: a `FAILED` night also sends a Telegram message using
+  the same `TELEGRAM_*` credentials as the worker.
+- Restore drill: `bash scripts/restore-drill.sh` (§3 Practise this).

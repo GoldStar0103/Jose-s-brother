@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { findCustomerOrder, type CustomerOrder, type CustomerOrderStatus } from '@levelup/db';
-import { siteName } from '@levelup/shared';
+import { findCustomerOrder, type CustomerOrder, type CustomerOrderStatus } from '@monkei/db';
+import { siteName } from '@monkei/shared';
 import { getCustomerSession } from '../../../lib/customer-session';
 import { callerIp, getDb, lookupLimiter } from '../../../lib/server';
 import { applyStripeReport, getStripe, STRIPE } from '../../../lib/stripe';

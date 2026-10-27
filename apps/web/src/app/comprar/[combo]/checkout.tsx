@@ -29,7 +29,7 @@ import { BankIcon, CardIcon, StoreIcon } from '../../icons';
  * that way: the blank tab opens (so it is never *blocked*) but never moves
  * past `about:blank`, with no error and no fallback, since the code only
  * handled the popup being blocked outright, not opening and then going
- * nowhere. Confirmed in production and apparently present on LevelUp Store
+ * nowhere. Confirmed in production and apparently present on Monkei
  * too, intermittently, from the same pattern.
  *
  * A real `<a target="_blank">`, tapped directly, carries a genuine click

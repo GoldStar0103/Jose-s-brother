@@ -2,7 +2,7 @@
  * The comprobante flow against real Postgres — from an unpaid order to one the
  * fulfilment worker will claim.
  *
- * This is the launch path: LevelUp keeps taking BBVA transfers and OXXO
+ * This is the launch path: Monkei keeps taking BBVA transfers and OXXO
  * deposits exactly as they do today, and approval here replaces the manual
  * WhatsApp back-and-forth. Conekta later calls the same code from a webhook.
  */
@@ -13,7 +13,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { eq, sql as raw } from 'drizzle-orm';
-import { approvePayment, createOrder, expireUnpaid, rejectPayment } from '@levelup/engine';
+import { approvePayment, createOrder, expireUnpaid, rejectPayment } from '@monkei/engine';
 import { createDb, type Database } from '../index.js';
 import { auditLog, baseProducts, campaigns, comboItems, combos, orders, payments } from '../schema.js';
 import { DrizzleOrderingStore } from './ordering-store.js';
@@ -23,7 +23,7 @@ import { DrizzleOrderQueue } from './order-queue.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_payment_test';
+const TEST_DB = 'monkei_payment_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });

@@ -19,7 +19,7 @@ import {
   summariseSync,
   syncCatalog,
   syncLevelPass,
-} from '@levelup/engine';
+} from '@monkei/engine';
 import type {
   Alerter,
   AdvisoryLock,
@@ -35,9 +35,9 @@ import type {
   SeasonCloseResult,
   SeasonStore,
   StuckPaymentStore,
-} from '@levelup/engine';
-import type { TopupProvider, UsdTenK } from '@levelup/provider';
-import type { DrizzleOrderQueue } from '@levelup/db';
+} from '@monkei/engine';
+import type { TopupProvider, UsdTenK } from '@monkei/provider';
+import type { DrizzleOrderQueue } from '@monkei/db';
 import { catalogSyncAlerts } from './catalog-report.js';
 import type { WorkerConfig } from './config.js';
 

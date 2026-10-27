@@ -44,13 +44,13 @@ describe('OTP hashing', () => {
 
 describe('normaliseEmail', () => {
   it.each([
-    ['  Jose@LevelUp.mx  ', 'jose@levelup.mx'],
+    ['  Jose@monkei.mx  ', 'jose@monkei.mx'],
     ['a.b+tag@gmail.com', 'a.b+tag@gmail.com'],
   ])('normalises %s to %s', (input, expected) => {
     expect(normaliseEmail(input)).toBe(expected);
   });
 
-  it.each(['', 'abc', 'a@b', 'no-at-sign.mx', '@levelup.mx', 'jose@'])('rejects implausible input (%s)', (input) => {
+  it.each(['', 'abc', 'a@b', 'no-at-sign.mx', '@monkei.mx', 'jose@'])('rejects implausible input (%s)', (input) => {
     expect(normaliseEmail(input)).toBeNull();
   });
 });
@@ -95,12 +95,12 @@ describe('customer session tokens', () => {
 
 describe('purpose-bound tokens', () => {
   it('round-trips for the same purpose', () => {
-    const token = signPurposeToken({ email: 'jose@levelup.mx' }, SECRET, 'pending-signup', 600);
-    expect(readPurposeToken(token, SECRET, 'pending-signup')).toMatchObject({ email: 'jose@levelup.mx' });
+    const token = signPurposeToken({ email: 'jose@monkei.mx' }, SECRET, 'pending-signup', 600);
+    expect(readPurposeToken(token, SECRET, 'pending-signup')).toMatchObject({ email: 'jose@monkei.mx' });
   });
 
   it('never verifies for a different purpose, even with the right secret', () => {
-    const token = signPurposeToken({ email: 'jose@levelup.mx' }, SECRET, 'pending-signup', 600);
+    const token = signPurposeToken({ email: 'jose@monkei.mx' }, SECRET, 'pending-signup', 600);
     expect(readPurposeToken(token, SECRET, 'something-else')).toBeNull();
   });
 
@@ -113,7 +113,7 @@ describe('purpose-bound tokens', () => {
   });
 
   it('rejects an expired purpose token', () => {
-    const token = signPurposeToken({ email: 'jose@levelup.mx' }, SECRET, 'pending-signup', -1);
+    const token = signPurposeToken({ email: 'jose@monkei.mx' }, SECRET, 'pending-signup', -1);
     expect(readPurposeToken(token, SECRET, 'pending-signup')).toBeNull();
   });
 });

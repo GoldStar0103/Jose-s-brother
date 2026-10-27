@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { ProviderSimulator } from '@levelup/provider';
+import { ProviderSimulator } from '@monkei/provider';
 import { fulfillOrder, PROVIDER_LOCK_KEY, type FulfillmentDeps } from './fulfillment.js';
 import { InMemoryLock } from './ports.js';
 import { buildOrder, FakeClock, MemoryAlerter, MemoryStore } from './testing.js';
@@ -15,12 +15,12 @@ const PRICES = { d100: 0.55, d1060: 5.4, d2180: 10.8, d5600: 27.5 };
 
 /** Mega Prime 48k: 5,600 eight times, one purchase for the customer. */
 const megaPrime48k = () =>
-  buildOrder({ orderNumber: 'LU-000900', items: Array(8).fill(['d5600', 5600, PRICES.d5600]) });
+  buildOrder({ orderNumber: 'MK-000900', items: Array(8).fill(['d5600', 5600, PRICES.d5600]) });
 
 /** Descuentos Chidos 3000: 2,180 + 520 + 100. */
 const chidos3000 = () =>
   buildOrder({
-    orderNumber: 'LU-000300',
+    orderNumber: 'MK-000300',
     items: [
       ['d2180', 2180, PRICES.d2180],
       ['d1060', 1060, PRICES.d1060],

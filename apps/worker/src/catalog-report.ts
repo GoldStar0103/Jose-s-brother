@@ -14,8 +14,8 @@
  *              moves money: an id replacement or a cost change.
  */
 
-import type { AlertLevel, CatalogSyncResult, DeactivationSkipReason } from '@levelup/engine';
-import { describeReplacement } from '@levelup/engine';
+import type { AlertLevel, CatalogSyncResult, DeactivationSkipReason } from '@monkei/engine';
+import { describeReplacement } from '@monkei/engine';
 
 export interface SyncAlert {
   level: AlertLevel;

@@ -13,7 +13,7 @@ const stuck = (
   Array.from({ length: n }, (_, i) => ({
     orderId: `order-${i}`,
     paymentId: `payment-${i}`,
-    orderNumber: `LU-00000${i}`,
+    orderNumber: `MK-00000${i}`,
     gateway,
     method,
     amountExpectedCents: 1_800,
@@ -54,7 +54,7 @@ describe('alertStuckGatewayPayments', () => {
     expect(level).toBe('warn');
     expect(title).toContain('SPEI');
     expect(title).toContain('6h');
-    expect(detail).toMatchObject({ order: 'LU-000000', gateway: 'stripe', method: 'spei', amountMxn: '18.00' });
+    expect(detail).toMatchObject({ order: 'MK-000000', gateway: 'stripe', method: 'spei', amountMxn: '18.00' });
   });
 
   it('names Mercado Pago in the alert when that is the stuck gateway', async () => {

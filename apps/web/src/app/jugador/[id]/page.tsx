@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getPublicProfile } from '@levelup/db';
-import { siteName } from '@levelup/shared';
+import { getPublicProfile } from '@monkei/db';
+import { siteName } from '@monkei/shared';
 import { getDb } from '../../../lib/server.js';
 import { avatarUrl, badgeArtworkUrl } from '../../../lib/assets.js';
 import { diamonds, initials } from '../../../lib/format.js';

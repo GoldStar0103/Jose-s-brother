@@ -7,7 +7,7 @@
  * customer pays and receives nothing, or diamonds ship for money that never
  * arrived.
  *
- * The launch flow is the one LevelUp already runs by hand: the customer
+ * The launch flow is the one Monkei already runs by hand: the customer
  * transfers to BBVA or deposits at OXXO and sends a photo of the receipt. An
  * admin approves it here in one tap, and fulfilment happens automatically.
  * Card payments through Stripe replace the human with a webhook calling the
@@ -211,7 +211,7 @@ export async function rejectPayment(
   // it back (which can take hours), or one who abandoned checkout (which the
   // expiry sweep already handles once the session's grace period actually
   // passes). Rejecting it by hand can beat that webhook to the punch: a real
-  // incident (2026-09-18, order LU-260918-0RTQ) had a card order rejected as
+  // incident (2026-09-18, order MK-260918-0RTQ) had a card order rejected as
   // "sin comprobante" 22 seconds after checkout started — the customer's $750
   // MXN charge succeeded in Stripe six minutes later, but by then the order
   // was already cancelled and the approval was refused. This used to only

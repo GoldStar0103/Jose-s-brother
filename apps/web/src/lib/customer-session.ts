@@ -59,7 +59,7 @@ export async function clearCustomerSessionCookie(): Promise<void> {
 
 // ── pending signup (verified email, no account yet) ─────────────────────────
 
-const PENDING_SIGNUP_COOKIE = 'levelup_pending_signup';
+const PENDING_SIGNUP_COOKIE = 'monkei_pending_signup';
 const PENDING_SIGNUP_PURPOSE = 'pending-signup';
 const PENDING_SIGNUP_TTL_SECONDS = 10 * 60;
 

@@ -6,7 +6,7 @@
  * than one that refuses to start at all.
  */
 
-import { assertDryRunDatabaseIsSafe, FALLBACK_DOMAIN } from '@levelup/shared';
+import { assertDryRunDatabaseIsSafe, FALLBACK_DOMAIN } from '@monkei/shared';
 
 export interface WorkerConfig {
   databaseUrl: string;

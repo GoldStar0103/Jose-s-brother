@@ -12,7 +12,7 @@
  */
 
 import { and, eq, gte, inArray, lt, ne, sql } from 'drizzle-orm';
-import { LEVEL_PASS_REWARD_COMBO_KEY } from '@levelup/engine';
+import { LEVEL_PASS_REWARD_COMBO_KEY } from '@monkei/engine';
 import type { Database } from '../index.js';
 import { financialLedgerEntries, orderItems, orders, payments } from '../schema.js';
 import { getFxRate } from './payment-settings.js';

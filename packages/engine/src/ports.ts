@@ -7,7 +7,7 @@
  * logic under test is the same logic that runs in production.
  */
 
-import type { EndpointKind, UsdTenK } from '@levelup/provider';
+import type { EndpointKind, UsdTenK } from '@monkei/provider';
 import type { OrderItemStatus, OrderStatus } from './states.js';
 
 export interface OrderItemRecord {

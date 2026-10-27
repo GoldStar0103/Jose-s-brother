@@ -7,8 +7,8 @@ import {
   getPaymentDetails,
   getPaymentMethodsEnabled,
   getStorefrontCombo,
-} from '@levelup/db';
-import { siteName } from '@levelup/shared';
+} from '@monkei/db';
+import { siteName } from '@monkei/shared';
 import { getDb } from '../../../lib/server';
 import { getCustomerSession } from '../../../lib/customer-session';
 import { applyStripeReport, getStripe, STRIPE } from '../../../lib/stripe';
@@ -22,7 +22,7 @@ export const dynamic = 'force-dynamic';
 /**
  * Titles and descriptions per offer, matching the generated preview card next
  * door. A link shared into a group should say what it is in the tab, in the
- * card and in search results — not "LevelUp Store" three times.
+ * card and in search results — not "Monkei" three times.
  */
 export async function generateMetadata({
   params,

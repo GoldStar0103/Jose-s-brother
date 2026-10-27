@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getPublicTop50, listSeasonHistory } from '@levelup/db';
+import { getPublicTop50, listSeasonHistory } from '@monkei/db';
 import { getDb } from '../../lib/server.js';
 import { avatarUrl } from '../../lib/assets.js';
 import { dateLabel, diamonds, initials } from '../../lib/format.js';

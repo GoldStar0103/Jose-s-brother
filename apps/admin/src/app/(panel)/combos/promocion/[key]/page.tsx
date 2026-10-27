@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
-import { campaigns as campaignsTable } from '@levelup/db';
+import { campaigns as campaignsTable } from '@monkei/db';
 import { getDb } from '../../../../../lib/db';
 import { requireSession } from '../../../../../lib/session';
 import { CampaignForm } from './campaign-form';

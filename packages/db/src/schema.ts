@@ -1,5 +1,5 @@
 /**
- * LevelUp Store — database schema
+ * Monkei — database schema
  *
  * Three constraints from the provider API shape almost everything here:
  *
@@ -147,7 +147,7 @@ export const campaigns = pgTable(
 
 /**
  * What the customer buys. The whole business model lives here: a combo is a
- * bundle of base SKUs sold under one name at one price, so LevelUp competes on
+ * bundle of base SKUs sold under one name at one price, so Monkei competes on
  * perceived value rather than on the commodity price everyone else matches.
  */
 export const combos = pgTable(
@@ -206,7 +206,7 @@ export const orders = pgTable(
 
     playerId: text('player_id').notNull(),
     /**
-     * The Mi LevelUp account that was signed in when this order was placed.
+     * The Mi MONKEI account that was signed in when this order was placed.
      * Level Pass / Vault credit this profile even when `player_id` is a
      * different Free Fire ID (secondaries). Season ranking still uses the
      * profile's single linked `player_profiles.player_id`.

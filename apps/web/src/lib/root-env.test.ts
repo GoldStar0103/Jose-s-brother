@@ -17,7 +17,7 @@ let dir: string;
 let saved: NodeJS.ProcessEnv;
 
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), 'levelup-env-'));
+  dir = mkdtempSync(join(tmpdir(), 'monkei-env-'));
   saved = { ...process.env };
 });
 

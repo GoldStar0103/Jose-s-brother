@@ -10,12 +10,12 @@
  * was and the reversal is posted on the day it happens, as an `order_refund`
  * ledger entry for the amount returned. Restating a closed period would be
  * wrong twice over — the revenue genuinely was collected then, and the
- * recharge cost and payment fee are NOT refunded to LevelUp, so deleting the
+ * recharge cost and payment fee are NOT refunded to Monkei, so deleting the
  * sale would quietly hide the real loss this refund causes.
  */
 
 import { and, eq, isNull, sql } from 'drizzle-orm';
-import { planOrderReversal, type OrderReversalPlan, type ReversibleCheckpoint } from '@levelup/engine';
+import { planOrderReversal, type OrderReversalPlan, type ReversibleCheckpoint } from '@monkei/engine';
 import type { Database } from '../index.js';
 import {
   auditLog,

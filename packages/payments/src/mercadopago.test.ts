@@ -41,12 +41,12 @@ function gateway(fetchImpl: typeof fetch, extra: Partial<ConstructorParameters<t
 
 const chargeInput = {
   orderId: 'ord-uuid-1',
-  orderNumber: 'LU-260924-AB12',
+  orderNumber: 'MK-260924-AB12',
   amountCents: 1_800,
   method: 'oxxo' as const,
   description: 'Mini Pack — 110 diamantes',
-  returnUrl: 'https://levelupstore.mx/pedido/LU-260924-AB12?id=123456789',
-  cancelUrl: 'https://levelupstore.mx/comprar/mini_pack?cancelado=LU-260924-AB12&id=123456789',
+  returnUrl: 'https://monkei.mx/pedido/MK-260924-AB12?id=123456789',
+  cancelUrl: 'https://monkei.mx/comprar/mini_pack?cancelado=MK-260924-AB12&id=123456789',
 };
 
 describe('createCharge', () => {
@@ -62,7 +62,7 @@ describe('createCharge', () => {
       // The order number, not the preference id — see the doc comment on
       // this field in mercadopago.ts for why: it's the only thing Mercado
       // Pago echoes back on the eventual Payment.
-      gatewayChargeId: 'LU-260924-AB12',
+      gatewayChargeId: 'MK-260924-AB12',
       amountCents: 1_800,
       instructions: { kind: 'redirect', url: 'https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=pref_1' },
       expiresAt: null,
@@ -71,10 +71,10 @@ describe('createCharge', () => {
     const [call] = calls;
     expect(call?.url).toBe('https://api.mercadopago.com/checkout/preferences');
     expect(call?.headers.Authorization).toBe('Bearer APP_USR-test-token');
-    expect(call?.headers['X-Idempotency-Key']).toBe('levelup-mp-ord-uuid-1');
+    expect(call?.headers['X-Idempotency-Key']).toBe('monkei-mp-ord-uuid-1');
 
     const body = JSON.parse(call!.body!);
-    expect(body.external_reference).toBe('LU-260924-AB12');
+    expect(body.external_reference).toBe('MK-260924-AB12');
     expect(body.items[0]).toMatchObject({ title: 'Mini Pack — 110 diamantes', quantity: 1, currency_id: 'MXN', unit_price: 18 });
     expect(body.back_urls).toEqual({
       success: chargeInput.returnUrl,
@@ -184,7 +184,7 @@ describe('verifyWebhook', () => {
     const { impl } = fakeFetch([
       {
         status: 200,
-        body: { id: 'pay_1', status: 'approved', transaction_amount: 18, external_reference: 'LU-260924-AB12' },
+        body: { id: 'pay_1', status: 'approved', transaction_amount: 18, external_reference: 'MK-260924-AB12' },
       },
     ]);
     const body = webhookBody('pay_1');
@@ -195,12 +195,12 @@ describe('verifyWebhook', () => {
 
     expect(result).toMatchObject({
       ok: true,
-      event: { gatewayChargeId: 'LU-260924-AB12', state: 'paid', amountReceivedCents: 1_800, reference: 'pay_1' },
+      event: { gatewayChargeId: 'MK-260924-AB12', state: 'paid', amountReceivedCents: 1_800, reference: 'pay_1' },
     });
   });
 
   it('reads a pending OXXO ticket as pending — a ticket is not money', async () => {
-    const { impl } = fakeFetch([{ status: 200, body: { id: 'pay_1', status: 'pending', external_reference: 'LU-1' } }]);
+    const { impl } = fakeFetch([{ status: 200, body: { id: 'pay_1', status: 'pending', external_reference: 'MK-1' } }]);
     const body = webhookBody('pay_1');
     const result = await gateway(impl).verifyWebhook(body, {
       'x-signature': signMp('pay_1', 'req_1', 1000),
@@ -210,7 +210,7 @@ describe('verifyWebhook', () => {
   });
 
   it.each(['rejected', 'cancelled'] as const)('reads a %s payment as failed', async (status) => {
-    const { impl } = fakeFetch([{ status: 200, body: { id: 'pay_1', status, external_reference: 'LU-1' } }]);
+    const { impl } = fakeFetch([{ status: 200, body: { id: 'pay_1', status, external_reference: 'MK-1' } }]);
     const result = await gateway(impl).verifyWebhook(webhookBody('pay_1'), {
       'x-signature': signMp('pay_1', 'req_1', 1000),
       'x-request-id': 'req_1',
@@ -219,7 +219,7 @@ describe('verifyWebhook', () => {
   });
 
   it.each(['refunded', 'charged_back'] as const)('reads a %s payment as refunded', async (status) => {
-    const { impl } = fakeFetch([{ status: 200, body: { id: 'pay_1', status, external_reference: 'LU-1' } }]);
+    const { impl } = fakeFetch([{ status: 200, body: { id: 'pay_1', status, external_reference: 'MK-1' } }]);
     const result = await gateway(impl).verifyWebhook(webhookBody('pay_1'), {
       'x-signature': signMp('pay_1', 'req_1', 1000),
       'x-request-id': 'req_1',
@@ -264,13 +264,13 @@ describe('verifyWebhook', () => {
   });
 
   it('uses the notification\'s own id for eventId, not payment+action — a single payment fires "payment.updated" more than once as it moves from pending to approved, and deduping on payment+action would silently drop the real settlement as a duplicate of the earlier pending report', async () => {
-    const { impl: impl1 } = fakeFetch([{ status: 200, body: { id: 'pay_1', status: 'pending', external_reference: 'LU-1' } }]);
+    const { impl: impl1 } = fakeFetch([{ status: 200, body: { id: 'pay_1', status: 'pending', external_reference: 'MK-1' } }]);
     const pendingResult = await gateway(impl1).verifyWebhook(webhookBody('pay_1', 'payment.updated', 111), {
       'x-signature': signMp('pay_1', 'req_1', 1000),
       'x-request-id': 'req_1',
     });
 
-    const { impl: impl2 } = fakeFetch([{ status: 200, body: { id: 'pay_1', status: 'approved', external_reference: 'LU-1' } }]);
+    const { impl: impl2 } = fakeFetch([{ status: 200, body: { id: 'pay_1', status: 'approved', external_reference: 'MK-1' } }]);
     const approvedResult = await gateway(impl2).verifyWebhook(webhookBody('pay_1', 'payment.updated', 222), {
       'x-signature': signMp('pay_1', 'req_2', 2000),
       'x-request-id': 'req_2',
@@ -317,18 +317,18 @@ describe('getCharge', () => {
       },
     ]);
 
-    const snapshot = await gateway(impl).getCharge('LU-260924-AB12');
+    const snapshot = await gateway(impl).getCharge('MK-260924-AB12');
     expect(snapshot).toMatchObject({
       state: 'pending',
       reference: 'pay_1',
       voucherUrl: 'https://www.mercadopago.com.mx/payments/pay_1/ticket',
     });
-    expect(calls[0]?.url).toContain('external_reference=LU-260924-AB12');
+    expect(calls[0]?.url).toContain('external_reference=MK-260924-AB12');
   });
 
   it('returns null when nothing has been paid against this order yet', async () => {
     const { impl } = fakeFetch([{ status: 200, body: { results: [] } }]);
-    expect(await gateway(impl).getCharge('LU-nope')).toBeNull();
+    expect(await gateway(impl).getCharge('MK-nope')).toBeNull();
   });
 });
 

@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { dismissStuckGatewayPayment, dismissWalletResolvedDelivery } from '@levelup/db';
+import { dismissStuckGatewayPayment, dismissWalletResolvedDelivery } from '@monkei/db';
 import { getDb } from '../../lib/db';
 import { requireSession } from '../../lib/session';
 

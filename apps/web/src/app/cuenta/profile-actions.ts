@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { changeLinkedPlayerId, setFeaturedBadges, updateAvatar, updateDisplayName } from '@levelup/db';
+import { changeLinkedPlayerId, setFeaturedBadges, updateAvatar, updateDisplayName } from '@monkei/db';
 import { createCustomerSessionToken } from '../../lib/customer-auth.js';
 import { getDb } from '../../lib/server.js';
 import {

@@ -1,8 +1,8 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { approvePayment, rejectPayment } from '@levelup/engine';
-import { DrizzlePaymentStore } from '@levelup/db';
+import { approvePayment, rejectPayment } from '@monkei/engine';
+import { DrizzlePaymentStore } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 

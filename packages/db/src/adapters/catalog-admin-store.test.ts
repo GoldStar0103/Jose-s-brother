@@ -12,7 +12,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { asc, eq, sql as raw } from 'drizzle-orm';
-import { reviewComboDraft, type ComboDraft } from '@levelup/engine';
+import { reviewComboDraft, type ComboDraft } from '@monkei/engine';
 import { createDb, type Database } from '../index.js';
 import { auditLog, baseProducts, campaigns, comboItems, combos } from '../schema.js';
 import { DrizzleCatalogAdminStore } from './catalog-admin-store.js';
@@ -21,7 +21,7 @@ import { listStorefront } from './storefront-queries.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_catalog_admin_test';
+const TEST_DB = 'monkei_catalog_admin_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });

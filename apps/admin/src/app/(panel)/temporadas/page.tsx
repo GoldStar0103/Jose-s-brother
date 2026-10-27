@@ -4,7 +4,7 @@ import {
   getLevelPassCheckpoints,
   listSeasonFunnels,
   listSeasonHistory,
-} from '@levelup/db';
+} from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { dateTime, diamonds } from '../../../lib/format';

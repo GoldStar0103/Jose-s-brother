@@ -6,7 +6,7 @@
 #   docker build -f docker/Dockerfile.next --build-arg APP=web -t levelup-web .
 #
 # Build context is the repository root: pnpm workspaces need the lockfile and
-# every package manifest to resolve, and the apps import @levelup/* from source.
+# every package manifest to resolve, and the apps import @monkei/* from source.
 
 # syntax=docker/dockerfile:1.7
 
@@ -45,7 +45,7 @@ COPY . .
 # identity, the provider key — is read per request, which is why the pages that
 # depend on them are force-dynamic. Baking them in here would mean rebuilding
 # the image to change an RFC.
-RUN pnpm --filter @levelup/${APP} exec next build
+RUN pnpm --filter @monkei/${APP} exec next build
 
 # ── runtime ───────────────────────────────────────────────────────────────────
 FROM ${NODE_IMAGE} AS runtime
@@ -65,6 +65,9 @@ COPY --from=build /repo/apps/${APP}/.next/standalone ./
 # have to be copied separately. Forgetting this is the classic standalone bug:
 # the site boots, serves HTML, and every stylesheet and script 404s.
 COPY --from=build /repo/apps/${APP}/.next/static ./apps/${APP}/.next/static
+# Favicons / brand marks for the storefront (and any future admin public assets).
+# Directory is always created in the repo so this COPY never fails when empty.
+COPY --from=build /repo/apps/${APP}/public ./apps/${APP}/public
 
 # The mount point for the `uploads` volume (docker-compose.prod.yml), created
 # here so Docker's first-mount copy-up gives the fresh named volume this

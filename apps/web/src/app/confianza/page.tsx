@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { countCompletedOrders, countUniqueCustomers, listTestimonials } from '@levelup/db';
+import { countCompletedOrders, countUniqueCustomers, listTestimonials } from '@monkei/db';
 import { getDb } from '../../lib/server';
 import { initials } from '../../lib/format';
 import { BoltIcon, HeadsetIcon, LockIcon, ShieldIcon } from '../icons';

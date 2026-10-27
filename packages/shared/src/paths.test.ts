@@ -36,9 +36,9 @@ describe('uploadRoot', () => {
 
 describe('safeStorageKey', () => {
   it('accepts a key we generated', () => {
-    expect(safeStorageKey('comprobantes/LU-260915-AB12/abc123.jpg')).toEqual({
+    expect(safeStorageKey('comprobantes/MK-260915-AB12/abc123.jpg')).toEqual({
       ok: true,
-      relative: 'comprobantes/LU-260915-AB12/abc123.jpg',
+      relative: 'comprobantes/MK-260915-AB12/abc123.jpg',
     });
   });
 
@@ -78,17 +78,17 @@ describe('safeStorageKey', () => {
   });
 
   it('collapses redundant separators rather than rejecting outright', () => {
-    expect(safeStorageKey('comprobantes//LU-1///x.jpg')).toEqual({
+    expect(safeStorageKey('comprobantes//MK-1///x.jpg')).toEqual({
       ok: true,
-      relative: 'comprobantes/LU-1/x.jpg',
+      relative: 'comprobantes/MK-1/x.jpg',
     });
   });
 
   it('normalises windows separators on a key written by another platform', () => {
     // Keys are stored with forward slashes, but be tolerant reading them back.
-    expect(safeStorageKey('comprobantes\\LU-1\\x.jpg')).toEqual({
+    expect(safeStorageKey('comprobantes\\MK-1\\x.jpg')).toEqual({
       ok: true,
-      relative: 'comprobantes/LU-1/x.jpg',
+      relative: 'comprobantes/MK-1/x.jpg',
     });
   });
 });

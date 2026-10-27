@@ -3,7 +3,7 @@
 import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { adminUsers } from '@levelup/db';
+import { adminUsers } from '@monkei/db';
 import { getDb } from '../../lib/db';
 import { createSessionToken, signPurposeToken, verifyPassword } from '../../lib/auth';
 import { clearSessionCookie, setSessionCookie } from '../../lib/session';

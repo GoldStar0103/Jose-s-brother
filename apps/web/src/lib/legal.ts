@@ -7,7 +7,7 @@
  * obvious on the page instead of quietly shipping as fact.
  */
 
-import { FALLBACK_DOMAIN, siteName } from '@levelup/shared';
+import { FALLBACK_DOMAIN, siteName } from '@monkei/shared';
 
 export interface LegalIdentity {
   businessName: string;

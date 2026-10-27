@@ -12,7 +12,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { eq, sql as raw } from 'drizzle-orm';
-import { createOrder, settleGatewayCharge } from '@levelup/engine';
+import { createOrder, settleGatewayCharge } from '@monkei/engine';
 import { createDb, type Database } from '../index.js';
 import { baseProducts, campaigns, comboItems, combos, orders, paymentEvents, payments } from '../schema.js';
 import { DrizzleOrderingStore } from './ordering-store.js';
@@ -28,7 +28,7 @@ import {
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_gateway_test';
+const TEST_DB = 'monkei_gateway_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });

@@ -26,8 +26,8 @@ describe('supportUrl', () => {
   });
 
   it('attaches an encoded message', () => {
-    expect(supportUrl('Hola, pedido LU-1 (ID 123).', '522206161171')).toBe(
-      'https://wa.me/522206161171?text=Hola%2C%20pedido%20LU-1%20(ID%20123).',
+    expect(supportUrl('Hola, pedido MK-1 (ID 123).', '522206161171')).toBe(
+      'https://wa.me/522206161171?text=Hola%2C%20pedido%20MK-1%20(ID%20123).',
     );
   });
 

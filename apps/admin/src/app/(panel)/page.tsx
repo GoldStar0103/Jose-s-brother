@@ -4,7 +4,7 @@ import {
   getPaymentDetails,
   listStuckGatewayPayments,
   listWalletResolvedDeliveries,
-} from '@levelup/db';
+} from '@monkei/db';
 import { getDb } from '../../lib/db';
 import { requireSession } from '../../lib/session';
 import { getProvider } from '../../lib/provider';

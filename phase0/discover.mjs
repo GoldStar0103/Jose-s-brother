@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * LevelUp Store — Phase 0 discovery
+ * Monkei — Phase 0 discovery
  *
  * Answers the questions that decide the architecture, before a line of
  * fulfillment code gets written:
@@ -436,8 +436,8 @@ async function testPurchase() {
 
   const isGame = target.source === 'games';
   const body = isGame
-    ? { package_id: target.productId, input1: TEST_PLAYER_ID, client_name: 'LU-PHASE0-TEST' }
-    : { product_id: target.productId, redemption_id: TEST_PLAYER_ID, client_name: 'LU-PHASE0-TEST' };
+    ? { package_id: target.productId, input1: TEST_PLAYER_ID, client_name: 'MK-PHASE0-TEST' }
+    : { product_id: target.productId, redemption_id: TEST_PLAYER_ID, client_name: 'MK-PHASE0-TEST' };
 
   // The docs shout: "NUNCA se mandan quantity y redemption_id juntos."
   // Assert it at the boundary rather than trusting the caller.
@@ -745,7 +745,7 @@ ${findings.calls.length} provider call(s) recorded in \`${jsonPath.split(/[\\/]/
 // ── main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-  log('LevelUp Store — Phase 0 Discovery');
+  log('Monkei — Phase 0 Discovery');
   log(`${BASE_URL}   mode: ${findings.mode}`);
 
   let missing = BASE_DENOMINATIONS;

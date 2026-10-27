@@ -212,7 +212,7 @@ export class MercadoPagoGateway implements PaymentGateway {
     const preference = await this.request<MpPreference>('POST', '/checkout/preferences', params, {
       // One preference per order, however many times the button is pressed —
       // same reasoning as Stripe's Idempotency-Key on session creation.
-      idempotencyKey: `levelup-mp-${input.orderId}`,
+      idempotencyKey: `monkei-mp-${input.orderId}`,
     });
 
     if (!preference.init_point) {

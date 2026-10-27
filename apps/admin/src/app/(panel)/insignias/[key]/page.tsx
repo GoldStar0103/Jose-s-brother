@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getBadgeDefinition, listBadgeHolders } from '@levelup/db';
+import { getBadgeDefinition, listBadgeHolders } from '@monkei/db';
 import { getDb } from '../../../../lib/db';
 import { requireSession } from '../../../../lib/session';
 import { dateTime } from '../../../../lib/format';

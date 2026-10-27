@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { getStorefrontCombo } from '@levelup/db';
+import { getStorefrontCombo } from '@monkei/db';
 import { getDb } from '../../../lib/server';
 import { diamonds, mxn } from '../../../lib/format';
 import { ogLogo } from '../../../lib/og-logo';

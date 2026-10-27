@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ChatIcon } from './icons';
 
-const STORAGE_KEY = 'levelup_whatsapp_popup_hide_until';
+const STORAGE_KEY = 'monkei_whatsapp_popup_hide_until';
 
 /** "Hoy" means the Mexico City calendar day, not the visitor's own clock. */
 function todayMexicoCity(): string {

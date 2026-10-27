@@ -13,8 +13,8 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { eq, sql as raw } from 'drizzle-orm';
-import { createOrder, syncCatalog } from '@levelup/engine';
-import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@levelup/provider';
+import { createOrder, syncCatalog } from '@monkei/engine';
+import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@monkei/provider';
 import { createDb, type Database } from '../index.js';
 import {
   adminUsers,
@@ -43,7 +43,7 @@ import { reverseCompletedOrder } from './order-reversal-store.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_order_reversal_test';
+const TEST_DB = 'monkei_order_reversal_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });

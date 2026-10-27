@@ -28,7 +28,7 @@ import { saveLevelPassCheckpoints } from './level-pass-settings.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_season_funnel_test';
+const TEST_DB = 'monkei_season_funnel_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -106,7 +106,7 @@ async function seedLpTransaction(
   const [order] = await db
     .insert(orders)
     .values({
-      orderNumber: `LU-${Math.random().toString(36).slice(2, 10)}`,
+      orderNumber: `MK-${Math.random().toString(36).slice(2, 10)}`,
       playerId: '100000',
       comboKey: 'test_combo',
       comboSnapshot: { name: 'Test' },

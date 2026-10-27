@@ -7,13 +7,13 @@ import {
   getPublicTop50,
   listStorefront,
   listTestimonials,
-} from '@levelup/db';
+} from '@monkei/db';
 import { getCustomerSession } from '../lib/customer-session';
 import { getDb } from '../lib/server';
 import { diamonds, initials, mxn, roundDownSignificant } from '../lib/format';
 import { avatarUrl, flyerUrl } from '../lib/assets';
 import { socialLinks } from '../lib/social';
-import { siteName } from '@levelup/shared';
+import { siteName } from '@monkei/shared';
 import logo from '../assets/logo.png';
 import heroAnnounce from '../assets/mascot/hero-announce.png';
 import heroStars from '../assets/mascot/hero-stars.png';
@@ -164,7 +164,7 @@ export default async function HomePage() {
         <div className="hm-bar-brand">
           <img src={logo.src} width={44} height={44} alt="" decoding="async" />
           <div className="hm-bar-wordmark">
-            {/* One styled word, not a two-part split like "LEVELUP STORE" —
+            {/* One styled word, not a two-part split like a legacy brand —
                 the brand name is configurable and most won't split naturally
                 into a plain part and a highlighted suffix the way that one did. */}
             <span className="hm-bar-name grad">{siteName().toUpperCase()}</span>

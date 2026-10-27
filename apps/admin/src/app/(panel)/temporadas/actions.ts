@@ -6,7 +6,7 @@ import {
   saveLevelPassCheckpoints,
   startFirstSeason,
   type CheckpointIssue,
-} from '@levelup/db';
+} from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 

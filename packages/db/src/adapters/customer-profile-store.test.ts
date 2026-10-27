@@ -1,4 +1,4 @@
-/** Mi LevelUp read/write surface against real Postgres. */
+/** Mi MONKEI read/write surface against real Postgres. */
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import postgres from 'postgres';
@@ -21,7 +21,7 @@ import {
   vaultOffers,
 } from '../schema.js';
 import {
-  getMyLevelUpOverview,
+  getMyMonkeiOverview,
   getMyProfile,
   getPublicProfile,
   getPublicTop50,
@@ -38,7 +38,7 @@ import {
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_customer_profile_test';
+const TEST_DB = 'monkei_customer_profile_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -106,10 +106,10 @@ describe('getMyProfile', () => {
   });
 });
 
-describe('getMyLevelUpOverview', () => {
+describe('getMyMonkeiOverview', () => {
   it('returns an all-zero, no-season overview when there is no active season', async () => {
     const p = await seedProfile();
-    const overview = await getMyLevelUpOverview(db, p.id);
+    const overview = await getMyMonkeiOverview(db, p.id);
     expect(overview).toMatchObject({ season: null, lp: 0, seasonalDiamonds: 0, rank: null, checkpoints: [], vault: { unlocked: false } });
   });
 
@@ -131,7 +131,7 @@ describe('getMyLevelUpOverview', () => {
       status: 'pending',
     });
 
-    const overview = await getMyLevelUpOverview(db, low.id);
+    const overview = await getMyMonkeiOverview(db, low.id);
     expect(overview.season).toMatchObject({ seasonNumber: 1 });
     expect(overview.lp).toBe(60);
     expect(overview.seasonalDiamonds).toBe(100);
@@ -157,7 +157,7 @@ describe('getMyLevelUpOverview', () => {
       grantedAt: new Date('2026-01-12T02:00:00Z'),
     });
 
-    const overview = await getMyLevelUpOverview(db, p.id);
+    const overview = await getMyMonkeiOverview(db, p.id);
     expect(overview.checkpoints[0]).toMatchObject({
       status: 'granted',
       reachedAt: new Date('2026-01-12T00:00:00Z'),
@@ -172,11 +172,11 @@ describe('getMyLevelUpOverview', () => {
     const [combo] = await db.insert(combos).values({ campaignId: campaign!.id, key: 'combo1', name: 'Combo Uno', priceMxnCents: 10_000, advertisedDiamonds: 100, active: true }).returning();
     const [offer] = await db.insert(vaultOffers).values({ comboId: combo!.id, vaultPriceMxnCents: 7_000, active: true }).returning();
 
-    const withoutEntitlement = await getMyLevelUpOverview(db, p.id);
+    const withoutEntitlement = await getMyMonkeiOverview(db, p.id);
     expect(withoutEntitlement.vault).toEqual({ unlocked: false, expiresAt: null, offers: [] });
 
     await db.insert(vaultEntitlements).values({ seasonId: season.id, playerProfileId: p.id, status: 'active', expiresAt: season.endsAt });
-    const withEntitlement = await getMyLevelUpOverview(db, p.id);
+    const withEntitlement = await getMyMonkeiOverview(db, p.id);
     expect(withEntitlement.vault.unlocked).toBe(true);
     expect(withEntitlement.vault.offers).toEqual([
       {
@@ -195,7 +195,7 @@ describe('getMyLevelUpOverview', () => {
     const season = await seedActiveSeason();
     await db.insert(vaultEntitlements).values({ seasonId: season.id, playerProfileId: p.id, status: 'expired', expiresAt: season.endsAt });
 
-    const overview = await getMyLevelUpOverview(db, p.id);
+    const overview = await getMyMonkeiOverview(db, p.id);
     expect(overview.vault.unlocked).toBe(false);
   });
 });
@@ -255,13 +255,13 @@ describe('listMyOrders', () => {
     const [campaign] = await db.insert(campaigns).values({ key: 'c', name: 'C' }).returning();
     const [combo] = await db.insert(combos).values({ campaignId: campaign!.id, key: 'combo1', name: 'Combo Uno', priceMxnCents: 10_000, advertisedDiamonds: 100, active: true }).returning();
     await db.insert(orders).values({
-      orderNumber: 'LU-1', playerId: '100001', comboId: combo!.id, comboKey: 'combo1',
+      orderNumber: 'MK-1', playerId: '100001', comboId: combo!.id, comboKey: 'combo1',
       comboSnapshot: { name: 'Combo Uno' }, priceMxnCents: 10_000, status: 'completed',
     });
 
     const list = await listMyOrders(db, '100001');
     expect(list).toHaveLength(1);
-    expect(list[0]).toMatchObject({ orderNumber: 'LU-1', comboName: 'Combo Uno', lpEarned: null });
+    expect(list[0]).toMatchObject({ orderNumber: 'MK-1', comboName: 'Combo Uno', lpEarned: null });
   });
 });
 

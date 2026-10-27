@@ -1,4 +1,4 @@
-import { listPendingApprovals } from '@levelup/db';
+import { listPendingApprovals } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { diamonds, mxn, relativeTime } from '../../../lib/format';

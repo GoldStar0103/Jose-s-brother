@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { deleteVaultOffer, saveVaultOffer, toggleVaultOffer } from '@levelup/db';
+import { deleteVaultOffer, saveVaultOffer, toggleVaultOffer } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 

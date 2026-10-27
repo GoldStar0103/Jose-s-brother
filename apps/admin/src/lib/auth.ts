@@ -81,7 +81,7 @@ export async function verifyPassword(password: string, stored: string): Promise<
 
 // ── sessions ──────────────────────────────────────────────────────────────────
 
-export const SESSION_COOKIE = 'levelup_admin_session';
+export const SESSION_COOKIE = 'monkei_admin_session';
 
 export interface SessionPayload {
   adminUserId: string;

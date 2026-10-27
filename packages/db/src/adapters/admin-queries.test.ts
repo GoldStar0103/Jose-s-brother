@@ -12,8 +12,8 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { eq, sql as raw } from 'drizzle-orm';
-import { approvePayment, createOrder, syncCatalog } from '@levelup/engine';
-import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@levelup/provider';
+import { approvePayment, createOrder, syncCatalog } from '@monkei/engine';
+import { ProviderSimulator, type ProviderProduct, type UsdTenK } from '@monkei/provider';
 import { createDb, type Database } from '../index.js';
 import { campaigns, comboItems, combos, baseProducts, orderItems, orders, payments } from '../schema.js';
 import { DrizzleCatalogSyncStore } from './catalog-sync-store.js';
@@ -34,7 +34,7 @@ import {
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = join(HERE, '..', '..', 'migrations');
 const BASE_URL = process.env.TEST_PG_URL ?? 'postgres://levelup@127.0.0.1:54330';
-const TEST_DB = 'levelup_admin_test';
+const TEST_DB = 'monkei_admin_test';
 
 const PG_AVAILABLE = await (async () => {
   const probe = postgres(`${BASE_URL}/postgres`, { max: 1, connect_timeout: 3 });
@@ -223,7 +223,7 @@ describe.skipIf(!PG_AVAILABLE)('listPendingApprovals', () => {
     // Real incident, 2026-09-18: an admin working this queue by habit
     // rejected a card order as "sin comprobante" 22 seconds after checkout
     // started, before Stripe's own webhook could confirm the real payment
-    // that succeeded six minutes later (order LU-260918-0RTQ). A card order
+    // that succeeded six minutes later (order MK-260918-0RTQ). A card order
     // must never be a candidate for that button in the first place.
     //
     // Real incident, 2026-09-23: this filter used to just be `method !=
