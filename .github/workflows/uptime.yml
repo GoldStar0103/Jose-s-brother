@@ -67,9 +67,10 @@ jobs:
             echo "TELEGRAM_* repository secrets not set — job failure is the external signal."
             exit 0
           fi
-          text="🚨 External uptime DOWN on monkei.mx
-Failed: ${{ steps.health.outputs.failed }}
-Source: GitHub Actions workflow uptime.yml"
+          text="$(printf '%s\n' \
+            "External uptime DOWN on monkei.mx" \
+            "Failed: ${{ steps.health.outputs.failed }}" \
+            "Source: GitHub Actions workflow uptime.yml")"
           curl -fsS --max-time 15 \
             -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${TELEGRAM_ALERT_CHAT_ID}" \
