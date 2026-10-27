@@ -16,6 +16,10 @@ on:
     # GitHub cron is best-effort; ~every 10 minutes is enough for "is it up".
     - cron: '*/10 * * * *'
   workflow_dispatch:
+  # First enablement / edits to this file should prove the probe immediately.
+  push:
+    paths:
+      - '.github/workflows/uptime.yml'
 
 concurrency:
   group: uptime-monkei
