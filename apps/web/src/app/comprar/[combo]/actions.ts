@@ -29,7 +29,17 @@ import { trackingContext } from '../../../lib/tracking';
 export interface ValidateState {
   status: 'idle' | 'found' | 'not_found' | 'error';
   playerId?: string;
-  nickname?: string;
+  /**
+   * Null when the provider confirms the ID exists but does not hand back a
+   * display name for it — observed live 2026-10-26: RecargasAmérica's
+   * `/catalog/validate` started returning `account_name: null` for accounts
+   * it still reports as found, consistently, not as a transient blip (a
+   * five-call retry against a known-good ID never got one back). `found` is
+   * still the actual safety check — it is what confirms the ID is a real
+   * account before any money moves — so it alone is enough to accept the ID;
+   * requiring a nickname on top is what blocked every customer at step one.
+   */
+  nickname?: string | null;
   message?: string;
 }
 
@@ -72,7 +82,7 @@ export async function validatePlayer(
   try {
     const result = await getProvider().validatePlayer(validator, playerId);
 
-    if (!result.found || !result.nickname) {
+    if (!result.found) {
       return {
         status: 'not_found',
         playerId,
@@ -130,7 +140,7 @@ async function validationProductId(): Promise<string | null> {
   return row?.providerProductId ?? null;
 }
 
-type ConfirmResult = { ok: true; nickname: string } | { ok: false; message: string };
+type ConfirmResult = { ok: true; nickname: string | null } | { ok: false; message: string };
 
 /**
  * `placeOrder` and `payWithCard` are public POST endpoints in their own
@@ -161,7 +171,7 @@ async function confirmPlayer(playerId: string): Promise<ConfirmResult> {
 
   try {
     const result = await getProvider().validatePlayer(productId, playerId);
-    if (!result.found || !result.nickname) {
+    if (!result.found) {
       return { ok: false, message: 'No encontramos ese ID de Free Fire. Revísalo por favor.' };
     }
     return { ok: true, nickname: result.nickname };
