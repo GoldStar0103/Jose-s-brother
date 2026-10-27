@@ -4,7 +4,7 @@
 # restored into a disposable Postgres, and that uploads extract — without
 # touching production containers or volumes.
 #
-# Usage (on the VPS, as levelup):
+# Usage (on the VPS, as monkei):
 #   bash scripts/restore-drill.sh [db-YYYYMMDD-HHMMSS.sql.gz]
 # If no stamp file is given, uses the newest db-*.sql.gz on the remote.
 

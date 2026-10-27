@@ -87,12 +87,12 @@ bash /root/server-setup.sh
 ```
 
 It installs Docker from Docker's own repository, creates the deploy user
-`levelup` (sudo, docker) with root's keys, turns on the firewall, fail2ban,
+`monkei` (sudo, docker) with root's keys, turns on the firewall, fail2ban,
 automatic security updates and swap, creates `/srv/monkei`, and last, turns
 off password and root logins over SSH. Read the summary it ends with:
 
 - **SSH hardening: ON** — continue.
-- **SSH hardening: SKIPPED** — `levelup` had no key. Do `ssh-copy-id` above,
+- **SSH hardening: SKIPPED** — `monkei` had no key. Do `ssh-copy-id` above,
   then run the script again.
 - **Reboot needed: YES** — reboot, but only after the login check below
   works: a reboot ends the root session too.
@@ -101,13 +101,13 @@ off password and root logins over SSH. Read the summary it ends with:
 deploy user:
 
 ```bash
-ssh levelup@<vps-ip>
+ssh monkei@<vps-ip>
 sudo true && docker ps          # both must work
 sudo reboot                     # only if the summary said so
 ```
 
 Only then close the root session. From here on, everything is done as
-`levelup`, with `sudo` when needed — root cannot log in over SSH any more. If
+`monkei`, with `sudo` when needed — root cannot log in over SSH any more. If
 you do get locked out, hPanel's recovery mode for the VPS is the way back in
 (its browser terminal may log in as root over SSH, and stop working with it).
 
@@ -119,7 +119,7 @@ to do.
 
 #### Get the code
 
-The setup script already created `/srv/monkei`, owned by `levelup`, with
+The setup script already created `/srv/monkei`, owned by `monkei`, with
 `backups/` inside — and `git clone` refuses a directory that is not empty. So:
 
 ```bash
@@ -359,7 +359,7 @@ from a backup instead.
 `scripts/backup.sh` dumps the database and the uploads volume into
 `/srv/monkei/backups` and keeps 14 days of them there. Install it in
 **root's** crontab — `sudo crontab -e`, not plain `crontab -e`: the log is in
-`/var/log` and the rclone login below is root's, so as `levelup` the job fails
+`/var/log` and the rclone login below is root's, so as `monkei` the job fails
 every night without a word.
 
 ```bash

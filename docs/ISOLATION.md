@@ -55,8 +55,8 @@ creates empty volumes and looks like a wiped store.
 Still often left as historical Postgres plumbing inside `.env` (safe; not
 shared with LevelUp Store):
 
-- OS deploy user on an already-provisioned host may still be `levelup` (SSH);
-  new installs from `server-setup.sh` default to `monkei`.
+- Deploy SSH user is **`monkei`** (hosts that still had `levelup` use
+  `scripts/rename-deploy-user.sh`).
 - `POSTGRES_USER` / `POSTGRES_DB` / `DATABASE_URL` may still say `levelup` if
   that is how the cluster was first initialised — renaming the role is a
   separate DB migration and is not required for brand isolation.

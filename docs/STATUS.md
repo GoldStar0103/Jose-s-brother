@@ -51,6 +51,8 @@ the compose name alone.
 - [x] `@monkei/*` rename + isolation docs committed / pushed to `origin/main`
 - [x] Compose project `name: monkei`, volumes `monkei_*`, deploy path
       `/srv/monkei` (migrated live via `scripts/migrate-infra-names.sh`)
+- [x] Deploy SSH user `monkei` (`levelup` removed via
+      `scripts/rename-deploy-user.sh`)
 
 ### Brand & isolation (Monkei ≠ LevelUp Store)
 
@@ -63,6 +65,7 @@ the compose name alone.
 - [x] Payment idempotency keys `monkei-*`
 - [x] Local compose Postgres on `:5433` / `monkei-postgres`
 - [x] Compose / volumes / `/srv/monkei` infra names
+- [x] Deploy SSH user `monkei`
 - [x] `docs/ISOLATION.md` rulebook
 
 ---

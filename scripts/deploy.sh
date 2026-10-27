@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Deploy Monkei. Two subcommands, both meant to be run from
-# /srv/monkei as the `levelup` deploy user — the same `cd /srv/monkei`
+# /srv/monkei as the `monkei` deploy user — the same `cd /srv/monkei`
 # convention docs/RUNBOOK.md uses throughout, and how scripts/backup.sh is
 # invoked:
 #
@@ -399,7 +399,7 @@ Usage:
   ./scripts/deploy.sh --help
 
 Run from /srv/monkei (docs/RUNBOOK.md's `cd /srv/monkei` convention), as the
-`levelup` deploy user, with docker-compose.prod.yml and a filled-in .env
+`monkei` deploy user, with docker-compose.prod.yml and a filled-in .env
 already in this directory.
 
   init      First deployment (docs/RUNBOOK.md §1). Builds and starts the
