@@ -77,7 +77,7 @@ the compose name alone.
 |---|---|---|
 | Flyer art ↔ catalog amounts/prices | Brother | SUPER PACKS + PACKS MEGA PRIME match. MINI PACKS / ENERGÍA INSANA / ¿DULCE O DIAMANTES? are marketing art that does not match catalog tiers exactly — confirm or replace. |
 | Facebook / Instagram / TikTok URLs | Brother | Env keys empty; homepage correctly hides those icons until set. WhatsApp VIP + channel already set. |
-| RecargasAmérica wallet top-up | Brother | Check panel Inicio “Saldo” when fulfilment pauses; fund before it hits zero. |
+| RecargasAmérica wallet top-up | Brother | Checked 2026-10-27: **$118.68 USD** (above $100 low threshold). Fund before it hits zero; panel Inicio shows live saldo. |
 
 Deliberately **not** automated (documented in RUNBOOK §6): Docker upgrades,
 kernel reboot, migrations-on-deploy, certificate-expiry paging beyond
