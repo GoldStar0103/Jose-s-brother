@@ -128,20 +128,36 @@ await check('a combo page renders', async () => {
 });
 
 await check('flyer images actually resolve', async () => {
-  // Two layers now: the homepage rail's compact `promo-flyer` thumbnails, and
-  // the full-size `flyer` on whichever promotion page the previous check
-  // followed. Checking only the homepage would miss a flyer that 404s on the
-  // detail page but happens to still be cached/working as a thumbnail.
-  const { body: homeBody } = await get(`${STORE}/`);
-  const promoSrcs = [...homeBody.matchAll(/<img[^>]+class="promo-flyer"[^>]+src="([^"]+)"/g)].map((m) => m[1]);
+  // Homepage rail uses `hm-offer-flyer`; campaign pages and /promociones use
+  // `flyer`. Attribute order is not guaranteed (Next may emit src before
+  // class). The homepage often links Mega Oferta straight to /comprar/, so
+  // promoPath can be null even when every campaign has art — always also
+  // load /promociones when the home rail is empty of flyer <img>s.
+  const flyerImgSrcs = (html) => {
+    const srcs = [];
+    for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
+      const tag = m[0];
+      if (!/\bclass="[^"]*\b(?:hm-offer-flyer|promo-flyer|flyer)\b[^"]*"/.test(tag)) continue;
+      const src = tag.match(/\bsrc="([^"]+)"/i);
+      if (src) srcs.push(src[1]);
+    }
+    return srcs;
+  };
 
-  let detailSrcs = [];
+  const { body: homeBody } = await get(`${STORE}/`);
+  let srcs = flyerImgSrcs(homeBody);
+
   if (promoPath) {
     const { body: detailBody } = await get(`${STORE}${promoPath}`);
-    detailSrcs = [...detailBody.matchAll(/<img[^>]+class="flyer"[^>]+src="([^"]+)"/g)].map((m) => m[1]);
+    srcs = [...srcs, ...flyerImgSrcs(detailBody)];
   }
 
-  const srcs = [...new Set([...promoSrcs, ...detailSrcs])];
+  if (srcs.length === 0) {
+    const { status, body: listBody } = await get(`${STORE}/promociones`);
+    if (status === 200) srcs = flyerImgSrcs(listBody);
+  }
+
+  srcs = [...new Set(srcs)];
   if (srcs.length === 0) return { warn: 'no flyers uploaded yet' };
 
   for (const src of srcs) {

@@ -1,0 +1,73 @@
+# Off-box uptime probe for monkei.mx.
+#
+# The VPS already runs scripts/uptime-check.sh every 5 minutes, but that cron
+# dies with the host. This workflow runs on GitHub's runners so a dead VPS
+# still produces a failed Actions run (and optional Telegram if secrets exist).
+#
+# Optional repository secrets (same names as production .env):
+#   TELEGRAM_BOT_TOKEN
+#   TELEGRAM_ALERT_CHAT_ID
+# Without them the job still fails loudly when the site is down.
+
+name: Uptime
+
+on:
+  schedule:
+    # GitHub cron is best-effort; ~every 10 minutes is enough for "is it up".
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: uptime-monkei
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe store + panel health
+        id: health
+        run: |
+          set -euo pipefail
+          fail=""
+          check() {
+            local name="$1" url="$2"
+            local code body
+            code="$(curl -sS --max-time 20 -o /tmp/body.json -w '%{http_code}' "$url" || echo 000)"
+            body="$(cat /tmp/body.json 2>/dev/null || true)"
+            if [ "$code" = "200" ] && echo "$body" | grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"'; then
+              echo "ok  $name ($url)"
+              return 0
+            fi
+            echo "DOWN $name HTTP $code — $url"
+            echo "body: ${body:0:200}"
+            fail="${fail}${fail:+; }${name}"
+            return 0
+          }
+          check store https://monkei.mx/api/health
+          check panel https://panel.monkei.mx/api/health
+          if [ -n "$fail" ]; then
+            echo "failed=$fail" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "failed=" >> "$GITHUB_OUTPUT"
+
+      - name: Telegram on failure
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
+        run: |
+          if [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_ALERT_CHAT_ID}" ]; then
+            echo "TELEGRAM_* repository secrets not set — job failure is the external signal."
+            exit 0
+          fi
+          text="🚨 External uptime DOWN on monkei.mx
+Failed: ${{ steps.health.outputs.failed }}
+Source: GitHub Actions workflow uptime.yml"
+          curl -fsS --max-time 15 \
+            -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_ALERT_CHAT_ID}" \
+            --data-urlencode "text=${text}" \
+            >/dev/null || echo "telegram notify failed"

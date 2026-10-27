@@ -72,22 +72,22 @@ check_url() {
   local url="$1"
   local code body
   # Two tries: a single blip should not page anyone.
-  if body="$(curl -fsS --max-time 15 -o /tmp/levelup-uptime-body.$$ -w '%{http_code}' "$url" 2>/dev/null)"; then
+  if body="$(curl -fsS --max-time 15 -o /tmp/monkei-uptime-body.$$ -w '%{http_code}' "$url" 2>/dev/null)"; then
     code="$body"
-    if [ "$code" = "200" ] && grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"' /tmp/levelup-uptime-body.$$ 2>/dev/null; then
-      rm -f /tmp/levelup-uptime-body.$$
+    if [ "$code" = "200" ] && grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"' /tmp/monkei-uptime-body.$$ 2>/dev/null; then
+      rm -f /tmp/monkei-uptime-body.$$
       return 0
     fi
   fi
   sleep 3
-  if body="$(curl -fsS --max-time 15 -o /tmp/levelup-uptime-body.$$ -w '%{http_code}' "$url" 2>/dev/null)"; then
+  if body="$(curl -fsS --max-time 15 -o /tmp/monkei-uptime-body.$$ -w '%{http_code}' "$url" 2>/dev/null)"; then
     code="$body"
-    if [ "$code" = "200" ] && grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"' /tmp/levelup-uptime-body.$$ 2>/dev/null; then
-      rm -f /tmp/levelup-uptime-body.$$
+    if [ "$code" = "200" ] && grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"' /tmp/monkei-uptime-body.$$ 2>/dev/null; then
+      rm -f /tmp/monkei-uptime-body.$$
       return 0
     fi
   fi
-  rm -f /tmp/levelup-uptime-body.$$
+  rm -f /tmp/monkei-uptime-body.$$
   return 1
 }
 

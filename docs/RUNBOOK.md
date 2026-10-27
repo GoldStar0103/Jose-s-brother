@@ -788,9 +788,11 @@ Being explicit so none of it is discovered during an incident:
 - Migrations on deploy. Deliberate, but it means remembering.
 - External uptime monitoring. `scripts/uptime-check.sh` (cron every 5 minutes)
   pages Telegram when the store or panel `/api/health` goes down while the VPS
-  itself is still up. It cannot see a dead VPS — for that, point any external
-  monitor (UptimeRobot, Better Stack, …) at
-  `https://$PUBLIC_DOMAIN/api/health` as well.
+  itself is still up. It cannot see a dead VPS — for that,
+  `.github/workflows/uptime.yml` probes both health URLs from GitHub Actions
+  every ~10 minutes (failed run = off-box signal). Optional repo secrets
+  `TELEGRAM_BOT_TOKEN` + `TELEGRAM_ALERT_CHAT_ID` also page Telegram on failure.
+  UptimeRobot / Better Stack remain fine alternatives if preferred.
 - Certificate expiry alerting. Caddy renews automatically; `TLS_EMAIL` is the
   fallback if renewal ever stops.
 
