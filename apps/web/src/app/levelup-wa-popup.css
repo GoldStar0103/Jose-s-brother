@@ -1,0 +1,279 @@
+/* ==========================================================================
+   WhatsApp channel popup — pixel-matched to levelup-store-propuestas /home
+   Loaded AFTER levelup-home.css so these rules win over the older bottom-sheet.
+   ========================================================================== */
+
+@keyframes ovIn{from{opacity:0}to{opacity:1}}
+@keyframes sheetIn{
+  0%{opacity:0;transform:translateY(26px) scale(.93)}
+  100%{opacity:1;transform:none}
+}
+@keyframes bubbleBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes shapeFloat{
+  0%,100%{transform:translate3d(0,0,0) rotate(0)}
+  50%{transform:translate3d(4px,-12px,0) rotate(10deg)}
+}
+@keyframes sweep{0%,76%{left:-80%;opacity:0}78%{opacity:1}100%{left:135%;opacity:1}}
+@keyframes rigSway{
+  0%,100%{transform:translate3d(0,0,0) rotate(-.4deg)}
+  50%{transform:translate3d(-2px,-6px,0) rotate(.5deg)}
+}
+@keyframes rigBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+
+.wa-overlay{
+  position:fixed!important;inset:0;z-index:200;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:16px;
+  background:rgba(4,3,10,.62);
+  backdrop-filter:blur(10px) saturate(1.1);
+  -webkit-backdrop-filter:blur(10px) saturate(1.1);
+  overflow:hidden;
+  animation:ovIn .3s ease-out both;
+}
+
+.wa-sheet{
+  position:relative;
+  display:block!important;
+  flex:0 0 auto!important;
+  align-self:center!important;
+  width:100%;
+  max-width:404px;
+  height:auto!important;
+  min-height:0!important;
+  max-height:min(92vh,900px);
+  margin:0;
+  padding:0!important;
+  overflow:visible;
+  border-radius:22px;
+  border:1.5px solid rgba(37,211,102,.85);
+  background:linear-gradient(180deg,#0a1310 0%,#0b0a14 40%,#0a0710 100%);
+  box-shadow:
+    0 0 0 1px rgba(37,211,102,.25),
+    0 0 34px -4px rgba(37,211,102,.55),
+    0 34px 70px -30px rgba(0,0,0,.95);
+  animation:sheetIn .62s cubic-bezier(.2,1.25,.35,1) both;
+}
+
+/* ---- header graphic ---- */
+.wa-top{
+  position:relative;
+  height:220px;
+  overflow:hidden;
+  border-radius:21px 21px 0 0;
+  background:
+    radial-gradient(80% 120% at 78% 18%,rgba(37,211,102,.35),transparent 62%),
+    linear-gradient(160deg,#123326 0%,#0d1a2c 58%,#120a24 100%);
+}
+.wa-top .hex{
+  position:absolute;inset:0;z-index:1;opacity:.55;pointer-events:none;
+  border-radius:21px 21px 0 0;overflow:hidden;
+  background-image:
+    linear-gradient(30deg,rgba(37,211,102,.16) 12%,transparent 12.5%,transparent 87%,rgba(37,211,102,.16) 87.5%),
+    linear-gradient(150deg,rgba(37,211,102,.16) 12%,transparent 12.5%,transparent 87%,rgba(37,211,102,.16) 87.5%),
+    linear-gradient(30deg,rgba(37,211,102,.16) 12%,transparent 12.5%,transparent 87%,rgba(37,211,102,.16) 87.5%);
+  background-size:44px 76px;
+  background-position:0 0,0 0,22px 38px;
+}
+.wa-top .glowline{
+  position:absolute;inset:auto 0 0 0;height:2px;z-index:4;pointer-events:none;
+  background:linear-gradient(90deg,transparent,#25d366,#7ce7f7,transparent);opacity:.9;
+}
+.wa-shapes{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  border-radius:21px 21px 0 0;overflow:hidden;
+}
+.wa-shapes i{
+  position:absolute;opacity:.85;
+  animation:shapeFloat var(--d,9s) ease-in-out infinite;
+}
+.wa-shapes i:nth-child(1){
+  left:12%;top:52%;width:34px;height:34px;background:#22d3ee;
+  clip-path:polygon(50% 0,100% 100%,0 100%);--d:8s;
+}
+.wa-shapes i:nth-child(2){
+  left:30%;top:34%;width:20px;height:20px;border:3px solid #25d366;
+  border-radius:50%;background:transparent;--d:11s;
+}
+.wa-shapes i:nth-child(3){
+  left:20%;top:76%;width:26px;height:26px;border-radius:6px;
+  background:linear-gradient(150deg,#c084fc,#7c3aed);--d:7s;
+}
+.wa-shapes i:nth-child(4){
+  left:44%;top:18%;width:44px;height:16px;border-radius:999px;
+  background:linear-gradient(100deg,#a78bfa,#22d3ee);--d:10s;
+}
+
+/* green chat badge — top left (reset older flex-sheet .wa-ic rules) */
+.wa-ic{
+  position:absolute!important;top:20px!important;left:18px!important;right:auto!important;
+  z-index:8;flex:none;
+  width:52px!important;height:52px!important;border-radius:15px!important;
+  display:grid!important;place-items:center;
+  border:0!important;color:#04220f;
+  background:linear-gradient(160deg,#2ee06f,#12a34b)!important;
+  box-shadow:0 10px 26px -10px rgba(37,211,102,.95),inset 0 1px 0 rgba(255,255,255,.45)!important;
+}
+.wa-ic svg{width:27px!important;height:27px!important;color:#04220f!important}
+
+/* speech bubble — left of mascot, tail pointing right */
+.wa-bubble{
+  position:absolute;top:14px;left:82px;z-index:9;
+  max-width:46%;padding:9px 12px;
+  border-radius:13px;background:#fff;color:#0b1220;
+  font-size:12.5px;font-weight:800;line-height:1.25;
+  box-shadow:0 12px 24px -12px rgba(0,0,0,.85);
+  animation:bubbleBob 4.4s ease-in-out infinite;
+}
+.wa-bubble::after{
+  content:"";position:absolute;left:auto;right:-6px;bottom:auto;top:50%;
+  width:14px;height:14px;background:#fff;border-radius:2px;
+  transform:translateY(-50%) rotate(45deg);
+}
+
+/* Monkei GIF — right slot fills the header art area, fully inside (no crop) */
+.wa-fighter,
+.wa-fighter.ia-live{
+  position:absolute!important;
+  left:auto!important;
+  right:2%!important;
+  top:10px!important;
+  bottom:6px!important;
+  width:46%!important;
+  max-width:210px!important;
+  height:auto!important;
+  max-height:none!important;
+  z-index:6;
+  display:block!important;
+  overflow:hidden;
+  pointer-events:none;
+  filter:drop-shadow(0 16px 24px rgba(0,0,0,.7)) drop-shadow(0 0 18px rgba(37,211,102,.35));
+  animation:none;
+}
+.wa-fighter > img,
+.wa-fighter img,
+.wa-fighter video,
+.wa-fighter .still,
+.wa-fighter .live{
+  display:block!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:100%!important;
+  max-width:none!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  transform:translate(-50%,-50%) scale(1.7)!important;
+  transform-origin:center center!important;
+  animation:none!important;
+}
+.wa-fighter.ia-live video.live{display:none!important}
+.wa-fighter.ia-live img.still{display:block!important}
+.wa-fighter.ia-live.has-live video.live{display:none!important}
+.wa-fighter.ia-live.has-live img.still{display:block!important}
+
+/* close — circular, green rim like the reference */
+.wa-close{
+  position:absolute;top:10px;right:10px;z-index:10;
+  width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;
+  background:rgba(4,8,12,.88);
+  border:1.5px solid rgba(37,211,102,.75);
+  color:#fff;
+  backdrop-filter:blur(6px);
+  box-shadow:0 6px 18px -8px rgba(0,0,0,.9);
+}
+.wa-close svg{width:14px;height:14px}
+
+/* ---- body ---- */
+.wa-body{
+  position:relative;z-index:4;
+  flex:none!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:18px 20px 18px;
+  text-align:center;
+  border-radius:0 0 21px 21px;
+  background:linear-gradient(180deg,rgba(10,7,16,.15),rgba(10,7,16,.95) 18%,#0a0710);
+}
+.wa-top{
+  flex:none!important;
+  min-height:0!important;
+}
+.wa-head{display:block}
+.wa-head b{
+  display:block;margin:0;
+  font-size:20px;font-weight:900;letter-spacing:-.02em;line-height:1.15;color:#fff;
+}
+.wa-head b i{font-style:normal;color:#2ee06f}
+.wa-head p{
+  margin:9px 0 0;
+  font-size:12.5px;line-height:1.55;color:#a7b0c8;font-weight:500;
+}
+
+.wa-tiles{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;
+}
+.wa-tile{
+  padding:12px 6px;border-radius:12px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(37,211,102,.28);
+  display:grid;justify-items:center;gap:7px;
+}
+.wa-tile svg{width:19px;height:19px;color:#2ee06f}
+.wa-tile span{
+  font-size:8.5px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;
+  color:#d5dbe9;line-height:1.25;
+}
+
+.wa-actions{display:grid;gap:9px;margin-top:16px}
+.wa-actions .btn,
+.wa-actions .btn-wa,
+.wa-actions .btn-ghost{
+  border-radius:14px!important;
+  width:100%;
+}
+.wa-actions .btn-wa{
+  position:relative;overflow:hidden;
+  height:46px;font-size:14px;font-weight:800;
+  color:#04220f!important;
+  background:linear-gradient(100deg,#3ef07d,#12a34b 70%,#0e8f42)!important;
+  border:0!important;
+  box-shadow:0 16px 30px -16px rgba(37,211,102,.95),inset 0 1px 0 rgba(255,255,255,.4);
+}
+.wa-actions .btn-wa svg{width:18px;height:18px;flex:none}
+.wa-actions .btn-wa::after{
+  content:"";position:absolute;top:-60%;left:-60%;width:44%;height:220%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:rotate(16deg);animation:sweep 5.5s ease-in-out infinite;pointer-events:none;
+}
+.wa-actions .btn-ghost{
+  height:42px;font-size:13.5px;font-weight:700;
+  color:#eef0fb!important;
+  background:#151122!important;
+  border:1px solid rgba(255,255,255,.1)!important;
+  box-shadow:none;
+}
+.wa-skip{
+  margin:2px auto 0;padding:4px;
+  background:none;border:0;cursor:pointer;
+  font-size:11px;color:#7d86a3;text-decoration:underline;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+}
+.wa-skip svg{width:14px;height:14px;flex:none}
+
+@media (max-width:430px){
+  .wa-top{height:200px}
+  .wa-fighter,
+  .wa-fighter.ia-live{
+    width:48%!important;max-width:180px!important;
+    right:1%!important;top:8px!important;bottom:4px!important;
+  }
+  .wa-fighter > img{transform:translate(-50%,-50%) scale(1.62)!important}
+  .wa-body{padding-top:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  .wa-overlay,.wa-sheet,.wa-bubble,.wa-fighter,.wa-shapes i,.wa-actions .btn-wa::after{animation:none!important}
+}

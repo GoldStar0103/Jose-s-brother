@@ -1,0 +1,28 @@
+.ia-live{display:block;position:relative}
+.ia-live video.live{display:none;width:100%;height:auto}
+.ia-live img.still{display:block;width:100%;height:auto}
+.ia-live.has-live video.live{display:block}
+.ia-live.has-live img.still{display:none}
+.hero-mascot .ia-live,.hero-mascot .ia-live img.still,.hero-mascot .ia-live video.live{width:100%;height:auto;display:block}
+.hero-mascot .ia-live video.live{display:none}
+.hero-mascot .ia-live.has-live video.live{display:block}
+.hero-mascot .ia-live.has-live img.still{display:none}
+.promo-mascot{display:block}
+.promo-mascot video.live,.promo-mascot img.still{width:100%;height:auto}
+/* el clip de promociones trae aire a la izquierda (el personaje salta): se recorta
+   con object-fit para que el luchador se vea mas grande dentro de la franja */
+.promo-mascot video.live{aspect-ratio:4/3;object-fit:cover;object-position:100% 50%}
+.why-mascot video.live,.why-mascot img.still{width:100%;height:auto}
+.why-mascot{margin-bottom:-10px}
+.steps-mascot{width:112px;flex:none}
+.steps-mascot video.live,.steps-mascot img.still{width:100%;height:auto}
+@media (min-width:1024px){
+  .promo-mascot{width:132px}
+  .why-mascot{width:112px;margin-bottom:-14px}
+  .steps-mascot{width:140px}
+}
+
+/* --- promociones: mascota mas grande, saliendo por arriba de la franja (2026-10-21) ---
+   El bloque .in tenia overflow:hidden y la mascota mandaba el alto de la franja. Ahora va
+   absoluta (no empuja el alto), la franja gana aire arriba y la cabeza sobresale. */
+.promo{margin-top:44px}

@@ -10,6 +10,9 @@ loadRootEnv();
 const nextConfig = {
   reactStrictMode: true,
 
+  // Hide the floating Next.js "N" badge in dev — users mistook it for app UI.
+  devIndicators: false,
+
   /**
    * Next's Server Actions default to a 1MB request body, which is smaller
    * than a single phone photo — checkout's own comprobante upload validates

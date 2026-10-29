@@ -2,20 +2,58 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { GiftIcon, HeadsetIcon, HomeIcon, ShieldIcon, UserIcon } from './icons';
 
-/**
- * Jose's mockup bar, verbatim: Inicio / Promociones / Mi cuenta / Confianza /
- * Soporte. He called out the previous compromise (Mis pedidos in the fifth
- * slot) as a miss. Guest order lookup stays in the footer and on /pedidos —
- * it is not a tab on this bar.
- */
 const ITEMS = [
-  { href: '/', label: 'Inicio', icon: HomeIcon },
-  { href: '/promociones', label: 'Promociones', icon: GiftIcon },
-  { href: '/cuenta', label: 'Mi cuenta', icon: UserIcon },
-  { href: '/confianza', label: 'Confianza', icon: ShieldIcon },
-  { href: '/soporte', label: 'Soporte', icon: HeadsetIcon },
+  {
+    href: '/',
+    label: 'Inicio',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
+        <path d="M3 11l9-8 9 8" />
+        <path d="M5.5 9.5V20h13V9.5" />
+      </svg>
+    ),
+  },
+  {
+    href: '/promociones',
+    label: 'Promociones',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
+        <path d="M20 12l-7-7v4H4v6h9v4z" />
+        <path d="M4 20h16" />
+      </svg>
+    ),
+  },
+  {
+    href: '/cuenta',
+    label: 'Mi cuenta',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
+        <circle cx="12" cy="8.5" r="3.2" />
+        <path d="M5.2 20c.7-3.4 3.5-5 6.8-5s6.1 1.6 6.8 5" />
+      </svg>
+    ),
+  },
+  {
+    href: '/confianza',
+    label: 'Confianza',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
+        <path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/soporte',
+    label: 'Soporte',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
+        <path d="M4 13v-1a8 8 0 0 1 16 0v1" />
+        <rect x="2.5" y="13" width="4" height="6" rx="1.6" />
+        <rect x="17.5" y="13" width="4" height="6" rx="1.6" />
+      </svg>
+    ),
+  },
 ] as const;
 
 function isActive(pathname: string, href: string): boolean {
@@ -27,21 +65,13 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="bottom-nav" aria-label="Navegación principal">
+    <nav className="bnav" aria-label="Navegación principal">
       {ITEMS.map((item) => {
         const active = isActive(pathname, item.href);
-        const Icon = item.icon;
-
         return (
-          <Link
-            key={item.label}
-            href={item.href}
-            className={`bottom-nav-item${active ? ' active' : ''}`}
-          >
-            <span className="bottom-nav-icon">
-              <Icon className="icon" />
-            </span>
-            <span>{item.label}</span>
+          <Link key={item.label} href={item.href} aria-current={active ? 'page' : undefined}>
+            {item.icon}
+            {item.label}
           </Link>
         );
       })}

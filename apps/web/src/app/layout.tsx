@@ -9,9 +9,24 @@ import { BottomNav } from './bottom-nav';
 import { WhatsappChannelPopup } from './whatsapp-channel-popup';
 import { whatsappChannelUrl } from '../lib/whatsapp-channel';
 import { legalIdentity, pending } from '../lib/legal';
+import { supportUrl } from '../lib/support';
+import { socialLinks } from '../lib/social';
 import { siteName } from '@monkei/shared';
 import logo from '../assets/logo.png';
+import { AppBg } from './app-bg';
+import { SupportFab } from './support-fab';
+import { SiteHeader } from './site-header';
+import { BackButton } from './back-button';
+import { RevealInit } from './reveal';
 import './globals.css';
+import './levelup-home.css';
+import './levelup-appbg-layers.css';
+import './levelup-hero-gems.css';
+import './levelup-ia-live.css';
+import './levelup-rk-patch.css';
+import './levelup-bridge.css';
+import './levelup-wa-popup.css';
+import './levelup-home-polish.css';
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap' });
 
@@ -26,19 +41,6 @@ const DESCRIPTION =
  */
 export const dynamic = 'force-dynamic';
 
-/**
- * Share metadata matters more here than it looks.
- *
- * Every visitor arrives from a link pasted into TikTok, Instagram or a WhatsApp
- * group. Without Open Graph tags those links preview as a bare grey box, and a
- * grey box from an unknown store is precisely the thing this market has learned
- * to scroll past. The preview card is the first trust signal, before anyone
- * reaches the site at all.
- *
- * `metadataBase` is what makes the rest work: relative og:image paths resolve
- * against it, and without it Next emits them relative, which every scraper
- * ignores.
- */
 export async function generateMetadata(): Promise<Metadata> {
   const google = googleSiteVerification();
   const facebook = facebookDomainVerification();
@@ -54,25 +56,14 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(siteOrigin()),
     title: {
       default: title,
-      // Page titles read "Pack Insano · <brand>" rather than repeating the
-      // brand twice.
       template: `%s · ${brand}`,
     },
     description: DESCRIPTION,
     applicationName: brand,
-    // Served from apps/web/public (copied into the standalone image). The
-    // App Router icon.png route has been 404ing under standalone on this
-    // stack; public + explicit icons is the reliable path for Search Console
-    // and browser tabs.
     icons: {
       icon: [{ url: '/icon.png', type: 'image/png' }],
       apple: [{ url: '/apple-icon.png', type: 'image/png' }],
     },
-    // No `alternates.canonical` here on purpose. Metadata is inherited, so a
-    // canonical of '/' in the root layout would make every page that does not
-    // override it declare itself to be the homepage — which tells search engines
-    // to drop /confianza and both legal notices in favour of it. Each page sets
-    // its own.
     ...(Object.keys(verification).length > 0 ? { verification } : {}),
     openGraph: {
       type: 'website',
@@ -90,67 +81,121 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Traffic is almost entirely phones arriving from TikTok, Instagram and
-// WhatsApp, so the mobile viewport is the design target, not an afterthought.
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0d0f1a',
+  themeColor: '#0b0d18',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // Each pixel is on only when its ID is configured and passes validation —
-  // see lib/pixel-ids.ts for why that check is a security boundary.
   const metaId = metaPixelId();
   const tiktokId = tiktokPixelId();
   const channelUrl = whatsappChannelUrl();
+  const waSupport = supportUrl() ?? '/soporte';
+  const social = socialLinks();
+  const brand = siteName();
+  const legal = legalIdentity();
 
   return (
     <html lang="es-MX" className={outfit.className}>
       <body>
         {metaId && <MetaPixel pixelId={metaId} />}
         {tiktokId && <TikTokPixel pixelId={tiktokId} />}
+        <AppBg />
+        <RevealInit />
         {channelUrl && <WhatsappChannelPopup channelUrl={channelUrl} />}
-        {children}
-        <footer className="site-footer">
-          {/* The logo on every page, not just the home hero: a buyer who lands
-              straight on a shared /comprar link should still see whose store
-              this is. Decorative here — the name sits right beside it. */}
-          <div className="footer-brand">
-            <img
-              src={logo.src}
-              width={36}
-              height={36}
-              alt=""
-              loading="lazy"
-              decoding="async"
-            />
-            <span>{siteName().toUpperCase()}</span>
-          </div>
-          <div className="footer-links">
-            <a href="/">Inicio</a>
-            <a href="/cuenta">Mi cuenta</a>
-            <a href="/ranking">Ranking</a>
-            <a href="/pedidos">Mis pedidos</a>
-            <a href="/confianza">Confianza</a>
-            {/* A real page now (see /soporte) rather than jumping straight to
-                WhatsApp — the client's own complaint was that support offered
-                nothing but a redirect. WhatsApp is still the fastest way to
-                actually reach someone; it is one tap away on that page. */}
-            <a href="/soporte">Soporte</a>
-          </div>
-          <div className="footer-links small">
-            <a href="/legal/terminos">Términos y Condiciones</a>
-            <a href="/legal/privacidad">Aviso de Privacidad</a>
-          </div>
-          <div className="footer-note">
-            No afiliado a Garena. Free Fire es marca de sus respectivos dueños.
-          </div>
-          <div className="footer-note">
-            Operado por {pending(legalIdentity().legalName, 'razón social')}.
-          </div>
-          <div className="footer-note">Juega más. Domina más.</div>
-        </footer>
+        <BackButton />
+        <SiteHeader />
+        <div className="wrap">
+          {children}
+          <footer className="foot">
+            <div className="foot-grid">
+              <div className="foot-brand">
+                <div className="b">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={logo.src} alt="" width={36} height={36} loading="lazy" decoding="async" />
+                  <b>{brand}</b>
+                </div>
+                <p>Recargas de diamantes y monedas para tus juegos, hechas por gamers para gamers.</p>
+              </div>
+              <div>
+                <h4>Navegación</h4>
+                <ul>
+                  <li>
+                    <a href="/">Inicio</a>
+                  </li>
+                  <li>
+                    <a href="/promociones">Promociones</a>
+                  </li>
+                  <li>
+                    <a href="/cuenta">Mi cuenta</a>
+                  </li>
+                  <li>
+                    <a href="/pedidos">Pedidos</a>
+                  </li>
+                  <li>
+                    <a href="/confianza">Confianza</a>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4>Legal</h4>
+                <ul>
+                  <li>
+                    <a href="/legal/terminos">Términos y condiciones</a>
+                  </li>
+                  <li>
+                    <a href="/legal/privacidad">Privacidad</a>
+                  </li>
+                  <li>
+                    <a href="/soporte">Soporte</a>
+                  </li>
+                  <li>
+                    <a href="/ranking">Ranking</a>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4>Síguenos</h4>
+                <ul>
+                  {social.tiktok && (
+                    <li>
+                      <a href={social.tiktok} target="_blank" rel="noreferrer">
+                        TikTok
+                      </a>
+                    </li>
+                  )}
+                  {social.instagram && (
+                    <li>
+                      <a href={social.instagram} target="_blank" rel="noreferrer">
+                        Instagram
+                      </a>
+                    </li>
+                  )}
+                  {social.facebook && (
+                    <li>
+                      <a href={social.facebook} target="_blank" rel="noreferrer">
+                        Facebook
+                      </a>
+                    </li>
+                  )}
+                  <li>
+                    <a href={channelUrl ?? waSupport} target="_blank" rel="noreferrer">
+                      WhatsApp
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="foot-base">
+              <span>
+                © {new Date().getFullYear()} {brand}. Todos los derechos reservados.
+              </span>
+              <span>Operado por {pending(legal.legalName, 'razón social')}.</span>
+            </div>
+          </footer>
+        </div>
+        <SupportFab supportHref={waSupport} />
         <BottomNav />
       </body>
     </html>

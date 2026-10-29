@@ -1,0 +1,58 @@
+/* LevelUp ranking strip (rev. R) — horizontal Top compradores bar.
+   Rail dissolves so ranking/support can interleave with main column via order. */
+.rail{display:contents}
+.ranking.rk{order:1}
+.hero{order:2;margin-top:0}
+.promo{order:3}
+.supt{order:4;margin-top:30px}
+.metrics,.offers-wrap,.why-wrap,.steps-wrap{order:5}
+@media (min-width:1024px){
+  .rail{display:flex;flex-direction:column;position:sticky;top:84px;order:0;gap:24px}
+  .ranking.rk,.hero,.promo,.supt,.metrics,.offers-wrap,.why-wrap,.steps-wrap{order:0}
+}
+
+.ranking.rk{padding:1px;border-radius:15px;overflow:visible;
+  background:linear-gradient(100deg,#e879f9,#8b5cf6 42%,#22d3ee);
+  box-shadow:0 0 24px -10px rgba(139,92,246,.75)}
+.ranking.rk .in{display:grid;grid-template-columns:minmax(0,1fr) auto;
+  grid-template-areas:"head more" "list list";align-items:center;gap:9px 12px;padding:10px 12px;
+  border-radius:14px;background:linear-gradient(160deg,#151230,#0a0916 72%)}
+.rk-head{grid-area:head}
+.rk-list{grid-area:list}
+.rk-more{grid-area:more;justify-self:end}
+.rk-head{display:flex;align-items:center;gap:8px;min-width:0}
+.rk-head svg{width:19px;height:19px;flex:none;color:#c4b5fd;
+  filter:drop-shadow(0 0 7px rgba(167,139,250,.6))}
+.rk-head b{display:block;font:900 10.5px/1.05 Outfit,sans-serif;letter-spacing:.11em;
+  text-transform:uppercase;color:#fff}
+.rk-head small{display:block;margin-top:3px;font:800 8px/1 Outfit,sans-serif;letter-spacing:.1em;
+  text-transform:uppercase;color:#f5c84c}
+.rk-list{display:flex;align-items:center;gap:11px;margin:0;padding:0;list-style:none;flex-wrap:wrap}
+.rk-list li{display:flex;align-items:center;gap:5px;min-width:0}
+.rk-badge{position:relative;display:grid;place-items:center;flex:none;width:23px;height:23px;
+  border-radius:50%;font:900 9.5px/1 Outfit,sans-serif;color:#fff;
+  background:conic-gradient(from 210deg,#fff6d8,#f5c84c 22%,#a8730a 44%,#ffe9a8 62%,#c9930f 84%,#f7dfa0);
+  box-shadow:0 0 0 1px rgba(255,255,255,.16),0 6px 14px -8px rgba(0,0,0,.9)}
+.rk-badge::after{content:"";position:absolute;inset:2.5px;border-radius:50%;
+  background:radial-gradient(120% 120% at 30% 20%,#20264a,#0b0e1c)}
+.rk-badge b{position:relative;z-index:2}
+.rk-p1 .rk-badge{background:conic-gradient(from 200deg,#fff9e0,#f5c84c 18%,#8a5c05 40%,#ffeeb0 58%,#e3ae2c 78%,#fff4c9);
+  box-shadow:0 0 0 1px rgba(255,255,255,.26),0 0 16px -3px rgba(245,200,76,.6),0 8px 18px -10px rgba(0,0,0,.95)}
+.rk-p1 .rk-badge b{color:#ffe9a8}
+.rk-p1 .rk-badge i{position:absolute;top:-9px;left:50%;transform:translateX(-50%);z-index:3;
+  font-style:normal;font-size:8px;line-height:1;color:#f5c84c;text-shadow:0 0 7px rgba(245,200,76,.85)}
+.rk-p2 .rk-badge{background:conic-gradient(from 210deg,#ffffff,#c9d4e4 22%,#6f7c92 44%,#eef3fb 62%,#93a1b8 84%,#ffffff)}
+.rk-p2 .rk-badge b{color:#e6ecf7}
+.rk-p3 .rk-badge{background:conic-gradient(from 210deg,#ffe6cc,#d29a6b 22%,#7a4a26 44%,#f3cba6 62%,#a2663a 84%,#ffd9b0)}
+.rk-p3 .rk-badge b{color:#ffd9b0}
+.rk-who b{display:block;font:800 8px/1 Outfit,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#eaf6ff}
+.rk-who em{display:block;margin-top:2px;font:900 10.5px/1 Outfit,sans-serif;font-style:normal;
+  color:#22d3ee;font-variant-numeric:tabular-nums}
+.rk-more{padding:7px 10px;border-radius:8px;
+  border:1px solid rgba(245,200,76,.72);background:rgba(245,200,76,.08);color:#ffe08a;
+  font:900 7.5px/1 Outfit,sans-serif;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;
+  transition:background .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease)}
+.rk-more:hover{background:rgba(245,200,76,.2);color:#fff3c4;border-color:rgba(245,200,76,.95)}
+@media (min-width:1024px){
+  .ranking.rk .in{padding:12px 14px;gap:10px 14px}
+}

@@ -1,0 +1,433 @@
+/* Circular back control — top-left, outside the shell column */
+.back-fab{
+  position:fixed;
+  z-index:70;
+  top:max(12px, env(safe-area-inset-top, 0px));
+  left:max(10px, env(safe-area-inset-left, 0px));
+  width:40px;height:40px;border-radius:50%;
+  display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(12,16,30,.92);
+  color:#e8ecff;
+  box-shadow:0 10px 28px -14px rgba(0,0,0,.9);
+  backdrop-filter:blur(10px);
+  cursor:pointer;
+  transition:background .2s ease,transform .2s ease,color .2s ease;
+}
+.back-fab svg{width:18px;height:18px}
+.back-fab:hover{background:rgba(34,211,238,.16);color:#fff;transform:translateY(-1px)}
+@media (min-width:480px){
+  .back-fab{
+    left:max(12px, calc(50% - (var(--shell-w) / 2) - 52px));
+  }
+}
+
+/* Extra LevelUp home polish — promo overflow, 2-col offers, hero clip, toasts */
+
+.hero.neon > .in,
+.hero > .in{
+  overflow:visible!important;
+}
+.hero-body{overflow:visible!important;min-height:400px}
+
+/* Hero mascot — fill the full right-half placement box (header → CTA) */
+.hero-body{
+  overflow:visible!important;
+}
+.hero-mascot{
+  position:absolute!important;
+  z-index:5!important;
+  left:auto!important;
+  right:6%!important;
+  top:4%!important;
+  bottom:2%!important;
+  width:48%!important;
+  max-width:none!important;
+  max-height:none!important;
+  height:unset!important;
+  min-height:0!important;
+  display:block!important;
+  pointer-events:none;
+  overflow:visible!important;
+  transform:none!important;
+  transform-origin:50% 100%!important;
+  filter:drop-shadow(0 26px 30px rgba(0,0,0,.65)) drop-shadow(0 0 14px rgba(34,211,238,.45));
+  animation:none!important;
+  --px:0px;--py:0px;--sc:1;--rot:0deg;
+}
+.hero-mascot .rig,
+.hero-mascot .ia-live{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-height:none!important;
+  position:absolute!important;
+  inset:0!important;
+  animation:none!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+.hero-mascot .rig > img,
+.hero-mascot .ia-live img.still,
+.hero-mascot .ia-live video.live{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center bottom;
+  display:block;
+}
+/* GIF has large empty canvas margins — scale hard so the figure fills the red box */
+.hero-mascot .rig > img[src$=".gif"],
+.hero-mascot .rig > img[src*=".gif"]{
+  display:block!important;
+  position:absolute!important;
+  left:50%!important;
+  bottom:0!important;
+  top:auto!important;
+  width:100%!important;
+  max-width:none!important;
+  height:100%!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+  transform:translateX(-50%) scale(2.65)!important;
+  transform-origin:center bottom!important;
+  filter:drop-shadow(0 0 14px rgba(34,211,238,.45)) drop-shadow(0 0 34px rgba(139,92,246,.35));
+}
+.hero:hover .hero-mascot .rig > img[src$=".gif"],
+.hero:hover .hero-mascot .rig > img[src*=".gif"]{
+  transform:translateX(-50%) scale(2.72)!important;
+}
+.hero-mascot .ia-live video.live{display:none}
+.hero-mascot .ia-live.has-live video.live{display:block}
+.hero-mascot .ia-live.has-live img.still{display:none}
+.hero-copy{position:relative;z-index:6;max-width:50%}
+
+/* Sections using LevelUp `.reveal` stay hidden until `.in` — show immediately as fallback */
+.reveal{opacity:1;transform:none}
+.reveal.in{opacity:1;transform:none}
+
+/* Promociones: Monkei GIF sits inside the strip (no pop-out above); CTA on the right */
+.promo{margin-top:28px;order:3}
+.promo .in{
+  overflow:hidden!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:10px 12px!important;
+  padding:10px 12px 10px 14px!important;
+}
+.promo .in > .btn{justify-self:end;white-space:nowrap;padding:11px 14px;font-size:12.5px}
+.promo-main{position:relative;padding-left:118px;min-height:104px;grid-column:1 / -1}
+@media (min-width:380px){
+  .promo-main{grid-column:auto}
+}
+.promo-mascot,
+.promo-mascot.ia-live{
+  position:absolute!important;
+  left:2px!important;
+  top:6px!important;
+  bottom:6px!important;
+  width:108px!important;
+  height:auto!important;
+  min-height:0;
+  overflow:hidden;
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.5));
+  pointer-events:none;
+}
+.promo-mascot > img,
+.promo-mascot img.still,
+.promo-mascot video.live{
+  display:block!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  bottom:auto!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  /* GIF canvas letterboxing — mild scale so crown→sneakers stay inside the slot */
+  transform:translate(-50%,-50%) scale(1.72)!important;
+  transform-origin:center center!important;
+}
+.promo-mascot video.live{display:none!important}
+.promo-mascot.has-live video.live{display:none!important}
+.promo-mascot.has-live img.still{display:block!important}
+
+/* Offers: 2 columns on phone widths like the reference */
+.offers{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px}
+.offer,.offer .meta{min-width:0}
+.offer .meta{flex-wrap:wrap;row-gap:2px}
+.offer .meta em{
+  font-style:normal;font-size:9px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:#c4b5fd;background:rgba(139,92,246,.16);
+  border:1px solid rgba(139,92,246,.35);padding:2px 6px;border-radius:5px;margin-left:6px;
+}
+.offer .obar{
+  color:#04121a;
+  background:linear-gradient(100deg,#7ce7f7,var(--cyan) 55%,#8b5cf6);
+}
+.offer.o2 .obar{background:linear-gradient(100deg,#7ce7f7,#22d3ee 50%,#8b5cf6)}
+.offer.o3 .obar{background:linear-gradient(100deg,#f5b8fb,var(--magenta))}
+.offer.o4 .obar{background:linear-gradient(100deg,#ffe08a,var(--gold))}
+
+/* Guest /cuenta: ranking stays inside the LevelUp shell column */
+.page.cuenta-rk{
+  max-width:none!important;
+  width:100%;
+  margin:0;
+  padding:14px 0 28px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+.page.cuenta-rk .ranking.rk{
+  width:100%;
+  max-width:100%;
+  margin:0;
+  box-sizing:border-box;
+}
+.page.cuenta-rk .neon.hero,
+.page.cuenta-rk .neon.promo,
+.page.cuenta-rk .supt,
+.page.cuenta-rk .metrics{
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+}
+.page.cuenta-rk .neon.promo{
+  margin-top:28px;
+}
+.page.cuenta-rk .supt{
+  margin-top:24px;
+}
+.page.cuenta-rk .metrics{
+  margin-top:18px;
+}
+.page.cuenta-rk .offers-wrap,
+.page.cuenta-rk .why-wrap,
+.page.cuenta-rk .steps-wrap{
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+}
+.page.cuenta-rk .offers-wrap{
+  margin-top:22px;
+}
+.page.cuenta-rk .why-wrap{
+  margin-top:28px;
+}
+.page.cuenta-rk .steps-wrap{
+  margin-top:24px;
+}
+/* Clearance for the absolute hero-tab that sits ~15px above the card */
+.ranking.rk + .neon.hero,
+.ranking.rk + .hero,
+.page.cuenta-rk .neon.hero{
+  margin-top:25px!important;
+}
+.page.cuenta-rk .ranking.rk .in{
+  grid-template-columns:minmax(0,1fr) auto;
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+}
+.page.cuenta-rk .rk-more{
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* Section order on mobile (DOM may vary) */
+.layout{display:flex;flex-direction:column}
+.col-main,.rail{display:contents}
+.ranking.rk{order:1}
+.hero{order:2}
+.promo{order:3}
+.supt{order:4;margin-top:30px}
+
+/* Soporte: Monkei GIF fully inside the left slot (no head crop) */
+.supt-card{overflow:hidden}
+.supt-main{
+  padding-left:136px!important;
+  min-height:200px!important;
+}
+.supt-mascot,
+.supt-mascot.ia-live{
+  position:absolute!important;
+  z-index:3!important;
+  left:4px!important;
+  top:10px!important;
+  bottom:8px!important;
+  width:120px!important;
+  max-width:none!important;
+  height:auto!important;
+  overflow:hidden;
+  pointer-events:none;
+  filter:drop-shadow(0 12px 24px rgba(0,0,0,.6)) drop-shadow(0 0 18px rgba(37,211,102,.18));
+}
+.supt-mascot > img,
+.supt-mascot img.still,
+.supt-mascot video.live{
+  display:block!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  bottom:auto!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  transform:translate(-50%,-50%) scale(1.68)!important;
+  transform-origin:center center!important;
+}
+.supt-mascot video.live{display:none!important}
+@media (max-width:430px){
+  .supt-main{padding-left:122px!important;min-height:188px!important}
+  .supt-mascot,.supt-mascot.ia-live{width:108px!important}
+  .supt-mascot > img{transform:translate(-50%,-50%) scale(1.62)!important}
+}
+@media (min-width:1024px){
+  .supt-main{padding-left:168px!important;min-height:220px!important}
+  .supt-mascot,.supt-mascot.ia-live{width:148px!important;left:8px!important}
+  .supt-mascot > img{transform:translate(-50%,-50%) scale(1.55)!important}
+}
+.metrics{order:5}
+.offers-wrap{order:6}
+.why-wrap{order:7}
+.steps-wrap{order:8}
+
+/* Live toasts — keep on mobile bottom-left of shell */
+.toasts{
+  position:fixed;left:50%;transform:translateX(-50%);z-index:80;
+  bottom:calc(var(--nav-h) + 14px + env(safe-area-inset-bottom));
+  width:min(100vw,var(--shell-w));padding:0 12px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:8px;pointer-events:none;
+}
+.toast{
+  display:flex;align-items:center;gap:9px;padding:8px 11px 8px 8px;border-radius:11px;
+  background:rgba(12,16,30,.92);border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 16px 34px -18px rgba(0,0,0,.95);backdrop-filter:blur(10px);
+  pointer-events:auto;max-width:280px;
+}
+.toast.on{opacity:1;transform:none}
+.toast .tav{
+  width:30px;height:30px;border-radius:8px;flex:none;display:grid;place-items:center;
+  font-size:11px;font-weight:900;color:#0a0713;background:linear-gradient(150deg,#aab3ca,#79839e);
+}
+.toast .ttx{display:flex;flex-direction:column;gap:1px;min-width:0}
+.toast .ttx b{font-size:10.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:168px}
+.toast .ttx span{font-size:9.5px;color:#9aa2c4}
+.toast .tck{
+  width:16px;height:16px;border-radius:50%;display:grid;place-items:center;flex:none;
+  background:rgba(37,211,102,.18);color:var(--wa);
+}
+.toast .tck svg{width:10px;height:10px}
+
+.live-dot{
+  width:7px;height:7px;border-radius:50%;background:#22d3ee;
+  box-shadow:0 0 0 3px rgba(34,211,238,.2);animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.badge-live{
+  display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase;color:#4ade80;
+}
+.badge-live i{
+  width:6px;height:6px;border-radius:50%;background:#4ade80;
+  box-shadow:0 0 0 3px rgba(74,222,128,.2);animation:pulse 2s ease-in-out infinite;
+}
+
+/* Metrics 2×2 on phone (reference) */
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+
+.why-head,.steps-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;
+}
+.why-head h2,.steps-head h2{
+  margin:0;font-size:22px;font-weight:900;letter-spacing:-.02em;line-height:1.15;flex:1;min-width:0;
+}
+.why-head h2 span,.steps-head h2 span{
+  display:block;margin-top:6px;font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:0;
+}
+/* ¿Por qué elegir?: Monkei PNG fills the right head slot + natural float */
+@keyframes whyMonkeiFloat{
+  0%,100%{transform:translateY(0) rotate(-1.2deg) scale(1)}
+  35%{transform:translateY(-10px) rotate(1.4deg) scale(1.03)}
+  70%{transform:translateY(-4px) rotate(-0.6deg) scale(1.015)}
+}
+.why-mascot,
+.why-mascot.ia-live{
+  position:relative!important;
+  flex:none!important;
+  width:168px!important;
+  height:210px!important;
+  margin:0 0 -6px!important;
+  overflow:visible;
+  pointer-events:none;
+  align-self:flex-end;
+  transform-origin:50% 100%;
+  animation:whyMonkeiFloat 4.8s cubic-bezier(.45,0,.35,1) infinite;
+  filter:drop-shadow(0 12px 22px rgba(0,0,0,.55)) drop-shadow(0 0 14px rgba(34,211,238,.35));
+}
+.why-mascot > img,
+.why-mascot img.still,
+.why-mascot video.live{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+}
+.why-mascot video.live{display:none!important}
+@media (prefers-reduced-motion:reduce){
+  .why-mascot,.why-mascot.ia-live{animation:none!important}
+}
+/* Cómo funciona: Monkei GIF fills the right head slot, fully visible */
+.steps-mascot,
+.steps-mascot.ia-live{
+  position:relative!important;
+  flex:none!important;
+  width:148px!important;
+  height:220px!important;
+  margin:0!important;
+  overflow:hidden;
+  pointer-events:none;
+  align-self:flex-end;
+}
+.steps-mascot > img,
+.steps-mascot img.still,
+.steps-mascot video.live{
+  display:block!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  transform:translate(-50%,-50%) scale(1.72)!important;
+  transform-origin:center center!important;
+  filter:drop-shadow(0 10px 20px rgba(0,0,0,.55));
+}
+.steps-mascot video.live{display:none!important}
+.benefits,.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.benefit .mini,.step .mini,.step .num{display:none}
+
+@media (min-width:1024px){
+  .promo{margin-top:36px}
+  .promo-main{padding-left:168px;min-height:124px}
+  .promo-mascot,.promo-mascot.ia-live{
+    width:148px!important;top:8px!important;bottom:8px!important;height:auto!important;
+  }
+  .promo-mascot > img{
+    transform:translate(-50%,-50%) scale(1.65)!important;
+  }
+  .metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .benefits,.steps{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  .why-mascot,.why-mascot.ia-live{width:188px!important;height:236px!important}
+  .steps-mascot,.steps-mascot.ia-live{width:168px!important;height:240px!important}
+  .steps-mascot > img{transform:translate(-50%,-50%) scale(1.65)!important}
+}
