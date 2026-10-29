@@ -174,13 +174,13 @@
 .wa-fighter.ia-live.has-live video.live{display:none!important}
 .wa-fighter.ia-live.has-live img.still{display:block!important}
 
-/* close — circular, green rim like the reference */
+/* close — matches the reference: rounded square, soft white rim */
 .wa-close{
-  position:absolute;top:10px;right:10px;z-index:10;
-  width:34px;height:34px;border-radius:50%;
+  position:absolute;top:10px;right:10px;z-index:7;
+  width:34px;height:34px;border-radius:11px;
   display:grid;place-items:center;cursor:pointer;
-  background:rgba(4,8,12,.88);
-  border:1.5px solid rgba(37,211,102,.75);
+  background:rgba(4,8,12,.82);
+  border:1px solid rgba(255,255,255,.35);
   color:#fff;
   backdrop-filter:blur(6px);
   box-shadow:0 6px 18px -8px rgba(0,0,0,.9);

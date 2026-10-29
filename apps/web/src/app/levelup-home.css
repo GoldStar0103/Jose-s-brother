@@ -566,11 +566,20 @@ button{font-family:inherit;color:inherit;text-align:inherit}
 }
 
 /* ================= calibracion 2026-10-19 (feedback de Jose) ================= */
-/* fondo gamer morado de respaldo: la base visible del sitio (ya sin video) */
-.appbg{background:
-  radial-gradient(60% 45% at 20% 10%,rgba(168,85,247,.42),transparent 62%),
-  radial-gradient(50% 40% at 85% 30%,rgba(232,121,249,.28),transparent 60%),
-  radial-gradient(60% 50% at 50% 100%,rgba(59,130,246,.28),transparent 65%),#0a0716}
+/* fondo: igualado al tono final de la referencia (levelup-store-propuestas /home) */
+.appbg{background:linear-gradient(158deg,#3b1470 0%,#5b21b6 26%,#6d28d9 44%,#0ea5e9 76%,#0b1030 100%)}
+.appbg::after{background:linear-gradient(180deg,rgba(8,6,20,.42),rgba(8,6,20,.62))}
+
+/* paneles/CTA: mismo degradado que la referencia */
+.neon{background:linear-gradient(125deg,#ff3ea5 0%,#a855f7 34%,#22d3ee 68%,#7ce7f7 100%)}
+.hero .in{background:linear-gradient(178deg,#0e0820 0%,#100a26 46%,#0a0518 100%)}
+.hero-tab{background:linear-gradient(180deg,#241033,#12071f);border-color:rgba(255,110,199,.55);
+  box-shadow:0 -2px 18px -4px rgba(255,110,199,.7),0 6px 18px -8px rgba(0,0,0,.9)}
+.hero-n{background:linear-gradient(180deg,#fff 0%,#eaf4ff 46%,#8fd8f5 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.step{background:linear-gradient(165deg,rgba(139,92,246,.10),rgba(20,23,40,.78) 60%);
+  border-color:rgba(139,92,246,.22)}
+.offer .meta b{font-size:12px}
 
 /* movimiento del luchador: mas suave y mas lento */
 .hero-mascot{animation:mfloat 11s cubic-bezier(.45,0,.35,1) infinite}
@@ -605,8 +614,9 @@ button{font-family:inherit;color:inherit;text-align:inherit}
   15%{opacity:.65}80%{opacity:.5}100%{transform:translateY(-150px) rotate(45deg) scale(1.05);opacity:0}}
 
 /* botones mas vistosos */
-.btn-cta{background:linear-gradient(100deg,#8ef0ff,#22d3ee 45%,#7c3aed 110%);
-  box-shadow:0 14px 34px -12px rgba(34,211,238,.85),0 0 0 1px rgba(255,255,255,.28) inset,0 0 26px rgba(124,58,237,.35)}
+.btn-cta{color:#040d16;background:linear-gradient(100deg,#8be9fb 0%,#22d3ee 42%,#a855f7 100%);
+  box-shadow:0 14px 34px -14px rgba(34,211,238,.95),inset 0 1px 0 rgba(255,255,255,.55)}
+.btn-cta::after{background:linear-gradient(180deg,rgba(255,255,255,.55),transparent 46%)}
 .btn-cta:hover{filter:brightness(1.08) saturate(1.1);transform:translateY(-2px)}
 .btn-cta:active{transform:scale(.99)}
 .btn-cta::after{animation:sheen 4.5s var(--ease) infinite}
