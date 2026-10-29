@@ -7,7 +7,8 @@
 .supt{order:4;margin-top:30px}
 .metrics,.offers-wrap,.why-wrap,.steps-wrap{order:5}
 @media (min-width:1024px){
-  .rail{display:flex;flex-direction:column;position:sticky;top:84px;order:0;gap:24px}
+  .rail{display:flex;flex-direction:column;position:sticky;top:84px;order:0;gap:24px;
+    margin-top:-15px} /* lines the ranking card's top up with the hero-tab badge that pokes above .hero */
   .ranking.rk,.hero,.promo,.supt,.metrics,.offers-wrap,.why-wrap,.steps-wrap{order:0}
 }
 

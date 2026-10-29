@@ -324,6 +324,8 @@ export default async function HomePage() {
               </div>
             </div>
 
+            {supportBlock}
+
             <section className="metrics reveal" aria-label="Actividad en vivo">
               <div className="metric">
                 <div className="top">
@@ -538,7 +540,6 @@ export default async function HomePage() {
           </div>
           <aside className="rail">
             {rankingBlock}
-            {supportBlock}
           </aside>
         </div>
         <LiveToasts />

@@ -108,7 +108,7 @@
 .reveal.in{opacity:1;transform:none}
 
 /* Promociones: Monkei GIF sits inside the strip (no pop-out above); CTA on the right */
-.promo{margin-top:28px;order:3}
+@media (max-width:1023px){ .promo{margin-top:28px} }
 .promo .in{
   overflow:hidden!important;
   display:grid!important;
@@ -296,10 +296,12 @@
   .supt-mascot,.supt-mascot.ia-live{width:148px!important;left:8px!important}
   .supt-mascot > img{transform:translate(-50%,-50%) scale(1.55)!important}
 }
-.metrics{order:5}
-.offers-wrap{order:6}
-.why-wrap{order:7}
-.steps-wrap{order:8}
+@media (max-width:1023px){
+  .metrics{order:5}
+  .offers-wrap{order:6}
+  .why-wrap{order:7}
+  .steps-wrap{order:8}
+}
 
 /* Live toasts — keep on mobile bottom-left of shell */
 .toasts{
