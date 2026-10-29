@@ -199,8 +199,7 @@ export default async function HomePage() {
   return (
       <>
         <div className="layout">
-          {rankingBlock}
-
+          <div className="col-main">
           {featured && (
               <section className="neon hero" aria-labelledby="oferta">
                 <div className="hero-tab">
@@ -324,8 +323,6 @@ export default async function HomePage() {
                 </Link>
               </div>
             </div>
-
-            {supportBlock}
 
             <section className="metrics reveal" aria-label="Actividad en vivo">
               <div className="metric">
@@ -538,6 +535,11 @@ export default async function HomePage() {
                 </article>
               </div>
             </section>
+          </div>
+          <aside className="rail">
+            {rankingBlock}
+            {supportBlock}
+          </aside>
         </div>
         <LiveToasts />
       </>

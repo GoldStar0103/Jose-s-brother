@@ -240,13 +240,16 @@
   text-overflow:ellipsis;
 }
 
-/* Section order on mobile (DOM may vary) */
-.layout{display:flex;flex-direction:column}
-.col-main,.rail{display:contents}
-.ranking.rk{order:1}
-.hero{order:2}
-.promo{order:3}
-.supt{order:4;margin-top:30px}
+/* Section order on mobile (DOM may vary) — scoped to mobile so it doesn't
+   clobber the desktop .col-main/.rail grid in levelup-home.css / levelup-rk-patch.css */
+@media (max-width:1023px){
+  .layout{display:flex;flex-direction:column}
+  .col-main,.rail{display:contents}
+  .ranking.rk{order:1}
+  .hero{order:2}
+  .promo{order:3}
+  .supt{order:4;margin-top:30px}
+}
 
 /* Soporte: Monkei GIF fully inside the left slot (no head crop) */
 .supt-card{overflow:hidden}
