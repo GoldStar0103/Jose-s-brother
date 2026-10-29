@@ -120,6 +120,7 @@ button{font-family:inherit;color:inherit;text-align:inherit}
 
 /* ================= ranking (estructura SK, tokens LevelUp) ================= */
 .ranking{overflow:hidden}
+.ranking.rk{margin-top:14px;margin-bottom:16px}
 .ranking .in{padding:14px}
 .rc-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
 .rc-head>svg{width:17px;height:17px;color:var(--violet-light);flex:none}
@@ -524,10 +525,10 @@ button{font-family:inherit;color:inherit;text-align:inherit}
   :root{--shell-w:1320px;--gap:20px}
   .wrap{background:none;box-shadow:none;padding:0 24px}
   .hdr-in{height:66px;padding:0 24px}
-  .layout{display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:20px;align-items:start;margin-top:18px}
+  .layout{display:block;margin-top:0}
   .col-main{display:flex;flex-direction:column;gap:20px}
   .hero,.promo,.metrics,.offers-wrap,.why-wrap,.steps-wrap{order:0}
-  .rail{position:sticky;top:84px;order:0}
+  .ranking.rk{margin-top:18px;margin-bottom:20px}
   .ranking .in{padding:16px}
   .sechead h2,.why-head h2,.steps-head h2{font-size:25px}
   .hero-body{min-height:372px;display:grid;grid-template-columns:1.02fr .98fr;align-items:center}

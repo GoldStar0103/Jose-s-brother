@@ -198,6 +198,7 @@ export default async function HomePage() {
 
   return (
       <>
+        {rankingBlock}
         <div className="layout">
           <div className="col-main">
           {featured && (
@@ -538,9 +539,6 @@ export default async function HomePage() {
               </div>
             </section>
           </div>
-          <aside className="rail">
-            {rankingBlock}
-          </aside>
         </div>
         <LiveToasts />
       </>
