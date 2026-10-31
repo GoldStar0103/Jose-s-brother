@@ -1,0 +1,563 @@
+/* ==========================================================================
+   MONKEI visual system — teal · gold · ember
+   Evolves the storefront away from the violet/magenta LevelUp clone while
+   keeping layout structure, brand mascots, and interaction patterns.
+   Loaded last so it wins the cascade.
+   ========================================================================== */
+
+:root{
+  --bg:#080f13;
+  --bg-deep:#060b0e;
+  --surface:#0e1a1c;
+  --surface-2:#152628;
+  --text:#e8f4f2;
+  --muted:#7a9a96;
+  --faint:#5a7a76;
+  --border:rgba(180,230,220,.10);
+  --border-strong:rgba(180,230,220,.18);
+  /* Remap legacy tokens → Monkei palette */
+  --violet:#14b8a6;
+  --violet-light:#5eead4;
+  --cyan:#2dd4bf;
+  --blue:#0f766e;
+  --gold:#f0c14d;
+  --magenta:#ff7a45;
+  --wa:#25d366;
+  --glass:rgba(10,22,24,.72);
+  --glass-soft:rgba(255,255,255,.035);
+  --accent:#2dd4bf;
+  --accent-2:#f0c14d;
+  --ember:#ff7a45;
+  --leaf:#34d399;
+  --ease-spring:cubic-bezier(.34,1.45,.64,1);
+}
+
+/* ---- Atmosphere ---- */
+body{
+  background:
+    linear-gradient(180deg, rgba(45,212,191,.24) 0, rgba(45,212,191,.10) 70px, transparent 150px) no-repeat,
+    var(--bg)!important;
+  color:var(--text);
+}
+body::before{
+  opacity:.28;
+  background-image:
+    radial-gradient(rgba(45,212,191,.05) 1px, transparent 1px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+  background-size:22px 22px, 120px 120px;
+}
+.appbg{background:#080f13!important}
+.appbg.no-video,
+.appbg{
+  background:
+    linear-gradient(180deg,rgba(45,212,191,.24) 0,rgba(45,212,191,.10) 70px,transparent 150px) no-repeat,
+    #080f13!important;
+}
+.appbg::after{background:none!important}
+.wrap{
+  background:none;
+  box-shadow:0 0 0 1px rgba(180,230,220,.06),0 40px 120px -40px rgba(0,0,0,.92);
+}
+
+/* Floating backdrop particles — teal / gold */
+.appbg .caps i{
+  background:linear-gradient(100deg,rgba(94,234,212,.9),rgba(45,212,191,.75),rgba(240,193,77,.55))!important;
+  box-shadow:0 0 40px -6px rgba(45,212,191,.7)!important;
+  opacity:.42;
+}
+.appbg .gems i{
+  background:linear-gradient(150deg,#e8fff8,#2dd4bf 40%,#0f766e 72%,#f0c14d)!important;
+  filter:drop-shadow(0 0 10px rgba(45,212,191,.7))!important;
+}
+.appbg .sparks i{
+  background:radial-gradient(circle,#fff8e7 0 34%,rgba(240,193,77,0) 68%)!important;
+}
+
+/* ---- Cards — modern frosted tiles ---- */
+:root{
+  --card-r:20px;
+  --card-bg:rgba(12,24,26,.72);
+  --card-bg-solid:rgba(10,20,22,.88);
+  --card-edge:rgba(210,240,232,.12);
+  --card-edge-hot:rgba(94,234,212,.38);
+  --card-shadow:
+    0 1px 0 rgba(255,255,255,.06) inset,
+    0 0 0 1px rgba(0,0,0,.35),
+    0 12px 28px -16px rgba(0,0,0,.72),
+    0 28px 56px -36px rgba(0,12,14,.55);
+  --card-shadow-hover:
+    0 1px 0 rgba(255,255,255,.1) inset,
+    0 0 0 1px rgba(45,212,191,.18),
+    0 18px 36px -18px rgba(0,0,0,.78),
+    0 32px 64px -28px rgba(45,212,191,.22);
+}
+
+.card,
+.neon,
+.ranking.rk,
+.supt-card,
+.metric,
+.benefit,
+.step,
+.offer .frame{
+  border-radius:var(--card-r)!important;
+}
+
+.card{
+  background:
+    linear-gradient(165deg,rgba(255,255,255,.055),transparent 42%),
+    var(--card-bg)!important;
+  border:1px solid var(--card-edge)!important;
+  box-shadow:var(--card-shadow)!important;
+  backdrop-filter:blur(18px) saturate(1.15)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.15)!important;
+  transition:
+    transform .4s var(--ease-spring),
+    border-color .35s var(--ease),
+    box-shadow .4s var(--ease)!important;
+  overflow:hidden;
+}
+.card::before{
+  background:
+    linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent),
+    radial-gradient(80% 55% at 50% -10%,rgba(45,212,191,.16),transparent 70%)!important;
+  opacity:.9;
+  height:1px;
+  inset:0 0 auto 0!important;
+  border-radius:0!important;
+}
+.card::after{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
+  background:radial-gradient(70% 50% at 100% 0%,rgba(240,193,77,.06),transparent 55%);
+}
+.card:hover{
+  border-color:var(--card-edge-hot)!important;
+  box-shadow:var(--card-shadow-hover)!important;
+}
+
+/* Neon shells → thin luminous ring, soft glass fill */
+.neon{
+  padding:1.5px!important;
+  background:
+    linear-gradient(145deg,
+      rgba(94,234,212,.95),
+      rgba(45,212,191,.35) 28%,
+      rgba(240,193,77,.55) 58%,
+      rgba(255,122,69,.45))!important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.04),
+    0 14px 36px -20px rgba(0,0,0,.85),
+    0 0 40px -24px rgba(45,212,191,.55)!important;
+  transition:transform .4s var(--ease-spring), box-shadow .4s var(--ease)!important;
+}
+.neon:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.06),
+    0 20px 44px -18px rgba(0,0,0,.88),
+    0 0 48px -18px rgba(45,212,191,.65)!important;
+}
+.neon > .in{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.05),transparent 28%),
+    linear-gradient(165deg,rgba(14,28,30,.92),rgba(7,16,18,.94) 70%)!important;
+  border-radius:calc(var(--card-r) - 1.5px)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(20px) saturate(1.2)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(1.2)!important;
+}
+
+/* Corner marks — thinner, quieter */
+.frm{
+  inset:10px!important;
+  border-radius:14px!important;
+  opacity:.7;
+  background:
+    linear-gradient(#5eead4,#5eead4) left 0 top 0/18px 1.5px no-repeat,
+    linear-gradient(#5eead4,#5eead4) left 0 top 0/1.5px 18px no-repeat,
+    linear-gradient(#f0c14d,#f0c14d) right 0 top 0/18px 1.5px no-repeat,
+    linear-gradient(#f0c14d,#f0c14d) right 0 top 0/1.5px 18px no-repeat,
+    linear-gradient(#ff7a45,#ff7a45) left 0 bottom 0/18px 1.5px no-repeat,
+    linear-gradient(#ff7a45,#ff7a45) left 0 bottom 0/1.5px 18px no-repeat,
+    linear-gradient(#5eead4,#5eead4) right 0 bottom 0/18px 1.5px no-repeat,
+    linear-gradient(#5eead4,#5eead4) right 0 bottom 0/1.5px 18px no-repeat!important;
+  filter:drop-shadow(0 0 4px rgba(45,212,191,.35))!important;
+}
+.shine::after{
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),rgba(240,193,77,.08),transparent);
+  animation:monkeiPanelShine 7s ease-in-out infinite;
+}
+@keyframes monkeiPanelShine{
+  0%,58%{transform:translateX(0) skewX(-18deg);opacity:0}
+  62%{opacity:1}
+  100%{transform:translateX(420%) skewX(-18deg);opacity:0}
+}
+
+/* ---- Buttons (base tokens; final look in monkei-3d.css) ---- */
+.btn{
+  border-radius:999px!important;
+  position:relative;
+  overflow:hidden;
+}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.offer .meta em{
+  color:#5eead4!important;
+  background:rgba(45,212,191,.14)!important;
+  border:1px solid rgba(45,212,191,.35)!important;
+}
+.offer .frame,
+.offer.o1 .frame{
+  padding:1.5px!important;
+  background:linear-gradient(145deg,rgba(94,234,212,.85),rgba(240,193,77,.4))!important;
+  box-shadow:var(--card-shadow)!important;
+}
+.offer.o2 .frame{background:linear-gradient(145deg,rgba(34,211,238,.85),rgba(45,212,191,.45))!important}
+.offer.o3 .frame{background:linear-gradient(145deg,rgba(255,122,69,.8),rgba(240,193,77,.45))!important}
+.offer .shot{
+  border-radius:calc(var(--card-r) - 2px)!important;
+  background:#071210!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+.offer{
+  transition:transform .4s var(--ease-spring), filter .3s ease!important;
+}
+.offer:hover{
+  transform:translateY(-5px) scale(1.01);
+  filter:saturate(1.05);
+}
+.offer:hover .frame{box-shadow:var(--card-shadow-hover)!important}
+
+/* ---- Header / nav ---- */
+.hdr{
+  background:rgba(4,12,14,.88)!important;
+  border-bottom:1px solid rgba(45,212,191,.1)!important;
+}
+.socials a{
+  background:rgba(45,212,191,.06)!important;
+  border:1px solid rgba(45,212,191,.16)!important;
+  transition:background .25s var(--ease),color .25s,transform .25s var(--ease-spring)!important;
+}
+.socials a:hover{
+  background:rgba(45,212,191,.2)!important;
+  color:#fff!important;
+  transform:translateY(-2px) scale(1.05)!important;
+}
+.brand img{
+  filter:drop-shadow(0 0 10px rgba(45,212,191,.55))!important;
+}
+.brand span{
+  background:linear-gradient(90deg,#e8f4f2,#5eead4 60%,#f0c14d);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+/* ---- Ranking ---- */
+.ranking.rk{
+  padding:1.5px!important;
+  background:linear-gradient(120deg,#ff7a45,#f0c14d 40%,#2dd4bf)!important;
+  box-shadow:var(--card-shadow),0 0 36px -18px rgba(45,212,191,.4)!important;
+  transition:transform .4s var(--ease-spring), box-shadow .4s var(--ease)!important;
+}
+.ranking.rk:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--card-shadow-hover)!important;
+}
+.ranking.rk .in{
+  border-radius:calc(var(--card-r) - 1.5px)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.05),transparent 30%),
+    linear-gradient(160deg,#102426,#071210 72%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+.rk-head svg{
+  color:#f0c14d!important;
+  filter:drop-shadow(0 0 7px rgba(240,193,77,.55))!important;
+}
+.rk-who em{color:#2dd4bf!important}
+.rk-more{
+  border-color:rgba(240,193,77,.72)!important;
+  background:rgba(240,193,77,.1)!important;
+  color:#ffe08a!important;
+}
+.rk-more:hover{
+  background:rgba(240,193,77,.22)!important;
+  color:#fff3c4!important;
+}
+
+/* ---- Hero / tabs ---- */
+.hero-tab{
+  border:1px solid rgba(45,212,191,.45)!important;
+  box-shadow:0 -2px 14px -4px rgba(45,212,191,.55),0 6px 18px -8px rgba(0,0,0,.9)!important;
+  background:linear-gradient(160deg,#0f2224,#0a1618)!important;
+}
+.hero-tab img{
+  filter:drop-shadow(0 0 6px rgba(45,212,191,.75))!important;
+}
+.tab[aria-selected="true"]{
+  color:#99f6e4!important;
+  background:rgba(45,212,191,.16)!important;
+  box-shadow:inset 0 -2px 0 var(--cyan)!important;
+}
+.rc-more:hover,.rc-head>svg{color:var(--violet-light)!important}
+.rc-more:hover{background:rgba(45,212,191,.16)!important}
+
+/* ---- Support / steps / why / metrics tiles ---- */
+.supt-card,
+.step,
+.benefit,
+.metric{
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(165deg,rgba(255,255,255,.05),transparent 40%),
+    linear-gradient(165deg,rgba(45,212,191,.08),var(--card-bg-solid) 55%)!important;
+  border:1px solid var(--card-edge)!important;
+  box-shadow:var(--card-shadow)!important;
+  backdrop-filter:blur(16px) saturate(1.1)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(1.1)!important;
+  transition:
+    transform .4s var(--ease-spring),
+    border-color .35s var(--ease),
+    box-shadow .4s var(--ease)!important;
+}
+.supt-card::before,
+.step::before,
+.benefit::before,
+.metric::before{
+  opacity:.85;
+  background:linear-gradient(90deg,transparent 5%,rgba(255,255,255,.12),transparent 95%)!important;
+}
+.supt-deco,
+.supt-card{border-radius:var(--card-r)!important}
+.supt-main{border-radius:var(--card-r) var(--card-r) 0 0!important}
+.supt-foot{border-radius:0 0 var(--card-r) var(--card-r)!important}
+.step:hover,
+.benefit:hover,
+.metric:hover,
+.supt-card:hover{
+  transform:translateY(-4px)!important;
+  border-color:var(--card-edge-hot)!important;
+  box-shadow:var(--card-shadow-hover)!important;
+}
+.benefit:nth-child(2){
+  background:
+    linear-gradient(165deg,rgba(255,255,255,.05),transparent 40%),
+    linear-gradient(165deg,rgba(34,211,238,.1),var(--card-bg-solid) 55%)!important;
+}
+.benefit:nth-child(3){
+  background:
+    linear-gradient(165deg,rgba(255,255,255,.05),transparent 40%),
+    linear-gradient(165deg,rgba(255,122,69,.1),var(--card-bg-solid) 55%)!important;
+}
+.benefit:nth-child(4){
+  background:
+    linear-gradient(165deg,rgba(255,255,255,.05),transparent 40%),
+    linear-gradient(165deg,rgba(240,193,77,.1),var(--card-bg-solid) 55%)!important;
+}
+.benefit .ic,
+.step .ic{
+  border-radius:12px!important;
+  background:rgba(45,212,191,.1)!important;
+  border:1px solid rgba(45,212,191,.22)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.step .num,
+.snum{
+  color:#041512!important;
+  background:linear-gradient(150deg,#5eead4,var(--cyan))!important;
+  box-shadow:0 6px 16px -8px rgba(45,212,191,.85)!important;
+}
+.metric b,
+.metric .val{
+  background:linear-gradient(180deg,#fff,#c9f5ef 55%,#2dd4bf);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+/* Hero mascot glow → teal/gold */
+.hero-mascot .rig > img[src$=".gif"],
+.hero-mascot .rig > img[src*=".gif"]{
+  filter:drop-shadow(0 0 14px rgba(45,212,191,.5)) drop-shadow(0 0 28px rgba(240,193,77,.28))!important;
+}
+.why-mascot,
+.steps-mascot{
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,.55)) drop-shadow(0 0 12px rgba(45,212,191,.35))!important;
+}
+
+/* ---- Back FAB / Support FAB ---- */
+.back-fab{
+  background:rgba(8,18,20,.92)!important;
+  border:1px solid rgba(45,212,191,.22)!important;
+  color:#e8f4f2!important;
+  transition:background .25s ease,transform .28s var(--ease-spring),border-color .25s ease,box-shadow .3s ease!important;
+}
+.back-fab:hover{
+  background:rgba(45,212,191,.18)!important;
+  border-color:rgba(45,212,191,.5)!important;
+  transform:translateY(-2px) scale(1.04)!important;
+  box-shadow:0 12px 28px -12px rgba(45,212,191,.55);
+}
+.fab-btn img,
+.fp-head img{
+  background:radial-gradient(circle at 50% 40%,rgba(45,212,191,.28),rgba(8,18,20,.95) 70%)!important;
+}
+
+/* ---- Bottom nav ---- */
+.bottom-nav,
+nav.bottom-nav{
+  background:rgba(4,12,14,.94)!important;
+  border-top:1px solid rgba(45,212,191,.12)!important;
+  backdrop-filter:blur(16px);
+}
+.bottom-nav a[aria-current="page"],
+.bottom-nav a.active{
+  color:#5eead4!important;
+}
+
+/* ---- Bridge / WA popup accents ---- */
+.pv-back:hover{
+  background:rgba(45,212,191,.22)!important;
+  border-color:rgba(45,212,191,.55)!important;
+}
+
+/* ---- Reveal / enter motion ---- */
+@keyframes monkeiRise{
+  from{opacity:0;transform:translateY(18px) scale(.98)}
+  to{opacity:1;transform:none}
+}
+.reveal.in,
+.page.cuenta-rk > .neon,
+.page.cuenta-rk > .ranking,
+.page.cuenta-rk > .supt,
+.page.cuenta-rk > .metrics,
+.page.cuenta-rk > .offers-wrap,
+.page.cuenta-rk > .why-wrap,
+.page.cuenta-rk > .steps-wrap{
+  animation:monkeiRise .55s var(--ease) both;
+}
+.ranking.rk{animation-delay:.02s}
+.hero{animation-delay:.08s}
+.promo{animation-delay:.14s}
+.supt{animation-delay:.2s}
+.offers-wrap{animation-delay:.26s}
+.why-wrap{animation-delay:.32s}
+.steps-wrap{animation-delay:.38s}
+
+/* Ambient pulse handled by monkei-3d cardIdle */
+
+/* --------------------------------------------------------------------------
+   Restore accent borders the generic `.card{border-color!important}` rule
+   above silently clobbers on cards that layer a semantic/tier color on top
+   (status, VIP, podium medals, vault). Same specificity, later in the
+   cascade, so these need !important too to win back their own color.
+   -------------------------------------------------------------------------- */
+.status-card.ok{border-color:rgba(34,197,94,.55)!important;box-shadow:var(--card-shadow),0 0 28px -18px rgba(34,197,94,.45)!important}
+.status-card.warn{border-color:rgba(245,158,11,.55)!important;box-shadow:var(--card-shadow),0 0 28px -18px rgba(245,158,11,.45)!important}
+.status-card.bad{border-color:rgba(239,68,68,.55)!important;box-shadow:var(--card-shadow),0 0 28px -18px rgba(239,68,68,.45)!important}
+.vip{border-color:rgba(37,211,102,.5)!important;box-shadow:var(--card-shadow),0 0 28px -18px rgba(37,211,102,.4)!important}
+.rk-podium-1{border-color:#fcd34d!important;box-shadow:var(--card-shadow),0 0 30px -14px rgba(252,211,77,.55)!important}
+.rk-podium-2{border-color:rgba(226,232,240,.55)!important;box-shadow:var(--card-shadow),0 0 22px -16px rgba(226,232,240,.4)!important}
+.rk-podium-3{border-color:rgba(217,119,6,.55)!important;box-shadow:var(--card-shadow),0 0 22px -16px rgba(217,119,6,.4)!important}
+.rk-fama-season{border-color:rgba(252,211,77,.35)!important}
+.vlt-offer{
+  border-color:rgba(252,211,77,.32)!important;
+  background:
+    linear-gradient(165deg,rgba(255,255,255,.055),transparent 42%),
+    linear-gradient(165deg,rgba(252,211,77,.08),var(--card-bg-solid) 58%)!important;
+}
+
+/* --------------------------------------------------------------------------
+   Checkout — payment-method tiles + stepper (same glass surface as .card)
+   -------------------------------------------------------------------------- */
+.pay-option{
+  position:relative;
+  border-radius:var(--card-r)!important;
+  background:
+    linear-gradient(165deg,rgba(255,255,255,.05),transparent 40%),
+    var(--card-bg-solid)!important;
+  box-shadow:var(--card-shadow)!important;
+  backdrop-filter:blur(16px) saturate(1.1);
+  -webkit-backdrop-filter:blur(16px) saturate(1.1);
+  overflow:hidden;
+  transition:transform .4s var(--ease-spring),box-shadow .4s var(--ease),border-color .3s ease!important;
+}
+.pay-option::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+  opacity:.85;pointer-events:none;
+}
+.pay-option.blue{border-color:#3b82f6!important;box-shadow:var(--card-shadow),0 0 26px -16px rgba(59,130,246,.45)!important}
+.pay-option.red{border-color:#ef4444!important;box-shadow:var(--card-shadow),0 0 26px -16px rgba(239,68,68,.45)!important}
+.pay-option.purple{border-color:var(--accent)!important;box-shadow:var(--card-shadow),0 0 26px -16px rgba(45,212,191,.45)!important}
+
+.checkout-step-dot{
+  background:var(--card-bg-solid)!important;
+  border-color:var(--card-edge)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 4px 10px -4px rgba(0,0,0,.6)!important;
+}
+.checkout-step-item.active .checkout-step-dot{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 0 4px rgba(240,193,77,.18),0 6px 14px -4px rgba(0,0,0,.65)!important;
+}
+.checkout-step-item.done .checkout-step-dot{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 16px -6px rgba(34,197,94,.55)!important;
+}
+
+/* ---- Ranking tabs — capsule toggle ---- */
+.rk-tabs{
+  background:var(--card-bg-solid)!important;
+  border:1px solid var(--card-edge)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 16px -10px rgba(0,0,0,.6)!important;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.rk-tab.active{
+  background:linear-gradient(105deg,#9af7ea,#2dd4bf 60%,#14b8a6)!important;
+  color:#041512!important;
+  box-shadow:0 6px 18px -8px rgba(45,212,191,.55),inset 0 1px 0 rgba(255,255,255,.5)!important;
+}
+
+/* ---- Level Pass checkpoints + vault banner ---- */
+.hx-node-icon{
+  background:var(--card-bg-solid)!important;
+  border-color:var(--card-edge)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 6px 14px -8px rgba(0,0,0,.6)!important;
+}
+.hx-node.current .hx-node-icon{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 0 4px rgba(240,193,77,.18),0 10px 20px -8px rgba(240,193,77,.4)!important;
+}
+.hx-node.granted .hx-node-icon{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 14px -6px rgba(34,197,94,.5)!important;
+}
+.hx-vault-banner{
+  background:
+    radial-gradient(circle at 0% 50%,rgba(240,193,77,.18),transparent 46%),
+    var(--card-bg-solid)!important;
+  border-color:rgba(240,193,77,.32)!important;
+  box-shadow:var(--card-shadow)!important;
+  transition:transform .35s var(--ease-spring),box-shadow .35s var(--ease)!important;
+}
+
+/* ---- Order tracker dots (pedidos list + pedido detail) ---- */
+.tracker-dot{
+  background:var(--card-bg-solid)!important;
+  border-color:var(--card-edge)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 4px 10px -4px rgba(0,0,0,.6)!important;
+}
+.tracker-step.done .tracker-dot{box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 16px -6px rgba(34,197,94,.55)!important}
+.tracker-step.active .tracker-dot{box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 0 4px rgba(34,211,238,.22),0 6px 14px -4px rgba(0,0,0,.65)!important}
+.tracker-step.error .tracker-dot{box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 16px -6px rgba(239,68,68,.55)!important}
+
+@media (prefers-reduced-motion:reduce){
+  .btn::after,.shine::after{animation:none!important}
+  .btn:hover::after{animation:none!important}
+  .neon.hero,.neon.promo,.reveal.in,
+  .ranking.rk,.hero,.promo,.supt,.offers-wrap,.why-wrap,.steps-wrap{
+    animation:none!important;
+  }
+  .offer:hover,.step:hover,.benefit:hover,.metric:hover{transform:none!important}
+}

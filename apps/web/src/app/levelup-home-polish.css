@@ -1,3 +1,11 @@
+/* Support FAB + panel avatars — Monkei (clipboard / help pose) */
+.fab-btn img,
+.fp-head img{
+  object-fit:contain!important;
+  object-position:center center!important;
+  background:radial-gradient(circle at 50% 40%,rgba(34,211,238,.22),rgba(10,18,28,.95) 70%)!important;
+}
+
 /* Circular back control — top-left, outside the shell column */
 .back-fab{
   position:fixed;
@@ -38,14 +46,23 @@
   position:absolute!important;
   z-index:5!important;
   left:auto!important;
-  right:6%!important;
-  top:4%!important;
-  bottom:2%!important;
-  width:48%!important;
+  right:6.6%!important;
+  top:41.6%!important;
+  bottom:-15.2%!important;
+  width:28.2%!important;
   max-width:none!important;
   max-height:none!important;
   height:unset!important;
   min-height:0!important;
+  /* `.hero-body` becomes `display:grid` at desktop (levelup-home.css's
+     min-width:1024px block), which makes `.hero-mascot` a grid item even
+     though it's `position:absolute`. An earlier desktop-only rule (also in
+     levelup-home.css) sets `align-self:end` on it, and Chromium's abspos
+     grid-item sizing mishandles any explicit (non-auto) `align-self` here:
+     it collapses the top+bottom-derived height to 0 instead of running the
+     normal CSS2.1 algorithm. `align-self:auto` (the default) sidesteps the
+     bug entirely — confirmed by toggling it live against the running page. */
+  align-self:auto!important;
   display:block!important;
   pointer-events:none;
   overflow:visible!important;
@@ -92,11 +109,32 @@
   object-position:center bottom!important;
   transform:translateX(-50%) scale(2.65)!important;
   transform-origin:center bottom!important;
-  filter:drop-shadow(0 0 14px rgba(34,211,238,.45)) drop-shadow(0 0 34px rgba(139,92,246,.35));
+  filter:drop-shadow(0 0 14px rgba(45,212,191,.5)) drop-shadow(0 0 28px rgba(240,193,77,.28));
 }
 .hero:hover .hero-mascot .rig > img[src$=".gif"],
 .hero:hover .hero-mascot .rig > img[src*=".gif"]{
   transform:translateX(-50%) scale(2.72)!important;
+}
+/* Mobile: the 2.65x zoom above is tuned for the wide desktop placement box.
+   `.hero-body`'s own `.hero-mascot` percentages are shared across every
+   breakpoint (no media guard upstream), so on a narrow phone-width card the
+   same box lands low/small, overlapping the CTA button instead of sitting
+   near the diamonds like desktop. Give mobile its own box + a gentler zoom. */
+@media (max-width:1023px){
+  .hero-mascot{
+    right:9.2%!important;
+    top:25.4%!important;
+    bottom:20.9%!important;
+    width:47.1%!important;
+  }
+  .hero-mascot .rig > img[src$=".gif"],
+  .hero-mascot .rig > img[src*=".gif"]{
+    transform:translateX(-50%) scale(2.1)!important;
+  }
+  .hero:hover .hero-mascot .rig > img[src$=".gif"],
+  .hero:hover .hero-mascot .rig > img[src*=".gif"]{
+    transform:translateX(-50%) scale(2.15)!important;
+  }
 }
 .hero-mascot .ia-live video.live{display:none}
 .hero-mascot .ia-live.has-live video.live{display:block}
@@ -161,14 +199,14 @@
 .offer .meta{flex-wrap:wrap;row-gap:2px}
 .offer .meta em{
   font-style:normal;font-size:9px;font-weight:800;letter-spacing:.08em;
-  text-transform:uppercase;color:#c4b5fd;background:rgba(139,92,246,.16);
-  border:1px solid rgba(139,92,246,.35);padding:2px 6px;border-radius:5px;margin-left:6px;
+  text-transform:uppercase;color:#5eead4;background:rgba(45,212,191,.16);
+  border:1px solid rgba(45,212,191,.35);padding:2px 6px;border-radius:5px;margin-left:6px;
 }
 .offer .obar{
-  color:#040d16;
-  background:linear-gradient(100deg,#8be9fb,#22d3ee 55%,#a855f7);
+  color:#041512;
+  background:linear-gradient(100deg,#7ff5e4,#2dd4bf 55%,#0f766e);
 }
-.offer.o3 .obar{background:linear-gradient(100deg,#f5b8fb,var(--magenta))}
+.offer.o3 .obar{background:linear-gradient(100deg,#ffb090,var(--magenta))}
 .offer.o4 .obar{background:linear-gradient(100deg,#ffe08a,var(--gold))}
 
 /* Guest /cuenta: ranking stays inside the LevelUp shell column */
@@ -215,11 +253,9 @@
 .page.cuenta-rk .offers-wrap{
   margin-top:22px;
 }
-.page.cuenta-rk .why-wrap{
-  margin-top:28px;
-}
+.page.cuenta-rk .why-wrap,
 .page.cuenta-rk .steps-wrap{
-  margin-top:24px;
+  margin-top:0;
 }
 /* Clearance for the absolute hero-tab that sits ~15px above the card */
 .ranking.rk + .neon.hero,
@@ -347,8 +383,13 @@
 /* Metrics 2×2 on phone (reference) */
 .metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 
+/* Pull why/steps up — cancel .layout flex gap between offers→why and why→steps */
+.why-wrap,
+.steps-wrap{
+  margin-top:calc(-1 * (var(--gap) + 2px) + 2px)!important;
+}
 .why-head,.steps-head{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:0 0 10px!important;
 }
 .why-head h2,.steps-head h2{
   margin:0;font-size:22px;font-weight:900;letter-spacing:-.02em;line-height:1.15;flex:1;min-width:0;
@@ -356,67 +397,50 @@
 .why-head h2 span,.steps-head h2 span{
   display:block;margin-top:6px;font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:0;
 }
-/* ¿Por qué elegir?: Monkei PNG fills the right head slot + natural float */
-@keyframes whyMonkeiFloat{
-  0%,100%{transform:translateY(0) rotate(-1.2deg) scale(1)}
-  35%{transform:translateY(-10px) rotate(1.4deg) scale(1.03)}
-  70%{transform:translateY(-4px) rotate(-0.6deg) scale(1.015)}
+/* Section head mascots — distinct motions per character */
+@keyframes whyMascotBob{
+  0%,100%{transform:translateY(0) scale(1)}
+  40%{transform:translateY(-10px) scale(1.03)}
+  70%{transform:translateY(-3px) scale(1.01)}
+}
+@keyframes stepsMascotSway{
+  0%,100%{transform:rotate(-2.2deg) translateX(0)}
+  50%{transform:rotate(2.4deg) translateX(4px)}
 }
 .why-mascot,
-.why-mascot.ia-live{
-  position:relative!important;
+.steps-mascot{
+  display:block!important;
   flex:none!important;
-  width:168px!important;
-  height:210px!important;
-  margin:0 0 -6px!important;
-  overflow:visible;
+  position:relative!important;
+  width:132px!important;
+  height:148px!important;
+  margin:0!important;
+  overflow:hidden;
   pointer-events:none;
   align-self:flex-end;
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,.55)) drop-shadow(0 0 12px rgba(34,211,238,.3));
+}
+/* Laptop Monkei — vertical bob + soft breathe */
+.why-mascot{
   transform-origin:50% 100%;
-  animation:whyMonkeiFloat 4.8s cubic-bezier(.45,0,.35,1) infinite;
-  filter:drop-shadow(0 12px 22px rgba(0,0,0,.55)) drop-shadow(0 0 14px rgba(34,211,238,.35));
+  animation:whyMascotBob 4.2s cubic-bezier(.45,0,.35,1) infinite;
+}
+/* Loading-bar Monkei — side sway from the feet */
+.steps-mascot{
+  transform-origin:50% 100%;
+  animation:stepsMascotSway 3.6s cubic-bezier(.45,0,.35,1) infinite;
 }
 .why-mascot > img,
-.why-mascot img.still,
-.why-mascot video.live{
+.steps-mascot > img{
   display:block!important;
   width:100%!important;
   height:100%!important;
   object-fit:contain!important;
   object-position:center bottom!important;
 }
-.why-mascot video.live{display:none!important}
 @media (prefers-reduced-motion:reduce){
-  .why-mascot,.why-mascot.ia-live{animation:none!important}
+  .why-mascot,.steps-mascot{animation:none!important}
 }
-/* Cómo funciona: Monkei GIF fills the right head slot, fully visible */
-.steps-mascot,
-.steps-mascot.ia-live{
-  position:relative!important;
-  flex:none!important;
-  width:148px!important;
-  height:220px!important;
-  margin:0!important;
-  overflow:hidden;
-  pointer-events:none;
-  align-self:flex-end;
-}
-.steps-mascot > img,
-.steps-mascot img.still,
-.steps-mascot video.live{
-  display:block!important;
-  position:absolute!important;
-  left:50%!important;
-  top:50%!important;
-  width:100%!important;
-  height:100%!important;
-  object-fit:contain!important;
-  object-position:center center!important;
-  transform:translate(-50%,-50%) scale(1.72)!important;
-  transform-origin:center center!important;
-  filter:drop-shadow(0 10px 20px rgba(0,0,0,.55));
-}
-.steps-mascot video.live{display:none!important}
 .benefits,.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .benefit .mini,.step .mini,.step .num{display:none}
 
@@ -431,7 +455,5 @@
   }
   .metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
   .benefits,.steps{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-  .why-mascot,.why-mascot.ia-live{width:188px!important;height:236px!important}
-  .steps-mascot,.steps-mascot.ia-live{width:168px!important;height:240px!important}
-  .steps-mascot > img{transform:translate(-50%,-50%) scale(1.65)!important}
+  .why-mascot,.steps-mascot{width:156px!important;height:172px!important}
 }

@@ -57,7 +57,7 @@
 .hero-mascot .rig{position:relative;display:block;transform-origin:50% 96%;
   animation:rigFloat 9s cubic-bezier(.45,0,.35,1) infinite}
 .hero-mascot img,.hero-mascot video{display:block;width:100%;height:auto;
-  filter:drop-shadow(0 0 14px rgba(34,211,238,.45)) drop-shadow(0 0 34px rgba(139,92,246,.35))}
+  filter:drop-shadow(0 0 14px rgba(45,212,191,.5)) drop-shadow(0 0 28px rgba(240,193,77,.28))}
 /* luchador animado con IA: video webm con alfa. Por defecto se ve la imagen fija;
    solo si el navegador respeta el canal alfa (todo menos Safari) entra el video. */
 .hero-mascot .live{display:none}
@@ -69,7 +69,7 @@
   100%{transform:translateY(0) rotate(-.4deg)}}
 /* halo que respira detras del luchador */
 .hero-mascot::before{content:"";position:absolute;inset:6% 4% 2%;border-radius:50%;z-index:-1;
-  background:radial-gradient(closest-side,rgba(34,211,238,.45),rgba(139,92,246,.28) 58%,transparent 74%);
+  background:radial-gradient(closest-side,rgba(45,212,191,.45),rgba(240,193,77,.22) 58%,transparent 74%);
   filter:blur(10px);animation:haloPulse 3.2s ease-in-out infinite}
 @keyframes haloPulse{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:1;transform:scale(1.05)}}
 @media (prefers-reduced-motion:reduce){

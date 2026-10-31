@@ -98,11 +98,11 @@
 }
 .wa-shapes i:nth-child(3){
   left:20%;top:76%;width:26px;height:26px;border-radius:6px;
-  background:linear-gradient(150deg,#c084fc,#7c3aed);--d:7s;
+  background:linear-gradient(150deg,#f0c14d,#ff7a45);--d:7s;
 }
 .wa-shapes i:nth-child(4){
   left:44%;top:18%;width:44px;height:16px;border-radius:999px;
-  background:linear-gradient(100deg,#a78bfa,#22d3ee);--d:10s;
+  background:linear-gradient(100deg,#5eead4,#2dd4bf);--d:10s;
 }
 
 /* green chat badge — top left (reset older flex-sheet .wa-ic rules) */

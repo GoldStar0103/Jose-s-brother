@@ -1,0 +1,593 @@
+/* ==========================================================================
+   MONKEI 3D layer — contemporary depth for cards, buttons, and diamonds
+   Loaded after monkei-theme.css
+   ========================================================================== */
+
+:root{
+  --depth-ease:cubic-bezier(.22,1,.36,1);
+  --btn-radius:999px;
+  --btn-h:48px;
+  --btn-pad-x:28px;
+  --btn-pad-y:0;
+  --btn-fs:13px;
+}
+
+/* Scene perspective */
+.wrap,
+.layout,
+.page.cuenta-rk,
+.col-main{
+  perspective:1400px;
+  perspective-origin:50% 20%;
+}
+.appbg{
+  perspective:900px;
+  transform-style:preserve-3d;
+}
+
+/* --------------------------------------------------------------------------
+   3D floating diamonds (background)
+   -------------------------------------------------------------------------- */
+.appbg .caps,
+.appbg .gems{display:none!important}
+
+.appbg .diamonds3d{
+  position:absolute;inset:0;
+  pointer-events:none;
+  perspective:1000px;
+  transform-style:preserve-3d;
+  overflow:hidden;
+}
+
+.appbg .d3{
+  position:absolute;
+  width:var(--s,32px);
+  height:calc(var(--s,32px) * 1.35);
+  transform-style:preserve-3d;
+  animation:d3Drift var(--drift,20s) ease-in-out infinite alternate;
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,.45));
+  opacity:.9;
+}
+.appbg .d3-orbit{
+  display:block;
+  width:100%;height:100%;
+  transform-style:preserve-3d;
+  transform-origin:50% 50%;
+  animation:d3Bob calc(var(--spin,14s) * .85) ease-in-out infinite;
+}
+.appbg .d3-gem{
+  display:block;
+  width:100%;height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  animation:d3Spin var(--spin,14s) ease-in-out infinite;
+}
+/* HEXZ-style gem (flat faceted SVG: light table, orange body, purple facet) */
+.appbg .gem-svg{
+  display:block;width:100%;height:100%;
+  overflow:visible;
+  filter:drop-shadow(0 0 12px rgba(255,150,40,.40));
+}
+.appbg .d3,
+.appbg .d3-sweep{height:var(--s,32px)}
+
+@keyframes d3Spin{
+  0%,100%{transform:rotateY(-26deg) rotateZ(-5deg)}
+  50%{transform:rotateY(26deg) rotateZ(5deg)}
+}
+@keyframes d3Bob{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(0,-18px,24px) scale(1.06)}
+}
+@keyframes d3Drift{
+  from{transform:translate3d(0,0,0) rotateZ(-8deg)}
+  to{transform:translate3d(18px,-28px,40px) rotateZ(10deg)}
+}
+
+/* --------------------------------------------------------------------------
+   Sweeping diamond — a single large diamond that actually travels across
+   the viewport (bottom-left to top-right, looping), instead of bobbing in
+   place like the field above. Uses the same HEXZ-style SVG gem as the field.
+   -------------------------------------------------------------------------- */
+.appbg .d3-sweep{
+  position:absolute;
+  left:0;top:0;
+  width:var(--s,56px);
+  height:var(--s,56px);
+  transform-style:preserve-3d;
+  animation:d3Sweep var(--sweep,80s) linear infinite;
+  filter:drop-shadow(0 14px 26px rgba(0,0,0,.5));
+  opacity:.88;
+}
+.appbg .d3-sweep .d3-orbit{
+  display:block;width:100%;height:100%;
+  transform-style:preserve-3d;transform-origin:50% 50%;
+  animation:d3Bob var(--bob,12s) ease-in-out infinite;
+}
+.appbg .d3-sweep .d3-gem{
+  display:block;width:100%;height:100%;position:relative;
+  transform-style:preserve-3d;
+  animation:d3Spin var(--spin,18s) ease-in-out infinite;
+}
+@keyframes d3Sweep{
+  0%{transform:translate3d(-15vw,105vh,0) rotateZ(-6deg)}
+  25%{transform:translate3d(18vw,62vh,0) rotateZ(5deg)}
+  50%{transform:translate3d(52vw,28vh,0) rotateZ(-4deg)}
+  75%{transform:translate3d(82vw,58vh,0) rotateZ(6deg)}
+  100%{transform:translate3d(118vw,-12vh,0) rotateZ(-5deg)}
+}
+
+.appbg .sparks i{
+  z-index:2;
+  filter:drop-shadow(0 0 6px rgba(255,248,220,.8));
+}
+
+/* --------------------------------------------------------------------------
+   3D cards — lift, tilt, depth shadow
+   -------------------------------------------------------------------------- */
+.card,
+.neon,
+.ranking.rk,
+.supt-card,
+.metric,
+.benefit,
+.step,
+.offer{
+  transform-style:preserve-3d;
+  will-change:transform;
+  transition:
+    transform .5s var(--depth-ease),
+    box-shadow .45s var(--depth-ease),
+    border-color .35s ease,
+    filter .35s ease!important;
+}
+
+.card,
+.neon,
+.ranking.rk,
+.supt-card,
+.metric,
+.benefit,
+.step{
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.08) inset,
+    0 -1px 0 rgba(0,0,0,.25) inset,
+    0 2px 0 rgba(0,0,0,.2),
+    0 10px 24px -12px rgba(0,0,0,.7),
+    0 28px 48px -28px rgba(0,18,20,.55)!important;
+}
+
+.card:hover{
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.14) inset,
+    0 4px 0 rgba(0,0,0,.18),
+    0 18px 36px -14px rgba(0,0,0,.75),
+    0 40px 70px -28px rgba(45,212,191,.28)!important;
+  border-color:rgba(94,234,212,.4)!important;
+}
+
+.neon:hover{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.08),
+    0 6px 0 rgba(0,0,0,.2),
+    0 22px 44px -16px rgba(0,0,0,.85),
+    0 0 56px -16px rgba(45,212,191,.55)!important;
+}
+
+.metric:nth-child(odd):hover,
+.benefit:nth-child(odd):hover,
+.step:nth-child(odd):hover,
+.metric:nth-child(even):hover,
+.benefit:nth-child(even):hover,
+.step:nth-child(even):hover{
+  transform:none!important;
+}
+
+.offer:hover{
+  filter:saturate(1.08)!important;
+}
+.offer:hover .frame{
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.12) inset,
+    0 8px 0 rgba(0,0,0,.22),
+    0 24px 48px -18px rgba(0,0,0,.8)!important;
+}
+.offer .frame{
+  transform-style:preserve-3d;
+  transition:box-shadow .45s var(--depth-ease), transform .45s var(--depth-ease)!important;
+}
+.offer .shot{
+  transform:translateZ(8px);
+}
+
+/* Subtle idle float on primary shells */
+@keyframes cardIdle{
+  0%,100%{transform:translate3d(0,0,0) rotateX(0) rotateY(0)}
+  50%{transform:translate3d(0,-3px,6px) rotateX(1deg) rotateY(-.6deg)}
+}
+.neon.hero,
+.neon.promo,
+.ranking.rk{
+  animation:cardIdle 7s ease-in-out infinite!important;
+}
+.neon.hero:hover,
+.neon.promo:hover,
+.ranking.rk:hover{
+  animation:none!important;
+  transform:none!important;
+}
+
+/* --------------------------------------------------------------------------
+   Modern capsule buttons — soft chips, not extruded blocks
+   Shape: full stadium (999px). Size: taller, wider padding, tighter type.
+   -------------------------------------------------------------------------- */
+.btn,
+a.btn,
+button.btn,
+.offer .obar,
+.rk-more,
+.supt-cta,
+.btn.primary,
+.btn.ghost,
+.btn-cta,
+.btn-violet,
+.btn-ghost,
+.btn-wa,
+.btn-sm,
+.promo .in > .btn{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:10px!important;
+  min-height:var(--btn-h)!important;
+  height:auto!important;
+  padding:var(--btn-pad-y) var(--btn-pad-x)!important;
+  border-radius:999px!important;
+  border:1.5px solid transparent!important;
+  font-size:var(--btn-fs)!important;
+  font-weight:700!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+  line-height:1!important;
+  overflow:hidden!important;
+  transform:none!important;
+  transform-style:flat!important;
+  text-shadow:none!important;
+  transition:
+    transform .28s var(--depth-ease),
+    box-shadow .28s var(--depth-ease),
+    background .28s ease,
+    border-color .28s ease,
+    color .2s ease,
+    filter .2s ease!important;
+}
+
+.btn-sm,
+.rk-more,
+.promo .in > .btn,
+.offer .obar{
+  --btn-h:40px;
+  --btn-pad-x:18px;
+  --btn-fs:11px;
+  letter-spacing:.1em!important;
+}
+
+.btn-block{width:100%!important;min-height:52px!important}
+
+/* Soft moving highlight under the fill */
+.btn::before,
+.btn-cta::before,
+.btn-violet::before,
+.btn-ghost::before,
+.btn-wa::before,
+.btn.primary::before,
+.offer .obar::before,
+.supt-cta::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:-1px!important;
+  border-radius:inherit!important;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.35) 48%,transparent 62%)!important;
+  transform:translateX(-120%)!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  transition:none!important;
+  z-index:1!important;
+}
+.btn:hover::before,
+.btn-cta:hover::before,
+.btn-violet:hover::before,
+.btn-ghost:hover::before,
+.btn-wa:hover::before,
+.btn.primary:hover::before,
+.offer .obar:hover::before,
+.supt-cta:hover::before,
+.supt-main:hover .supt-cta::before{
+  animation:btnSweep .75s var(--depth-ease) forwards!important;
+  opacity:1!important;
+}
+@keyframes btnSweep{
+  to{transform:translateX(120%)}
+}
+
+.btn > *,
+.btn-cta > *,
+.supt-cta > *,
+.offer .obar{
+  position:relative;z-index:2;
+}
+
+/* Kill old extruded sheen */
+.btn::after,
+.btn-cta::after{
+  display:none!important;
+  animation:none!important;
+  content:none!important;
+}
+
+/* Primary — translucent glass capsule with teal rim */
+.btn-cta,
+a.btn-cta,
+button.btn-cta,
+.btn.primary{
+  color:#041512!important;
+  background:
+    linear-gradient(105deg,rgba(127,245,228,.95),rgba(45,212,191,.92) 55%,rgba(94,234,212,.88))!important;
+  border-color:rgba(255,255,255,.45)!important;
+  box-shadow:
+    0 0 0 1px rgba(45,212,191,.25),
+    0 8px 28px -10px rgba(45,212,191,.55),
+    inset 0 1px 0 rgba(255,255,255,.55)!important;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.btn-cta:hover,
+a.btn-cta:hover,
+button.btn-cta:hover,
+.btn.primary:hover{
+  transform:translateY(-2px) scale(1.03)!important;
+  filter:brightness(1.06);
+  box-shadow:
+    0 0 0 1px rgba(45,212,191,.45),
+    0 14px 36px -10px rgba(45,212,191,.65),
+    inset 0 1px 0 rgba(255,255,255,.65)!important;
+}
+.btn-cta:active,
+a.btn-cta:active,
+button.btn-cta:active,
+.btn.primary:active{
+  transform:scale(.97)!important;
+  filter:brightness(.98);
+  box-shadow:
+    0 0 0 1px rgba(45,212,191,.3),
+    0 4px 14px -6px rgba(45,212,191,.4),
+    inset 0 1px 0 rgba(255,255,255,.4)!important;
+}
+
+/* Offer bars — slim capsule chips */
+.offer .obar{
+  color:#041512!important;
+  min-height:38px!important;
+  margin-top:10px!important;
+  background:linear-gradient(105deg,#9af7ea,#2dd4bf 60%,#14b8a6)!important;
+  border:1.5px solid rgba(255,255,255,.4)!important;
+  box-shadow:0 6px 20px -8px rgba(45,212,191,.5),inset 0 1px 0 rgba(255,255,255,.5)!important;
+}
+.offer .obar:hover{
+  transform:translateY(-2px) scale(1.02)!important;
+  box-shadow:0 10px 26px -8px rgba(45,212,191,.6),inset 0 1px 0 rgba(255,255,255,.6)!important;
+}
+.offer .obar:active{transform:scale(.98)!important}
+.offer.o2 .obar{
+  background:linear-gradient(105deg,#a5f3fc,#22d3ee 60%,#0891b2)!important;
+  box-shadow:0 6px 20px -8px rgba(34,211,238,.5),inset 0 1px 0 rgba(255,255,255,.5)!important;
+}
+.offer.o3 .obar{
+  background:linear-gradient(105deg,#ffc9b0,#ff7a45 60%,#e85a2a)!important;
+  box-shadow:0 6px 20px -8px rgba(255,122,69,.5),inset 0 1px 0 rgba(255,255,255,.45)!important;
+}
+.offer.o4 .obar{
+  background:linear-gradient(105deg,#ffe8a8,#f0c14d 60%,#d4a017)!important;
+  box-shadow:0 6px 20px -8px rgba(240,193,77,.5),inset 0 1px 0 rgba(255,255,255,.5)!important;
+}
+
+/* Gold secondary — outline capsule */
+.btn-violet{
+  color:#ffe08a!important;
+  background:rgba(240,193,77,.08)!important;
+  border:1.5px solid rgba(240,193,77,.55)!important;
+  box-shadow:0 0 24px -12px rgba(240,193,77,.35),inset 0 1px 0 rgba(255,255,255,.06)!important;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.btn-violet:hover{
+  color:#fff8e0!important;
+  transform:translateY(-2px) scale(1.03)!important;
+  background:rgba(240,193,77,.16)!important;
+  border-color:rgba(240,193,77,.85)!important;
+  box-shadow:0 0 32px -8px rgba(240,193,77,.5),inset 0 1px 0 rgba(255,255,255,.1)!important;
+}
+.btn-violet:active{transform:scale(.97)!important}
+
+/* Ghost — frosted glass capsule */
+.btn-ghost,
+.btn.ghost{
+  color:#e8f4f2!important;
+  background:rgba(255,255,255,.04)!important;
+  border:1.5px solid rgba(210,240,232,.22)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)!important;
+  backdrop-filter:blur(14px) saturate(1.15);
+  -webkit-backdrop-filter:blur(14px) saturate(1.15);
+}
+.btn-ghost:hover,
+.btn.ghost:hover{
+  color:#fff!important;
+  transform:translateY(-2px) scale(1.03)!important;
+  background:rgba(45,212,191,.1)!important;
+  border-color:rgba(94,234,212,.45)!important;
+  box-shadow:0 8px 24px -12px rgba(45,212,191,.35),inset 0 1px 0 rgba(255,255,255,.1)!important;
+}
+.btn-ghost:active,
+.btn.ghost:active{transform:scale(.97)!important}
+
+/* WhatsApp — soft green capsule */
+.btn-wa,
+.supt-cta{
+  color:#04210e!important;
+  background:linear-gradient(105deg,#6ef0a0,#25d366 55%,#16a34a)!important;
+  border:1.5px solid rgba(255,255,255,.35)!important;
+  box-shadow:0 8px 26px -10px rgba(37,211,102,.55),inset 0 1px 0 rgba(255,255,255,.45)!important;
+}
+.btn-wa:hover,
+.supt-cta:hover,
+.supt-main:hover .supt-cta{
+  transform:translateY(-2px) scale(1.03)!important;
+  filter:brightness(1.05);
+  box-shadow:0 14px 34px -10px rgba(37,211,102,.65),inset 0 1px 0 rgba(255,255,255,.55)!important;
+  background:linear-gradient(105deg,#7af5aa,#2ee06f 55%,#16a34a)!important;
+}
+.btn-wa:active,
+.supt-cta:active{transform:scale(.97)!important}
+
+.rk-more{
+  min-height:34px!important;
+  padding:0 14px!important;
+  color:#ffe08a!important;
+  background:rgba(240,193,77,.08)!important;
+  border:1.5px solid rgba(240,193,77,.5)!important;
+  border-radius:999px!important;
+  box-shadow:none!important;
+  letter-spacing:.12em!important;
+}
+.rk-more:hover{
+  transform:translateY(-1px) scale(1.04)!important;
+  background:rgba(240,193,77,.16)!important;
+  border-color:rgba(240,193,77,.85)!important;
+  color:#fff3c4!important;
+}
+
+/* Back control — rounded square chip (not circle / not extruded) */
+.back-fab{
+  width:44px!important;
+  height:44px!important;
+  border-radius:14px!important;
+  border:1.5px solid rgba(45,212,191,.28)!important;
+  background:rgba(8,18,20,.55)!important;
+  backdrop-filter:blur(14px)!important;
+  -webkit-backdrop-filter:blur(14px)!important;
+  box-shadow:0 8px 24px -12px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+.back-fab:hover{
+  transform:translateY(-2px) scale(1.05)!important;
+  background:rgba(45,212,191,.16)!important;
+  border-color:rgba(94,234,212,.5)!important;
+  box-shadow:0 12px 28px -10px rgba(45,212,191,.35),inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+.back-fab:active{transform:scale(.96)!important}
+
+.socials a{
+  width:36px!important;
+  height:36px!important;
+  border-radius:12px!important;
+  border:1.5px solid rgba(45,212,191,.2)!important;
+  background:rgba(255,255,255,.04)!important;
+  backdrop-filter:blur(10px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)!important;
+}
+.socials a:hover{
+  transform:translateY(-2px) scale(1.06)!important;
+  background:rgba(45,212,191,.14)!important;
+  border-color:rgba(94,234,212,.4)!important;
+  box-shadow:0 8px 20px -10px rgba(45,212,191,.35)!important;
+}
+
+/* --------------------------------------------------------------------------
+   Secondary-page tiles — checkout payment options, ranking tabs, Level Pass
+   checkpoints, vault banner. Colors/surfaces live in monkei-theme.css; this
+   is just the tilt/lift motion, same tokens as the card system above.
+   -------------------------------------------------------------------------- */
+.pay-option,
+.hx-vault-banner{
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.pay-option:hover{
+  transform:none!important;
+}
+.hx-vault-banner:hover{
+  transform:translate3d(0,-4px,14px) scale(1.01)!important;
+}
+
+/* Plain `.btn` variants that don't match any of the named button classes
+   above (e.g. .pay-option-cta) still get the sweep highlight via the generic
+   `.btn::before` rule, but need their own lift since there's no generic
+   `.btn:hover` transform rule. */
+.pay-option-cta:hover{
+  transform:translateY(-2px) scale(1.03)!important;
+}
+.pay-option-cta:active{
+  transform:scale(.97)!important;
+}
+
+.rk-tab{
+  transition:transform .25s var(--depth-ease),background .25s ease,color .2s ease,box-shadow .25s ease!important;
+}
+.rk-tab:hover,
+.rk-tab.active{
+  transform:translateY(-1px)!important;
+}
+
+.checkout-step-dot,
+.tracker-dot,
+.hx-node-icon{
+  transition:box-shadow .35s var(--depth-ease),border-color .3s ease,transform .3s var(--depth-ease)!important;
+}
+.hx-node.current .hx-node-icon{
+  transform:translateY(-2px) scale(1.06)!important;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  .appbg .d3,
+  .appbg .d3-orbit,
+  .appbg .d3-gem,
+  .appbg .d3-sweep,
+  .appbg .d3-sweep .d3-orbit,
+  .appbg .d3-sweep .d3-gem,
+  .neon.hero,
+  .neon.promo,
+  .ranking.rk{animation:none!important}
+  .card:hover,
+  .neon:hover,
+  .ranking.rk:hover,
+  .metric:hover,
+  .benefit:hover,
+  .step:hover,
+  .supt-card:hover,
+  .offer:hover,
+  .btn:hover::before,
+  .btn-cta:hover::before,
+  .btn-violet:hover::before,
+  .btn-ghost:hover::before,
+  .btn-wa:hover::before,
+  .offer .obar:hover::before{animation:none!important}
+  .btn-cta:hover,
+  .btn-violet:hover,
+  .btn-ghost:hover,
+  .btn-wa:hover,
+  .btn.primary:hover,
+  .offer .obar:hover,
+  .back-fab:hover,
+  .socials a:hover,
+  .pay-option:hover,
+  .pay-option-cta:hover,
+  .hx-vault-banner:hover,
+  .rk-tab:hover,
+  .hx-node.current .hx-node-icon{
+    transform:none!important;
+  }
+}

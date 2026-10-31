@@ -303,7 +303,7 @@ export default async function CuentaPage() {
               <span className="promo-mascot" aria-hidden="true">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/lu/nuevo/hero-monkei-diamond.gif"
+                  src="/lu/nuevo/promo-monkei.gif"
                   alt=""
                   decoding="async"
                 />
@@ -475,17 +475,13 @@ export default async function CuentaPage() {
         </div>
 
         <section className="why-wrap reveal in">
-          <div className="why-head" style={{ marginTop: 8 }}>
+          <div className="why-head">
             <h2>
               ¿Por qué elegir {brand}? <span>La tienda que está contigo, sin límites.</span>
             </h2>
             <span className="why-mascot" aria-hidden="true">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/lu/nuevo/why-monkei.png"
-                alt=""
-                decoding="async"
-              />
+              <img src="/lu/nuevo/why-monkei.png" alt="" decoding="async" />
             </span>
           </div>
           <div className="benefits">
@@ -535,17 +531,13 @@ export default async function CuentaPage() {
         </section>
 
         <section className="steps-wrap reveal in">
-          <div className="steps-head" style={{ marginTop: 8 }}>
+          <div className="steps-head">
             <h2>
               ¿Cómo funciona? <span>Tu recarga en 4 simples pasos.</span>
             </h2>
             <span className="steps-mascot" aria-hidden="true">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/lu/nuevo/steps-monkei.gif"
-                alt=""
-                decoding="async"
-              />
+              <img src="/lu/nuevo/steps-monkei.png" alt="" decoding="async" />
             </span>
           </div>
           <div className="steps">

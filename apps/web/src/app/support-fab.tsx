@@ -16,7 +16,7 @@ export function SupportFab({ supportHref }: { supportHref: string }) {
         onClick={() => setOpen((v) => !v)}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/lu/poses/presenta_r0c1.webp" alt="" loading="lazy" />
+        <img src="/lu/nuevo/support-monkei.png" alt="" loading="lazy" />
         <span className="fab-dot" aria-hidden="true" />
         <span className="fab-txt">
           Soporte en línea
@@ -30,7 +30,7 @@ export function SupportFab({ supportHref }: { supportHref: string }) {
           </button>
           <div className="fp-head">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/lu/poses/saluda_r1c0.webp" alt="" loading="lazy" />
+            <img src="/lu/nuevo/support-monkei.png" alt="" loading="lazy" />
             <div>
               <b>Soporte</b>
               <span>En línea · responde en minutos</span>

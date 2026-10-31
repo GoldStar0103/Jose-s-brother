@@ -3,22 +3,22 @@
    WhatsApp. Desktop is the adaptation, not the baseline. */
 
 :root {
-  --bg: #0b0d18;
-  --surface: #151829;
-  --surface-2: #1d2138;
-  --border: #2a2f4a;
-  --text: #eef0fb;
-  --muted: #8b91b5;
-  --accent: #8b5cf6;
-  --accent-2: #22d3ee;
-  --gold: #f5c84c;
+  --bg: #071210;
+  --surface: #0e1a1c;
+  --surface-2: #152628;
+  --border: #1e3534;
+  --text: #e8f4f2;
+  --muted: #7a9a96;
+  --accent: #2dd4bf;
+  --accent-2: #f0c14d;
+  --gold: #f0c14d;
   --ok: #22c55e;
   --warn: #f59e0b;
   --bad: #ef4444;
   /* A wider icon palette than the one brand gradient — see icons.tsx and
      .trust-icon's color modifiers. */
-  --pink: #ec4899;
-  --blue: #3b82f6;
+  --pink: #ff7a45;
+  --blue: #22d3ee;
   --radius: 14px;
 }
 
@@ -46,11 +46,26 @@ img { max-width: 100%; display: block; }
 .page.narrow { max-width: 720px; }
 
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.05), transparent 42%),
+    rgba(12, 24, 26, 0.78);
+  border: 1px solid rgba(210, 240, 232, 0.12);
+  border-radius: 20px;
   padding: 18px;
   margin-bottom: 14px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 12px 28px -16px rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  transition: transform 0.35s ease, border-color 0.3s ease, box-shadow 0.35s ease;
+}
+.card:hover {
+  border-color: rgba(94, 234, 212, 0.32);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 18px 36px -18px rgba(0, 0, 0, 0.78),
+    0 0 0 1px rgba(45, 212, 191, 0.12);
 }
 
 .mono { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
@@ -74,12 +89,12 @@ img { max-width: 100%; display: block; }
   margin: 0 auto 14px;
   padding: 3px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #a78bfa, var(--accent-2));
+  background: linear-gradient(135deg, #2dd4bf, var(--accent-2));
   box-shadow: 0 0 34px rgba(139, 92, 246, 0.35);
 }
 .hero h1 { font-size: 30px; margin: 0; letter-spacing: -0.03em; line-height: 1.1; }
 .grad {
-  background: linear-gradient(90deg, #a78bfa, var(--accent-2));
+  background: linear-gradient(90deg, #2dd4bf, var(--accent-2));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -346,18 +361,24 @@ input:focus { outline: 2px solid var(--accent-2); outline-offset: -1px; }
 .btn {
   font: inherit;
   font-weight: 700;
-  padding: 12px 18px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
+  padding: 0 28px;
+  min-height: 48px;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
   background: var(--surface-2);
   color: var(--text);
   cursor: pointer;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 13px;
 }
-/* Buttons read as the "blue" half of the brand (2026-10 client brief: purple
-   panels, blue buttons/details) — var(--accent-2), not var(--accent). It's
-   a light cyan, so white text on it fails contrast badly (~1.8:1); --bg
-   (near-black) on top of it instead clears AAA (~11:1). */
-.btn.primary { background: var(--accent-2); border-color: var(--accent-2); color: var(--bg); }
+/* Primary CTA — modern glass capsule */
+.btn.primary {
+  background: linear-gradient(105deg, rgba(127, 245, 228, 0.95), #2dd4bf 55%, #5eead4);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #041512;
+  box-shadow: 0 8px 28px -10px rgba(45, 212, 191, 0.55);
+}
 .btn.ghost { background: transparent; color: var(--muted); }
 .btn.wide { width: 100%; display: block; text-align: center; }
 .btn.sm { padding: 7px 12px; font-size: 14px; }
@@ -536,7 +557,7 @@ input:focus { outline: 2px solid var(--accent-2); outline-offset: -1px; }
 .footer-brand img { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); }
 .footer-brand span {
   font-weight: 900; letter-spacing: 0.05em; font-size: 14px;
-  background: linear-gradient(90deg, #a78bfa, var(--accent-2));
+  background: linear-gradient(90deg, #2dd4bf, var(--accent-2));
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .footer-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 12px 0; font-size: 14px; color: var(--muted); }
@@ -581,13 +602,13 @@ input:focus { outline: 2px solid var(--accent-2); outline-offset: -1px; }
 .trust-icon.amber { background: rgba(245, 158, 11, 0.14); color: var(--warn); }
 .trust-icon.green { background: rgba(34, 197, 94, 0.14); color: var(--ok); }
 .trust-icon.cyan { background: rgba(34, 211, 238, 0.14); color: var(--accent-2); }
-.trust-icon.purple { background: rgba(139, 92, 246, 0.14); color: var(--accent); }
+.trust-icon.purple { background: rgba(45, 212, 191, 0.14); color: var(--accent); }
 .trust-icon.pink { background: rgba(236, 72, 153, 0.14); color: var(--pink); }
 .trust-icon.blue { background: rgba(59, 130, 246, 0.14); color: var(--blue); }
 .quote-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .avatar {
   width: 38px; height: 38px; flex: none; border-radius: 50%;
-  background: linear-gradient(135deg, #a78bfa, var(--accent-2));
+  background: linear-gradient(135deg, #2dd4bf, var(--accent-2));
   color: #0b0d18; font-weight: 800; font-size: 14px;
   display: grid; place-items: center;
 }
@@ -649,7 +670,7 @@ input:focus { outline: 2px solid var(--accent-2); outline-offset: -1px; }
 /* A little glow throughout — the client's own words: visible from Inicio to
    Soporte, not confined to one section. Kept subtle enough not to fight
    readability: a soft border/shadow, not a full glow-everything treatment. */
-.card { box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.05), 0 6px 22px rgba(0, 0, 0, 0.28); }
+.card { box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 12px 28px -16px rgba(0, 0, 0, 0.72); }
 .btn.primary { box-shadow: 0 0 22px rgba(34, 211, 238, 0.45); }
 .mega { box-shadow: 0 0 30px rgba(139, 92, 246, 0.25); }
 .section-title-lg {
@@ -1419,7 +1440,7 @@ input:focus { outline: 2px solid var(--accent-2); outline-offset: -1px; }
 .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
 .why-item h3 { font-size: 14px; margin: 8px 0 5px; letter-spacing: -0.01em; }
 .why-item p { color: var(--muted); font-size: 12.5px; margin: 0; }
-.why-item.glow-purple { border-color: rgba(139, 92, 246, 0.5); box-shadow: 0 0 16px rgba(139, 92, 246, 0.18); }
+.why-item.glow-purple { border-color: rgba(45, 212, 191, 0.5); box-shadow: 0 0 16px rgba(45, 212, 191, 0.18); }
 .why-item.glow-cyan { border-color: rgba(34, 211, 238, 0.5); box-shadow: 0 0 16px rgba(34, 211, 238, 0.18); }
 .why-item.glow-green { border-color: rgba(34, 197, 94, 0.5); box-shadow: 0 0 16px rgba(34, 197, 94, 0.18); }
 .why-item.glow-pink { border-color: rgba(236, 72, 153, 0.5); box-shadow: 0 0 16px rgba(236, 72, 153, 0.18); }
@@ -1826,7 +1847,7 @@ input:focus { outline: 2px solid var(--accent-2); outline-offset: -1px; }
   flex: none;
   padding: 3px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #a78bfa, var(--accent-2));
+  background: linear-gradient(135deg, #2dd4bf, var(--accent-2));
   box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
 }
 .me-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
@@ -1836,19 +1857,17 @@ input:focus { outline: 2px solid var(--accent-2); outline-offset: -1px; }
    hero with the luchador as a character, motion by default, and the mockup's
    Level Pass density. prefers-reduced-motion still kills the loops. */
 
-/* Jose's first-page canvas is a dark arena, not a flat void: a purple
-   stage-light from above, cooler falloff at the sides, and a vignette.
-   CSS only — we do not paint a Free Fire character into this layer. */
-html { background: #05060d; }
+/* Monkei canvas: deep teal arena with gold/ember falloff — not Jose's purple stage. */
+html { background: #040a0c; }
 body {
-  background-color: #05060d;
+  background-color: #040a0c;
   background-image:
-    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(124, 58, 237, 0.55), transparent 58%),
-    radial-gradient(ellipse 70% 40% at 50% 12%, rgba(139, 92, 246, 0.22), transparent 52%),
-    radial-gradient(ellipse 50% 35% at 100% 40%, rgba(34, 211, 238, 0.07), transparent 50%),
-    radial-gradient(ellipse 50% 35% at 0% 55%, rgba(88, 28, 160, 0.16), transparent 50%),
+    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(45, 212, 191, 0.42), transparent 58%),
+    radial-gradient(ellipse 70% 40% at 50% 12%, rgba(15, 118, 110, 0.22), transparent 52%),
+    radial-gradient(ellipse 50% 35% at 100% 40%, rgba(240, 193, 77, 0.08), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 0% 55%, rgba(255, 122, 69, 0.10), transparent 50%),
     radial-gradient(ellipse 80% 45% at 50% 110%, rgba(0, 0, 0, 0.75), transparent 55%),
-    linear-gradient(180deg, #1a0f32 0%, #0a0818 38%, #05060d 100%);
+    linear-gradient(180deg, #0a2824 0%, #071210 38%, #040a0c 100%);
   background-attachment: fixed;
 }
 body::before {
@@ -1857,10 +1876,10 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0.28;
   background:
-    repeating-linear-gradient(60deg, rgba(139, 92, 246, 0.07) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(-60deg, rgba(139, 92, 246, 0.05) 0 1px, transparent 1px 28px);
+    repeating-linear-gradient(60deg, rgba(45, 212, 191, 0.06) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(-60deg, rgba(240, 193, 77, 0.04) 0 1px, transparent 1px 28px);
 }
 body > * { position: relative; z-index: 1; }
 
@@ -2003,15 +2022,15 @@ body > * { position: relative; z-index: 1; }
 .hx-pass, .hx-vault, .hx-login-scene {
   position: relative;
   overflow: hidden;
-  border-color: rgba(139, 92, 246, 0.45);
+  border-color: rgba(45, 212, 191, 0.45);
   background:
-    radial-gradient(circle at 90% 0%, rgba(139, 92, 246, 0.28), transparent 50%),
+    radial-gradient(circle at 90% 0%, rgba(45, 212, 191, 0.28), transparent 50%),
     var(--surface);
 }
 .hx-pass-head, .hx-vault-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
-.hx-pass .progress-track { height: 10px; margin-top: 12px; background: #0d1020; }
+.hx-pass .progress-track { height: 10px; margin-top: 12px; background: #071210; }
 .hx-pass .progress-fill {
-  background: linear-gradient(90deg, #7c3aed, #c4b5fd);
+  background: linear-gradient(90deg, #0f766e, #5eead4);
   animation: hxFill 1.1s ease both;
 }
 @keyframes hxFill { from { width: 0; } }

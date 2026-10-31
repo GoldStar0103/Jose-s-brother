@@ -1,21 +1,21 @@
 .appbg .layer{position:absolute;inset:0;pointer-events:none}
 /* capsulas difuminadas */
-.appbg .caps i{position:absolute;border-radius:999px;opacity:.5;filter:blur(1px);
-  background:linear-gradient(100deg,rgba(196,181,253,.95),rgba(34,211,238,.85));
-  box-shadow:0 0 40px -6px rgba(167,139,250,.9);animation:capDrift var(--d,26s) var(--ease-io) infinite alternate}
+.appbg .caps i{position:absolute;border-radius:999px;opacity:.45;filter:blur(1px);
+  background:linear-gradient(100deg,rgba(94,234,212,.9),rgba(45,212,191,.75),rgba(240,193,77,.55));
+  box-shadow:0 0 40px -6px rgba(45,212,191,.75);animation:capDrift var(--d,26s) var(--ease-io) infinite alternate}
 @keyframes capDrift{from{transform:translate3d(0,0,0) rotate(var(--r,-18deg))}
   to{transform:translate3d(var(--tx,18px),var(--ty,-26px),0) rotate(calc(var(--r,-18deg) + 8deg))}}
 /* diamantes flotando */
 .appbg .gems i{position:absolute;width:var(--s,22px);height:var(--s,22px);opacity:.85;
-  background:linear-gradient(150deg,#dff7ff,#5ad3f7 42%,#2f7ff0 74%,#c4b5fd);
+  background:linear-gradient(150deg,#e8fff8,#2dd4bf 40%,#0f766e 72%,#f0c14d);
   clip-path:polygon(50% 0,100% 36%,72% 100%,28% 100%,0 36%);
-  filter:drop-shadow(0 0 10px rgba(90,211,247,.75));
+  filter:drop-shadow(0 0 10px rgba(45,212,191,.7));
   animation:gemFloat var(--d,14s) ease-in-out infinite}
 @keyframes gemFloat{0%,100%{transform:translate3d(0,0,0) rotate(-6deg)}
   50%{transform:translate3d(6px,-22px,0) rotate(9deg)}}
 /* chispas de 4 puntas */
 .appbg .sparks i{position:absolute;width:var(--s,10px);height:var(--s,10px);
-  background:radial-gradient(circle,#fff 0 34%,rgba(255,255,255,0) 68%);
+  background:radial-gradient(circle,#fff8e7 0 34%,rgba(240,193,77,0) 68%);
   clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%);
   animation:sparkTwinkle var(--d,4.6s) ease-in-out infinite}
 @keyframes sparkTwinkle{0%,100%{opacity:0;transform:scale(.4)}
@@ -24,17 +24,17 @@
 /* corner brackets + sheen used inside neon panels */
 .frm{position:absolute;inset:6px;pointer-events:none;z-index:8;border-radius:12px;
   background:
-    linear-gradient(#7ce7f7,#7ce7f7) left 0 top 0/26px 2px no-repeat,
-    linear-gradient(#7ce7f7,#7ce7f7) left 0 top 0/2px 26px no-repeat,
-    linear-gradient(#ff6ec7,#ff6ec7) right 0 top 0/26px 2px no-repeat,
-    linear-gradient(#ff6ec7,#ff6ec7) right 0 top 0/2px 26px no-repeat,
-    linear-gradient(#ff6ec7,#ff6ec7) left 0 bottom 0/26px 2px no-repeat,
-    linear-gradient(#ff6ec7,#ff6ec7) left 0 bottom 0/2px 26px no-repeat,
-    linear-gradient(#7ce7f7,#7ce7f7) right 0 bottom 0/26px 2px no-repeat,
-    linear-gradient(#7ce7f7,#7ce7f7) right 0 bottom 0/2px 26px no-repeat;
-  filter:drop-shadow(0 0 6px rgba(124,231,247,.75))}
+    linear-gradient(#5eead4,#5eead4) left 0 top 0/26px 2px no-repeat,
+    linear-gradient(#5eead4,#5eead4) left 0 top 0/2px 26px no-repeat,
+    linear-gradient(#f0c14d,#f0c14d) right 0 top 0/26px 2px no-repeat,
+    linear-gradient(#f0c14d,#f0c14d) right 0 top 0/2px 26px no-repeat,
+    linear-gradient(#ff7a45,#ff7a45) left 0 bottom 0/26px 2px no-repeat,
+    linear-gradient(#ff7a45,#ff7a45) left 0 bottom 0/2px 26px no-repeat,
+    linear-gradient(#5eead4,#5eead4) right 0 bottom 0/26px 2px no-repeat,
+    linear-gradient(#5eead4,#5eead4) right 0 bottom 0/2px 26px no-repeat;
+  filter:drop-shadow(0 0 6px rgba(45,212,191,.55))}
 .shine{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden;border-radius:inherit}
 .shine::after{content:"";position:absolute;top:-20%;left:-40%;width:40%;height:140%;
-  background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.16),rgba(240,193,77,.1),transparent);
   transform:skewX(-18deg);animation:panelShine 5.5s ease-in-out infinite}
 @keyframes panelShine{0%,60%{transform:translateX(0) skewX(-18deg)}100%{transform:translateX(420%) skewX(-18deg)}}
