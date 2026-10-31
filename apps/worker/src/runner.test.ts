@@ -19,9 +19,12 @@ import type {
 } from '@monkei/engine';
 import { loadConfig } from './config.js';
 import {
+  CATALOG_OUTAGE_REALERT_MS,
   CATALOG_SYNC_RETRY_MS,
   CatalogSyncSchedule,
   checkWallet,
+  describeError,
+  newCatalogSyncOutage,
   ORDER_BOUNDARY_KEY,
   runCatalogSync,
   runFulfillmentLoop,
@@ -258,6 +261,38 @@ describe('runCatalogSync', () => {
 
     expect(catalog.products).toEqual([]);
     expect(alerter.sent[0]).toMatchObject({ level: 'warn', title: expect.stringMatching(/failed/) });
+  });
+
+  it('alerts once per outage, repeats hourly, and announces recovery', async () => {
+    // A provider maintenance window retries every 5 minutes for hours.
+    const { deps, alerter, provider } = harness([]);
+    const outage = newCatalogSyncOutage();
+    provider.programCatalog(null, 'HTTP 503');
+
+    await runCatalogSync(deps, outage, 0);
+    await runCatalogSync(deps, outage, CATALOG_SYNC_RETRY_MS);
+    await runCatalogSync(deps, outage, CATALOG_SYNC_RETRY_MS * 2);
+    expect(alerter.sent).toHaveLength(1);
+    expect(alerter.sent[0]).toMatchObject({ level: 'warn', title: expect.stringMatching(/failed/) });
+
+    await runCatalogSync(deps, outage, CATALOG_OUTAGE_REALERT_MS);
+    expect(alerter.sent).toHaveLength(2);
+    expect(alerter.sent[1]?.detail).toMatchObject({ failedAttempts: 4 });
+
+    provider.programCatalog(null);
+    await runCatalogSync(deps, outage, CATALOG_OUTAGE_REALERT_MS + CATALOG_SYNC_RETRY_MS);
+    expect(alerter.sent).toHaveLength(3);
+    expect(alerter.sent[2]).toMatchObject({ level: 'info', title: expect.stringMatching(/recovered/) });
+
+    // A later outage starts fresh.
+    provider.programCatalog(null, 'HTTP 503');
+    await runCatalogSync(deps, outage, CATALOG_OUTAGE_REALERT_MS * 3);
+    expect(alerter.sent).toHaveLength(4);
+  });
+
+  it('describeError includes the cause chain', () => {
+    const err = new TypeError('fetch failed', { cause: new Error('ECONNRESET') });
+    expect(describeError(err)).toBe('TypeError: fetch failed ← caused by: Error: ECONNRESET');
   });
 
   it('survives an alerter that throws', async () => {

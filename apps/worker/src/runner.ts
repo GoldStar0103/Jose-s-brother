@@ -57,6 +57,32 @@ export interface RunnerDeps {
   config: WorkerConfig;
 }
 
+/** Where a run of consecutive catalog-sync failures stands, so it is alerted once. */
+export interface CatalogSyncOutage {
+  failedSince: number | null;
+  lastAlertAt: number | null;
+  failures: number;
+}
+
+export function newCatalogSyncOutage(): CatalogSyncOutage {
+  return { failedSince: null, lastAlertAt: null, failures: 0 };
+}
+
+/**
+ * `String(err)` for an error, plus the `cause` chain. Node's `fetch` reports
+ * every transport failure as a bare "TypeError: fetch failed" and keeps the
+ * real reason (ENOTFOUND, ECONNRESET, a certificate error…) on `cause`.
+ */
+export function describeError(err: unknown): string {
+  const parts: string[] = [];
+  let current: unknown = err;
+  for (let depth = 0; current !== undefined && current !== null && depth < 4; depth++) {
+    parts.push(String(current));
+    current = current instanceof Error ? current.cause : undefined;
+  }
+  return parts.join(' ← caused by: ');
+}
+
 /**
  * Held for the whole of one `fulfillOrder` call, and by the catalog sync.
  *
@@ -305,7 +331,11 @@ export class WalletAlertSchedule {
  * and survived: a catalog endpoint having a bad minute must not stop the
  * worker delivering orders that are already paid for.
  */
-export async function runCatalogSync(deps: RunnerDeps): Promise<CatalogSyncResult | null> {
+export async function runCatalogSync(
+  deps: RunnerDeps,
+  outage: CatalogSyncOutage = newCatalogSyncOutage(),
+  now: number = Date.now(),
+): Promise<CatalogSyncResult | null> {
   const { catalog, provider, lock, orderBoundary, alerter } = deps;
 
   // The `Alerter` contract is never to throw, but this runs on the sweep loop
@@ -321,12 +351,38 @@ export async function runCatalogSync(deps: RunnerDeps): Promise<CatalogSyncResul
       lock.withLock(PROVIDER_LOCK_KEY, () => syncCatalog({ store: catalog, provider })),
     );
   } catch (err) {
-    console.error(`[catalog] Sync failed: ${String(err)}`);
+    const error = describeError(err);
+    console.error(`[catalog] Sync failed: ${error}`);
+    outage.failedSince ??= now;
+    outage.failures += 1;
     // Warn, not critical: a failed sync changes nothing — the previous catalog
     // stays exactly as it was — and the retry comes round shortly. If the
     // provider's purchase endpoints are down too, fulfilment says so itself.
-    await send('warn', 'Provider catalog sync failed — will retry', { error: String(err) });
+    //
+    // Retries run every few minutes, so a provider maintenance window would
+    // otherwise send the same message all night. Say it once, repeat hourly
+    // while it lasts, and announce the recovery below.
+    const due = outage.lastAlertAt === null || now - outage.lastAlertAt >= CATALOG_OUTAGE_REALERT_MS;
+    if (due) {
+      outage.lastAlertAt = now;
+      await send('warn', 'Provider catalog sync failed — will retry', {
+        error,
+        failingSince: new Date(outage.failedSince).toISOString(),
+        failedAttempts: outage.failures,
+      });
+    }
     return null;
+  }
+
+  if (outage.failedSince !== null) {
+    const { failedSince, failures } = outage;
+    outage.failedSince = null;
+    outage.lastAlertAt = null;
+    outage.failures = 0;
+    await send('info', 'Provider catalog sync recovered', {
+      failingSince: new Date(failedSince).toISOString(),
+      failedAttempts: failures,
+    });
   }
 
   const alerts = catalogSyncAlerts(result);
@@ -341,6 +397,9 @@ export async function runCatalogSync(deps: RunnerDeps): Promise<CatalogSyncResul
 /** After a failed sync, try again this soon rather than a full interval later. */
 export const CATALOG_SYNC_RETRY_MS = 5 * 60_000;
 
+/** While syncs keep failing, repeat the alert this often rather than on every retry. */
+export const CATALOG_OUTAGE_REALERT_MS = 60 * 60_000;
+
 /**
  * When the next catalog sync is due.
  *
@@ -352,6 +411,7 @@ export const CATALOG_SYNC_RETRY_MS = 5 * 60_000;
  */
 export class CatalogSyncSchedule {
   private nextAt: number | null = null;
+  private readonly outage = newCatalogSyncOutage();
 
   constructor(
     private readonly intervalMs: number,
@@ -372,7 +432,7 @@ export class CatalogSyncSchedule {
   ): Promise<{ ran: boolean; result: CatalogSyncResult | null }> {
     if (!this.isDue(now)) return { ran: false, result: null };
 
-    const result = await runCatalogSync(deps);
+    const result = await runCatalogSync(deps, this.outage, now);
     // Scheduled from when the run was due, not when it finished, and sooner
     // after a failure: on the day the provider migrates, an hour between
     // attempts is an hour of not knowing.

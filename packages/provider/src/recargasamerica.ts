@@ -173,7 +173,10 @@ export class RecargasAmericaProvider implements TopupProvider {
     } catch (err) {
       const isTimeout = err instanceof Error && err.name === 'TimeoutError';
       record.durationMs = Date.now() - started;
-      record.error = isTimeout ? `timeout after ${this.timeoutMs}ms` : String(err);
+      // Node's fetch hides the real reason (ENOTFOUND, ECONNRESET, a TLS error…)
+      // on `cause`; "TypeError: fetch failed" alone says nothing.
+      const cause = err instanceof Error && err.cause ? ` (cause: ${String(err.cause)})` : '';
+      record.error = isTimeout ? `timeout after ${this.timeoutMs}ms` : `${String(err)}${cause}`;
       this.onApiCall?.(record);
 
       return { ok: false, httpStatus: null, code: null, message: record.error, transport: true };

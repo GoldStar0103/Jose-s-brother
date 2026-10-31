@@ -174,6 +174,14 @@ describe('validatePlayer', () => {
     expect(result).toEqual({ found: true, nickname: 'ShadowFF' });
   });
 
+  it('keeps the underlying cause of a transport failure in the error', async () => {
+    const failingFetch = (async () => {
+      throw new TypeError('fetch failed', { cause: new Error('getaddrinfo ENOTFOUND panel.example') });
+    }) as unknown as typeof fetch;
+
+    await expect(provider(failingFetch).listFreeFireCatalog()).rejects.toThrow(/ENOTFOUND/);
+  });
+
   it('throws if the retry also fails, without retrying a second time', async () => {
     const calls: Array<{ status: number; body: unknown }> = [
       { status: 502, body: { success: false, error: 'Upstream error' } },
