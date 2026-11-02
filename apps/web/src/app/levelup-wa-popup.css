@@ -202,7 +202,7 @@
   object-position:center center;
 }
 
-.wa-intro{min-width:0;text-align:left;padding-top:2px}
+.wa-intro{min-width:0;text-align:left;padding-top:2px;position:relative;z-index:3}
 .wa-kicker{
   margin:0;
   font-size:16px;font-weight:700;line-height:1.15;color:#fff;

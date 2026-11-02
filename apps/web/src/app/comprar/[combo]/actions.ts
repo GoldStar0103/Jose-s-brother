@@ -130,7 +130,7 @@ export interface CheckoutState {
  * the 100 💎 one is still the cheapest), and validating against a dead id would
  * fail every customer at step one.
  */
-async function validationProductId(): Promise<string | null> {
+export async function validationProductId(): Promise<string | null> {
   const [row] = await getDb()
     .select({ providerProductId: baseProducts.providerProductId })
     .from(baseProducts)
