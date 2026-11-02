@@ -30,9 +30,11 @@
   /* Force a raster clip for the rounded corners. On some desktop GPUs,
      overflow:hidden + a fractional (cqw) border-radius lets the composited
      artwork leak a sliver past the curve at each corner; mask-image makes
-     Chromium clip to the exact alpha mask instead of the geometric path. */
-  -webkit-mask-image: -webkit-radial-gradient(#fff, #fff);
-  mask-image: radial-gradient(#fff, #fff);
+     Chromium clip to the exact alpha mask instead of the geometric path.
+     Must be a LINEAR gradient — a radial one defaults to an ellipse that
+     falls short of the corners on a wide card, clipping them away instead. */
+  -webkit-mask-image: -webkit-linear-gradient(#fff, #fff);
+  mask-image: linear-gradient(#fff, #fff);
 }
 
 .leaderboard.ranking.rk:hover {
