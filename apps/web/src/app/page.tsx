@@ -12,7 +12,6 @@ import { getDb } from '../lib/server';
 import { diamonds, mxn, roundDownSignificant } from '../lib/format';
 import { flyerUrl } from '../lib/assets';
 import { siteName } from '@monkei/shared';
-import { LiveToasts } from './live-toasts';
 import { DiamondOfferCard } from './diamond-offer-card';
 import { TopCompradoresCard } from './top-compradores-card';
 import { PromocionesCard } from './promociones-card';
@@ -323,7 +322,6 @@ export default async function HomePage() {
             </section>
           </div>
         </div>
-        <LiveToasts />
       </>
   );
 }
