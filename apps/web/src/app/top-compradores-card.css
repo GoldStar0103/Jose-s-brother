@@ -27,6 +27,12 @@
   box-shadow: none !important;
   border-radius: 4.2cqw !important;
   transform: none !important;
+  /* Force a raster clip for the rounded corners. On some desktop GPUs,
+     overflow:hidden + a fractional (cqw) border-radius lets the composited
+     artwork leak a sliver past the curve at each corner; mask-image makes
+     Chromium clip to the exact alpha mask instead of the geometric path. */
+  -webkit-mask-image: -webkit-radial-gradient(#fff, #fff);
+  mask-image: radial-gradient(#fff, #fff);
 }
 
 .leaderboard.ranking.rk:hover {

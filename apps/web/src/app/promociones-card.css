@@ -11,6 +11,11 @@
   aspect-ratio: 1908 / 780;
   overflow: hidden;
   border-radius: 5.35cqw;
+  /* Force a raster clip — works around a desktop-GPU corner leak where
+     overflow:hidden + a fractional (cqw) border-radius lets composited
+     children show a sliver past the curve at each corner. */
+  -webkit-mask-image: -webkit-radial-gradient(#fff, #fff);
+  mask-image: radial-gradient(#fff, #fff);
   color: #f9f9fb;
   background: linear-gradient(90deg, #001715 0%, #000d15 40%, #00121b 77%, #002638 100%);
   box-shadow:
