@@ -1,9 +1,15 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
+
+function isExternalHref(href: string): boolean {
+  return /^https?:\/\//i.test(href);
+}
 
 export function SupportFab({ supportHref }: { supportHref: string }) {
   const [open, setOpen] = useState(false);
+  const external = isExternalHref(supportHref);
 
   return (
     <div className="fab">
@@ -37,12 +43,21 @@ export function SupportFab({ supportHref }: { supportHref: string }) {
             </div>
           </div>
           <p>¿Dudas con tu recarga o con tu pedido? Escríbenos por WhatsApp y lo vemos contigo.</p>
-          <a className="btn btn-wa btn-block btn-sm" href={supportHref} target="_blank" rel="noreferrer">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.4A10 10 0 1 0 12 2z" />
-            </svg>
-            Abrir WhatsApp
-          </a>
+          {external ? (
+            <a className="btn btn-wa btn-block btn-sm" href={supportHref} target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.4A10 10 0 1 0 12 2z" />
+              </svg>
+              Abrir WhatsApp
+            </a>
+          ) : (
+            <Link className="btn btn-wa btn-block btn-sm" href={supportHref}>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.4A10 10 0 1 0 12 2z" />
+              </svg>
+              Ir a soporte
+            </Link>
+          )}
         </div>
       )}
     </div>

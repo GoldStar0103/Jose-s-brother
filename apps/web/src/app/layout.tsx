@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Outfit } from 'next/font/google';
+import { Montserrat, Outfit } from 'next/font/google';
 import { facebookDomainVerification, googleSiteVerification } from '../lib/google-verification';
 import { siteOrigin } from '../lib/site';
 import { metaPixelId, tiktokPixelId } from '../lib/pixel-ids';
@@ -29,8 +29,23 @@ import './levelup-wa-popup.css';
 import './levelup-home-polish.css';
 import './monkei-theme.css';
 import './monkei-3d.css';
+import './diamond-offer-card.css';
+import './neon-monkei-header.css';
+import './top-compradores-card.css';
+import './promociones-card.css';
+import './neon-support-card.css';
+import './metrics-modern.css';
+import './why-steps-modern.css';
+import './neon-bottom-nav.css';
+import './offers-3d-buttons.css';
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap' });
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '700', '800'],
+  variable: '--font-montserrat',
+});
 
 const DESCRIPTION =
   'Recargas de diamantes para Free Fire directo a tu cuenta. Entrega automática, pago seguro.';
@@ -94,20 +109,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const tiktokId = tiktokPixelId();
   const channelUrl = whatsappChannelUrl();
   const waSupport = supportUrl() ?? '/soporte';
+  const waFooterHref = channelUrl ?? waSupport;
+  const waFooterExternal = /^https?:\/\//i.test(waFooterHref);
   const social = socialLinks();
   const brand = siteName();
   const legal = legalIdentity();
 
   return (
-    <html lang="es-MX" className={outfit.className}>
+    <html lang="es-MX" className={`${outfit.className} ${montserrat.variable}`}>
       <body>
         {metaId && <MetaPixel pixelId={metaId} />}
         {tiktokId && <TikTokPixel pixelId={tiktokId} />}
         <AppBg />
         <RevealInit />
-        {channelUrl && <WhatsappChannelPopup channelUrl={channelUrl} />}
-        <BackButton />
+        {channelUrl && <WhatsappChannelPopup channelUrl={channelUrl} brandName={brand} />}
         <SiteHeader />
+        <div className="page-back">
+          <BackButton />
+        </div>
         <div className="wrap">
           {children}
           <footer className="foot">
@@ -182,7 +201,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     </li>
                   )}
                   <li>
-                    <a href={channelUrl ?? waSupport} target="_blank" rel="noreferrer">
+                    <a
+                      href={waFooterHref}
+                      {...(waFooterExternal ? { target: '_blank', rel: 'noreferrer' } : {})}
+                    >
                       WhatsApp
                     </a>
                   </li>

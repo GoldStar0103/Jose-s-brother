@@ -1,0 +1,214 @@
+/* Modern metric tiles — clean glass, soft accents, no heavy neon/pixel look */
+
+.metrics {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.metrics .metric {
+  position: relative;
+  display: flex !important;
+  flex-direction: column;
+  gap: 6px !important;
+  min-height: 108px;
+  padding: 14px 14px 12px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(10, 18, 22, 0.78) !important;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 48%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 10px 24px -18px rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(14px) saturate(1.15) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(1.15) !important;
+  overflow: hidden !important;
+  transform: none !important;
+}
+
+.metrics .metric::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 14px !important;
+  right: 14px !important;
+  top: 0 !important;
+  height: 2px !important;
+  border-radius: 999px !important;
+  inset: auto !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+  background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.7), transparent) !important;
+}
+
+.metrics .metric::after {
+  content: '';
+  position: absolute;
+  right: -18%;
+  top: -40%;
+  width: 58%;
+  height: 78%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.12), transparent 68%);
+  pointer-events: none;
+}
+
+.metrics .metric--rating::before {
+  background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.75), transparent) !important;
+}
+.metrics .metric--rating::after {
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.12), transparent 68%);
+}
+.metrics .metric--delivery::before {
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.75), transparent) !important;
+}
+.metrics .metric--delivery::after {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.12), transparent 68%);
+}
+.metrics .metric--live::before {
+  background: linear-gradient(90deg, transparent, rgba(251, 113, 133, 0.7), transparent) !important;
+}
+
+.metrics .metric:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(94, 234, 212, 0.28) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 14px 28px -16px rgba(0, 0, 0, 0.7) !important;
+}
+
+.metrics .metric-head,
+.metrics .metric .top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 18px;
+}
+
+.metrics .metric .lbl {
+  font-size: 10px !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: rgba(226, 238, 236, 0.62) !important;
+}
+
+.metrics .live-dot {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  background: #fb7185 !important;
+  box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.18) !important;
+  animation: metric-live-pulse 1.8s ease-in-out infinite !important;
+}
+
+@keyframes metric-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.92);
+  }
+}
+
+.metrics .metric-value,
+.metrics .metric .odo,
+.metrics .metric .big {
+  position: relative;
+  z-index: 1;
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 4px !important;
+  margin: 2px 0 0 !important;
+  font-size: 28px !important;
+  font-weight: 750 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1 !important;
+  font-variant-numeric: tabular-nums !important;
+  color: #f4fbf9 !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: #f4fbf9 !important;
+}
+
+.metrics .metric .odo small {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #5eead4 !important;
+  -webkit-text-fill-color: #5eead4 !important;
+}
+
+.metrics .metric .big svg {
+  width: 15px !important;
+  height: 15px !important;
+  color: #fbbf24 !important;
+  flex: none;
+  align-self: center;
+}
+
+.metrics .metric .sub {
+  position: relative;
+  z-index: 1;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+  color: rgba(186, 210, 206, 0.72) !important;
+}
+
+.metrics .metric .bar {
+  position: relative;
+  z-index: 1;
+  height: 4px !important;
+  margin-top: auto !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  overflow: hidden !important;
+}
+
+.metrics .metric .bar i {
+  display: block !important;
+  height: 100% !important;
+  width: 62%;
+  border-radius: inherit !important;
+  background: linear-gradient(90deg, #2dd4bf, #67e8f9) !important;
+}
+
+.metrics .metric--customers .bar i {
+  background: linear-gradient(90deg, #14b8a6, #5eead4) !important;
+}
+
+.metrics .metric--live .bar i {
+  background: linear-gradient(90deg, #fb7185, #2dd4bf) !important;
+}
+
+@media (min-width: 760px) {
+  .metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .metrics .metric {
+    min-height: 118px;
+    padding: 16px !important;
+  }
+
+  .metrics .metric-value,
+  .metrics .metric .odo,
+  .metrics .metric .big {
+    font-size: 30px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metrics .live-dot {
+    animation: none !important;
+  }
+  .metrics .metric:hover {
+    transform: none !important;
+  }
+}

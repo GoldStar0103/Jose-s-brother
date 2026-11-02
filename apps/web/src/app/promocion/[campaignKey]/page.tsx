@@ -47,7 +47,7 @@ export default async function PromotionPage({
 
   return (
     <main className="page">
-      <Link href="/" className="back">
+      <Link href="/promociones" className="back">
         ← Volver
       </Link>
 

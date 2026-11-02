@@ -1,0 +1,148 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1914" height="510" viewBox="0 0 1914 510" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Leaderboard card">
+<rect width="1914" height="510" rx="100" fill="url(#paint0_linear_0_8)"/>
+<path id="Border highlight" d="M101 5.5H1813C1865.19 5.5 1907.5 47.8091 1907.5 100V407C1907.5 459.191 1865.19 501.5 1813 501.5H101C48.8091 501.5 6.5 459.191 6.5 407V100C6.5 47.8091 48.8091 5.5 101 5.5Z" fill="url(#paint1_linear_0_8)" stroke-width="3" stroke="url(#paint2_linear_0_8)"/>
+<rect id="Card interior" x="15" y="16" width="1884" height="479" rx="84" fill="url(#paint3_linear_0_8)"/>
+<path id="Inset outline" d="M101 21H1813C1857.18 21 1893 56.8172 1893 101V410C1893 454.183 1857.18 490 1813 490H101C56.8172 490 21 454.183 21 410V101C21 56.8172 56.8172 21 101 21Z" stroke-width="2" stroke="url(#paint4_linear_0_8)"/>
+<path id="Architectural facets" opacity="0.12" d="M20 460.936L379.547 20H510.291L20 491V460.936ZM434.023 20H1109.53L1381.92 230.447L1207.59 320.638L728.198 250.489L434.023 20ZM1360.13 491L1894 20H1795.94L1272.97 491H1360.13Z" fill="#12333C"/>
+<path id="Diagonal accent" opacity="0.65" d="M20 20H20.001V20.001H20V20ZM1894 490.999H1894V491H1894V490.999ZM1625 491L1894 223V284L1680 491H1625ZM1480 77L1535 20H1550L1496 77H1480ZM1650 77L1707 20H1722L1665 77H1650Z" fill="#005273"/>
+<path id="Fine accent rules" opacity="0.7" d="M20 20L20.001 20.001M1894 490.999L1894 491M1680 490L1894 278M1481 76L1537 20M1678 76L1735 20" stroke-width="1.5" stroke="#04B5CD"/>
+<path id="Gold diagonal" opacity="0.9" d="M20 20L20.001 20.001M319.999 490.999L320 491M20 461L260 221" stroke-width="2" stroke="#E6BC43"/>
+<g id="Dot texture" clip-path="url(#clip0_0_8)">
+<circle id="Texture dot" opacity="0.4" cx="1861.5" cy="337.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_2" opacity="0.4" cx="1846.5" cy="337.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_3" opacity="0.4" cx="1831.5" cy="337.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_4" opacity="0.4" cx="1816.5" cy="337.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_5" opacity="0.4" cx="1801.5" cy="337.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_6" opacity="0.4" cx="1786.5" cy="337.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_7" opacity="0.4" cx="1771.5" cy="337.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_8" opacity="0.4" cx="1756.5" cy="337.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_9" opacity="0.4" cx="1741.5" cy="337.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_10" opacity="0.4" cx="1726.5" cy="337.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_11" opacity="0.4" cx="1864.5" cy="352.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_12" opacity="0.4" cx="1849.5" cy="352.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_13" opacity="0.4" cx="1834.5" cy="352.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_14" opacity="0.4" cx="1819.5" cy="352.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_15" opacity="0.4" cx="1804.5" cy="352.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_16" opacity="0.4" cx="1789.5" cy="352.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_17" opacity="0.4" cx="1774.5" cy="352.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_18" opacity="0.4" cx="1759.5" cy="352.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_19" opacity="0.4" cx="1744.5" cy="352.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_20" opacity="0.4" cx="1729.5" cy="352.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_21" opacity="0.4" cx="1867.5" cy="367.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_22" opacity="0.4" cx="1852.5" cy="367.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_23" opacity="0.4" cx="1837.5" cy="367.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_24" opacity="0.4" cx="1822.5" cy="367.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_25" opacity="0.4" cx="1807.5" cy="367.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_26" opacity="0.4" cx="1792.5" cy="367.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_27" opacity="0.4" cx="1777.5" cy="367.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_28" opacity="0.4" cx="1762.5" cy="367.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_29" opacity="0.4" cx="1747.5" cy="367.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_30" opacity="0.4" cx="1732.5" cy="367.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_31" opacity="0.4" cx="1870.5" cy="382.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_32" opacity="0.4" cx="1855.5" cy="382.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_33" opacity="0.4" cx="1840.5" cy="382.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_34" opacity="0.4" cx="1825.5" cy="382.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_35" opacity="0.4" cx="1810.5" cy="382.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_36" opacity="0.4" cx="1795.5" cy="382.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_37" opacity="0.4" cx="1780.5" cy="382.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_38" opacity="0.4" cx="1765.5" cy="382.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_39" opacity="0.4" cx="1750.5" cy="382.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_40" opacity="0.4" cx="1735.5" cy="382.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_41" opacity="0.4" cx="1873.5" cy="397.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_42" opacity="0.4" cx="1858.5" cy="397.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_43" opacity="0.4" cx="1843.5" cy="397.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_44" opacity="0.4" cx="1828.5" cy="397.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_45" opacity="0.4" cx="1813.5" cy="397.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_46" opacity="0.4" cx="1798.5" cy="397.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_47" opacity="0.4" cx="1783.5" cy="397.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_48" opacity="0.4" cx="1768.5" cy="397.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_49" opacity="0.4" cx="1753.5" cy="397.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_50" opacity="0.4" cx="1738.5" cy="397.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_51" opacity="0.4" cx="1876.5" cy="412.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_52" opacity="0.4" cx="1861.5" cy="412.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_53" opacity="0.4" cx="1846.5" cy="412.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_54" opacity="0.4" cx="1831.5" cy="412.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_55" opacity="0.4" cx="1816.5" cy="412.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_56" opacity="0.4" cx="1801.5" cy="412.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_57" opacity="0.4" cx="1786.5" cy="412.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_58" opacity="0.4" cx="1771.5" cy="412.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_59" opacity="0.4" cx="1756.5" cy="412.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_60" opacity="0.4" cx="1741.5" cy="412.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_61" opacity="0.4" cx="1879.5" cy="427.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_62" opacity="0.4" cx="1864.5" cy="427.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_63" opacity="0.4" cx="1849.5" cy="427.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_64" opacity="0.4" cx="1834.5" cy="427.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_65" opacity="0.4" cx="1819.5" cy="427.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_66" opacity="0.4" cx="1804.5" cy="427.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_67" opacity="0.4" cx="1789.5" cy="427.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_68" opacity="0.4" cx="1774.5" cy="427.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_69" opacity="0.4" cx="1759.5" cy="427.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_70" opacity="0.4" cx="1744.5" cy="427.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_71" opacity="0.4" cx="1882.5" cy="442.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_72" opacity="0.4" cx="1867.5" cy="442.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_73" opacity="0.4" cx="1852.5" cy="442.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_74" opacity="0.4" cx="1837.5" cy="442.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_75" opacity="0.4" cx="1822.5" cy="442.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_76" opacity="0.4" cx="1807.5" cy="442.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_77" opacity="0.4" cx="1792.5" cy="442.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_78" opacity="0.4" cx="1777.5" cy="442.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_79" opacity="0.4" cx="1762.5" cy="442.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_80" opacity="0.4" cx="1747.5" cy="442.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_81" opacity="0.4" cx="1885.5" cy="457.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_82" opacity="0.4" cx="1870.5" cy="457.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_83" opacity="0.4" cx="1855.5" cy="457.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_84" opacity="0.4" cx="1840.5" cy="457.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_85" opacity="0.4" cx="1825.5" cy="457.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_86" opacity="0.4" cx="1810.5" cy="457.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_87" opacity="0.4" cx="1795.5" cy="457.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_88" opacity="0.4" cx="1780.5" cy="457.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_89" opacity="0.4" cx="1765.5" cy="457.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_90" opacity="0.4" cx="1750.5" cy="457.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_91" opacity="0.4" cx="1888.5" cy="472.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_92" opacity="0.4" cx="1873.5" cy="472.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_93" opacity="0.4" cx="1858.5" cy="472.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_94" opacity="0.4" cx="1843.5" cy="472.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_95" opacity="0.4" cx="1828.5" cy="472.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_96" opacity="0.4" cx="1813.5" cy="472.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_97" opacity="0.4" cx="1798.5" cy="472.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_98" opacity="0.4" cx="1783.5" cy="472.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_99" opacity="0.4" cx="1768.5" cy="472.5" r="2.5" fill="#00566A"/>
+<circle id="Texture dot_100" opacity="0.4" cx="1753.5" cy="472.5" r="2.5" fill="#00566A"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_8" x1="0" y1="0" x2="1914" y2="0" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFE773"/>
+<stop offset="0.25" stop-color="#FFE776"/>
+<stop offset="0.5" stop-color="#E6BD37"/>
+<stop offset="0.75" stop-color="#00F5CD"/>
+<stop offset="1" stop-color="#00E4EB"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_8" x1="5" y1="4" x2="1909" y2="4" gradientUnits="userSpaceOnUse">
+<stop stop-color="#A8770A"/>
+<stop offset="0.5" stop-color="#423A16"/>
+<stop offset="1" stop-color="#00B9B8"/>
+</linearGradient>
+<linearGradient id="paint2_linear_0_8" x1="5" y1="4" x2="1909" y2="4" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFF7A1"/>
+<stop offset="0.5" stop-color="#FFE885"/>
+<stop offset="1" stop-color="#00ECEE"/>
+</linearGradient>
+<linearGradient id="paint3_linear_0_8" x1="15" y1="16" x2="1899" y2="16" gradientUnits="userSpaceOnUse">
+<stop stop-color="#171A0D"/>
+<stop offset="0.25" stop-color="#04151C"/>
+<stop offset="0.5" stop-color="#001119"/>
+<stop offset="0.75" stop-color="#00121A"/>
+<stop offset="1" stop-color="#001419"/>
+</linearGradient>
+<linearGradient id="paint4_linear_0_8" x1="20" y1="20" x2="1894" y2="20" gradientUnits="userSpaceOnUse">
+<stop stop-color="#514420"/>
+<stop offset="0.5" stop-color="#113847"/>
+<stop offset="1" stop-color="#003943"/>
+</linearGradient>
+<clipPath id="clip0_0_8">
+<rect width="150" height="148" fill="white" transform="translate(1724 335)"/>
+</clipPath>
+</defs>
+</svg>

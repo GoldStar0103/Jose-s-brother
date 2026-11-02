@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { getPublicTop50, listSeasonHistory } from '@monkei/db';
 import { getDb } from '../../lib/server.js';
 import { avatarUrl } from '../../lib/assets.js';
-import { dateLabel, diamonds, initials } from '../../lib/format.js';
+import { dateLabel, diamonds } from '../../lib/format.js';
+import { PlayerAvatar } from '../player-avatar';
 
 export const metadata: Metadata = {
   title: 'Ranking',
@@ -13,22 +14,26 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
-const MEDALS = ['🥇', '🥈', '🥉'];
 const PAGE_SIZE = 10;
+
+function Medal({ rank, size }: { rank: number; size: number }) {
+  if (rank < 1 || rank > 3) {
+    return <div style={{ fontSize: size * 0.58, fontWeight: 700 }}>#{rank}</div>;
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`/lu/nuevo/top-compradores/medal-${rank}.png`}
+      alt=""
+      width={size}
+      height={size}
+      style={{ display: 'inline-block' }}
+    />
+  );
+}
 
 function daysRemaining(endsAt: Date): number {
   return Math.max(0, Math.ceil((endsAt.getTime() - Date.now()) / 86_400_000));
-}
-
-function Avatar({ url, name, size }: { url: string | null; name: string; size: number }) {
-  return url ? (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={url} alt="" width={size} height={size} style={{ borderRadius: '50%', objectFit: 'cover' }} />
-  ) : (
-    <div className="avatar" aria-hidden="true" style={{ width: size, height: size, fontSize: size * 0.4 }}>
-      {initials(name)}
-    </div>
-  );
 }
 
 export default async function RankingPage({
@@ -118,9 +123,9 @@ function Top50Tab({
                 className={`card rk-podium-card rk-podium-${i + 1}`}
                 style={{ flex: 1, textAlign: 'center', order: i === 0 ? 2 : i === 1 ? 1 : 3 }}
               >
-                <div style={{ fontSize: 28 }}>{MEDALS[player.rank - 1]}</div>
+                <Medal rank={player.rank} size={40} />
                 <div style={{ margin: '4px auto', width: 'fit-content' }}>
-                  <Avatar url={avatarUrl(player.avatarAssetUrl)} name={name} size={48} />
+                  <PlayerAvatar url={avatarUrl(player.avatarAssetUrl)} size={48} />
                 </div>
                 <div style={{ fontWeight: 700 }}>{name}</div>
                 <div className="hint">{diamonds(player.seasonalDiamonds)} 💎</div>
@@ -142,7 +147,7 @@ function Top50Tab({
             <span className="mono" style={{ width: 28 }}>
               #{player.rank}
             </span>
-            <Avatar url={avatarUrl(player.avatarAssetUrl)} name={name} size={32} />
+            <PlayerAvatar url={avatarUrl(player.avatarAssetUrl)} size={32} />
             <span style={{ fontWeight: 600 }}>{name}</span>
             <div className="spacer" />
             <span className="hint">{diamonds(player.seasonalDiamonds)} 💎</span>
@@ -218,9 +223,9 @@ function SalonDeLaFamaTab({ history }: { history: Awaited<ReturnType<typeof list
                     className={`card rk-podium-card rk-podium-${p.position}`}
                     style={{ flex: 1, textAlign: 'center' }}
                   >
-                    <div style={{ fontSize: 24 }}>{MEDALS[p.position - 1] ?? `#${p.position}`}</div>
+                    <Medal rank={p.position} size={34} />
                     <div style={{ margin: '4px auto', width: 'fit-content' }}>
-                      <Avatar url={avatarUrl(p.avatarAssetUrlSnapshot)} name={name} size={40} />
+                      <PlayerAvatar url={avatarUrl(p.avatarAssetUrlSnapshot)} size={40} />
                     </div>
                     <div style={{ fontWeight: 700, fontSize: 14 }}>{name}</div>
                     <div className="hint">{diamonds(p.seasonalDiamonds)} 💎</div>

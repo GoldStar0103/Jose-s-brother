@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="406.517" height="349.4" viewBox="0 0 406.517 349.4" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="Right lower diagonal panel" d="M231.017 108.896L406.017 0.896123V213.896L170.017 348.896L0.0166574 343.896C20.0167 343.229 37.6833 333.896 53.0167 315.896L231.017 108.896Z" fill="url(#paint0_linear_0_55)" stroke="black"/>
+<defs>
+<linearGradient id="paint0_linear_0_55" x1="0.0166574" y1="174.896" x2="406.017" y2="174.896" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00232C"/>
+<stop offset="0.5" stop-color="#001017"/>
+<stop offset="1" stop-color="#00445C"/>
+</linearGradient>
+</defs>
+</svg>

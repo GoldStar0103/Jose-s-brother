@@ -1,279 +1,416 @@
 /* ==========================================================================
-   WhatsApp channel popup — pixel-matched to levelup-store-propuestas /home
-   Loaded AFTER levelup-home.css so these rules win over the older bottom-sheet.
+   WhatsApp / welcome popup — modern neon sheet (#00fd91)
    ========================================================================== */
 
 @keyframes ovIn{from{opacity:0}to{opacity:1}}
 @keyframes sheetIn{
-  0%{opacity:0;transform:translateY(26px) scale(.93)}
+  0%{opacity:0;transform:translateY(20px) scale(.97)}
   100%{opacity:1;transform:none}
 }
-@keyframes bubbleBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@keyframes shapeFloat{
-  0%,100%{transform:translate3d(0,0,0) rotate(0)}
-  50%{transform:translate3d(4px,-12px,0) rotate(10deg)}
+@keyframes waRingPulse{
+  0%,100%{opacity:.7;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}
 }
-@keyframes sweep{0%,76%{left:-80%;opacity:0}78%{opacity:1}100%{left:135%;opacity:1}}
-@keyframes rigSway{
-  0%,100%{transform:translate3d(0,0,0) rotate(-.4deg)}
-  50%{transform:translate3d(-2px,-6px,0) rotate(.5deg)}
+/* Gentle float — amplitude kept small; parents use overflow:visible so frames never clip */
+@keyframes waCharFloat{
+  0%,100%{transform:translate(-50%,-50%) translateY(0)}
+  50%{transform:translate(-50%,-50%) translateY(-5px)}
 }
-@keyframes rigBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
 
 .wa-overlay{
   position:fixed!important;inset:0;z-index:200;
   display:flex!important;
   align-items:center!important;
   justify-content:center!important;
-  padding:16px;
-  background:rgba(4,3,10,.62);
-  backdrop-filter:blur(10px) saturate(1.1);
-  -webkit-backdrop-filter:blur(10px) saturate(1.1);
+  padding:14px;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
   overflow:hidden;
-  animation:ovIn .3s ease-out both;
+  animation:ovIn .28s ease-out both;
 }
 
 .wa-sheet{
+  --wa-neon:#00fd91;
+  --wa-neon-soft:#5bffb5;
   position:relative;
-  display:block!important;
-  flex:0 0 auto!important;
-  align-self:center!important;
+  display:flex;
+  flex-direction:column;
+  gap:13px;
   width:100%;
-  max-width:404px;
-  height:auto!important;
-  min-height:0!important;
-  max-height:min(92vh,900px);
+  max-width:400px;
   margin:0;
-  padding:0!important;
+  padding:16px 14px 12px;
   overflow:visible;
-  border-radius:22px;
-  border:1.5px solid rgba(37,211,102,.85);
-  background:linear-gradient(180deg,#0a1310 0%,#0b0a14 40%,#0a0710 100%);
+  border-radius:20px;
+  border:2px solid var(--wa-neon);
+  background:#060907;
   box-shadow:
-    0 0 0 1px rgba(37,211,102,.25),
-    0 0 34px -4px rgba(37,211,102,.55),
-    0 34px 70px -30px rgba(0,0,0,.95);
-  animation:sheetIn .62s cubic-bezier(.2,1.25,.35,1) both;
+    0 0 0 1px rgba(0,253,145,.25),
+    0 0 28px rgba(0,253,145,.45),
+    0 0 56px -10px rgba(0,253,145,.35),
+    0 28px 60px -22px rgba(0,0,0,.95);
+  animation:sheetIn .48s cubic-bezier(.22,1,.36,1) both;
+  isolation:isolate;
 }
 
-/* ---- header graphic ---- */
-.wa-top{
-  position:relative;
-  height:220px;
-  overflow:hidden;
-  border-radius:21px 21px 0 0;
-  background:
-    radial-gradient(80% 120% at 78% 18%,rgba(37,211,102,.35),transparent 62%),
-    linear-gradient(160deg,#123326 0%,#0d1a2c 58%,#120a24 100%);
-}
-.wa-top .hex{
-  position:absolute;inset:0;z-index:1;opacity:.55;pointer-events:none;
-  border-radius:21px 21px 0 0;overflow:hidden;
-  background-image:
-    linear-gradient(30deg,rgba(37,211,102,.16) 12%,transparent 12.5%,transparent 87%,rgba(37,211,102,.16) 87.5%),
-    linear-gradient(150deg,rgba(37,211,102,.16) 12%,transparent 12.5%,transparent 87%,rgba(37,211,102,.16) 87.5%),
-    linear-gradient(30deg,rgba(37,211,102,.16) 12%,transparent 12.5%,transparent 87%,rgba(37,211,102,.16) 87.5%);
-  background-size:44px 76px;
-  background-position:0 0,0 0,22px 38px;
-}
-.wa-top .glowline{
-  position:absolute;inset:auto 0 0 0;height:2px;z-index:4;pointer-events:none;
-  background:linear-gradient(90deg,transparent,#25d366,#7ce7f7,transparent);opacity:.9;
-}
-.wa-shapes{
-  position:absolute;inset:0;z-index:2;pointer-events:none;
-  border-radius:21px 21px 0 0;overflow:hidden;
-}
-.wa-shapes i{
-  position:absolute;opacity:.85;
-  animation:shapeFloat var(--d,9s) ease-in-out infinite;
-}
-.wa-shapes i:nth-child(1){
-  left:12%;top:52%;width:34px;height:34px;background:#22d3ee;
-  clip-path:polygon(50% 0,100% 100%,0 100%);--d:8s;
-}
-.wa-shapes i:nth-child(2){
-  left:30%;top:34%;width:20px;height:20px;border:3px solid #25d366;
-  border-radius:50%;background:transparent;--d:11s;
-}
-.wa-shapes i:nth-child(3){
-  left:20%;top:76%;width:26px;height:26px;border-radius:6px;
-  background:linear-gradient(150deg,#f0c14d,#ff7a45);--d:7s;
-}
-.wa-shapes i:nth-child(4){
-  left:44%;top:18%;width:44px;height:16px;border-radius:999px;
-  background:linear-gradient(100deg,#5eead4,#2dd4bf);--d:10s;
-}
-
-/* green chat badge — top left (reset older flex-sheet .wa-ic rules) */
-.wa-ic{
-  position:absolute!important;top:20px!important;left:18px!important;right:auto!important;
-  z-index:8;flex:none;
-  width:52px!important;height:52px!important;border-radius:15px!important;
-  display:grid!important;place-items:center;
-  border:0!important;color:#04220f;
-  background:linear-gradient(160deg,#2ee06f,#12a34b)!important;
-  box-shadow:0 10px 26px -10px rgba(37,211,102,.95),inset 0 1px 0 rgba(255,255,255,.45)!important;
-}
-.wa-ic svg{width:27px!important;height:27px!important;color:#04220f!important}
-
-/* speech bubble — left of mascot, tail pointing right */
-.wa-bubble{
-  position:absolute;top:14px;left:82px;z-index:9;
-  max-width:46%;padding:9px 12px;
-  border-radius:13px;background:#fff;color:#0b1220;
-  font-size:12.5px;font-weight:800;line-height:1.25;
-  box-shadow:0 12px 24px -12px rgba(0,0,0,.85);
-  animation:bubbleBob 4.4s ease-in-out infinite;
-}
-.wa-bubble::after{
-  content:"";position:absolute;left:auto;right:-6px;bottom:auto;top:50%;
-  width:14px;height:14px;background:#fff;border-radius:2px;
-  transform:translateY(-50%) rotate(45deg);
-}
-
-/* Monkei GIF — right slot fills the header art area, fully inside (no crop) */
-.wa-fighter,
-.wa-fighter.ia-live{
-  position:absolute!important;
-  left:auto!important;
-  right:2%!important;
-  top:10px!important;
-  bottom:6px!important;
-  width:46%!important;
-  max-width:210px!important;
-  height:auto!important;
-  max-height:none!important;
-  z-index:6;
-  display:block!important;
+/* Neon hex honeycomb — bright in corners, quiet in the content center */
+.wa-sheet-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  border-radius:inherit;
   overflow:hidden;
   pointer-events:none;
-  filter:drop-shadow(0 16px 24px rgba(0,0,0,.7)) drop-shadow(0 0 18px rgba(37,211,102,.35));
-  animation:none;
+  background:
+    radial-gradient(90% 70% at 8% 6%,rgba(0,253,145,.18),transparent 55%),
+    radial-gradient(80% 65% at 94% 96%,rgba(0,253,145,.14),transparent 58%),
+    radial-gradient(70% 55% at 50% 45%,rgba(8,14,10,.55),transparent 70%),
+    linear-gradient(165deg,#050806 0%,#08100c 50%,#040605 100%);
 }
-.wa-fighter > img,
-.wa-fighter img,
-.wa-fighter video,
-.wa-fighter .still,
-.wa-fighter .live{
-  display:block!important;
-  position:absolute!important;
-  left:50%!important;
-  top:50%!important;
-  width:100%!important;
-  max-width:none!important;
-  height:100%!important;
-  object-fit:contain!important;
-  object-position:center center!important;
-  transform:translate(-50%,-50%) scale(1.7)!important;
-  transform-origin:center center!important;
-  animation:none!important;
+.wa-hex-glow{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  filter:blur(18px);
 }
-.wa-fighter.ia-live video.live{display:none!important}
-.wa-fighter.ia-live img.still{display:block!important}
-.wa-fighter.ia-live.has-live video.live{display:none!important}
-.wa-fighter.ia-live.has-live img.still{display:block!important}
-
-/* close — matches the reference: rounded square, soft white rim */
-.wa-close{
-  position:absolute;top:10px;right:10px;z-index:7;
-  width:34px;height:34px;border-radius:11px;
-  display:grid;place-items:center;cursor:pointer;
-  background:rgba(4,8,12,.82);
-  border:1px solid rgba(255,255,255,.35);
-  color:#fff;
-  backdrop-filter:blur(6px);
-  box-shadow:0 6px 18px -8px rgba(0,0,0,.9);
+.wa-hex-glow--tl{
+  left:-20%;top:-24%;
+  width:70%;height:58%;
+  background:radial-gradient(circle,rgba(0,253,145,.38),transparent 68%);
 }
-.wa-close svg{width:14px;height:14px}
-
-/* ---- body ---- */
-.wa-body{
-  position:relative;z-index:4;
-  flex:none!important;
-  height:auto!important;
-  min-height:0!important;
-  padding:18px 20px 18px;
-  text-align:center;
-  border-radius:0 0 21px 21px;
-  background:linear-gradient(180deg,rgba(10,7,16,.15),rgba(10,7,16,.95) 18%,#0a0710);
+.wa-hex-glow--br{
+  right:-18%;bottom:-26%;
+  width:68%;height:56%;
+  background:radial-gradient(circle,rgba(0,253,145,.3),transparent 70%);
 }
-.wa-top{
-  flex:none!important;
-  min-height:0!important;
-}
-.wa-head{display:block}
-.wa-head b{
-  display:block;margin:0;
-  font-size:20px;font-weight:900;letter-spacing:-.02em;line-height:1.15;color:#fff;
-}
-.wa-head b i{font-style:normal;color:#2ee06f}
-.wa-head p{
-  margin:9px 0 0;
-  font-size:12.5px;line-height:1.55;color:#a7b0c8;font-weight:500;
-}
-
-.wa-tiles{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;
-}
-.wa-tile{
-  padding:12px 6px;border-radius:12px;
-  background:rgba(255,255,255,.035);
-  border:1px solid rgba(37,211,102,.28);
-  display:grid;justify-items:center;gap:7px;
-}
-.wa-tile svg{width:19px;height:19px;color:#2ee06f}
-.wa-tile span{
-  font-size:8.5px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;
-  color:#d5dbe9;line-height:1.25;
-}
-
-.wa-actions{display:grid;gap:9px;margin-top:16px}
-.wa-actions .btn,
-.wa-actions .btn-wa,
-.wa-actions .btn-ghost{
-  border-radius:14px!important;
+.wa-hex-grid{
+  position:absolute;
+  inset:0;
   width:100%;
+  height:100%;
+  display:block;
 }
-.wa-actions .btn-wa{
-  position:relative;overflow:hidden;
-  height:46px;font-size:14px;font-weight:800;
-  color:#04220f!important;
-  background:linear-gradient(100deg,#3ef07d,#12a34b 70%,#0e8f42)!important;
-  border:0!important;
-  box-shadow:0 16px 30px -16px rgba(37,211,102,.95),inset 0 1px 0 rgba(255,255,255,.4);
+.wa-hex-base{
+  opacity:.55;
 }
-.wa-actions .btn-wa svg{width:18px;height:18px;flex:none}
-.wa-actions .btn-wa::after{
-  content:"";position:absolute;top:-60%;left:-60%;width:44%;height:220%;
-  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
-  transform:rotate(16deg);animation:sweep 5.5s ease-in-out infinite;pointer-events:none;
+.wa-hex-lit{
+  opacity:.9;
+  filter:drop-shadow(0 0 3px rgba(0,253,145,.55)) drop-shadow(0 0 10px rgba(0,253,145,.25));
+  mask-image:
+    radial-gradient(ellipse 55% 48% at 12% 10%,#000 0%,transparent 72%),
+    radial-gradient(ellipse 52% 46% at 90% 92%,#000 0%,transparent 72%);
+  -webkit-mask-image:
+    radial-gradient(ellipse 55% 48% at 12% 10%,#000 0%,transparent 72%),
+    radial-gradient(ellipse 52% 46% at 90% 92%,#000 0%,transparent 72%);
+  -webkit-mask-composite:source-over;
+  mask-composite:add;
 }
-.wa-actions .btn-ghost{
-  height:42px;font-size:13.5px;font-weight:700;
-  color:#eef0fb!important;
-  background:#151122!important;
-  border:1px solid rgba(255,255,255,.1)!important;
+
+.wa-sheet > :not(.wa-sheet-bg){z-index:1}
+.wa-close{z-index:8!important}
+
+.wa-close{
+  position:absolute;top:10px;right:10px;z-index:8;
+  width:32px;height:32px;border-radius:10px;
+  display:grid;place-items:center;cursor:pointer;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.12);
+  color:rgba(220,230,220,.85);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+}
+.wa-close:hover{
+  background:rgba(0,253,145,.12);
+  border-color:rgba(0,253,145,.45);
+  color:#fff;
+  transform:translateY(-1px);
+}
+.wa-close svg{width:13px;height:13px}
+
+/* Hero — left slot is the red-box region; landscape GIF sized by height to fill it */
+.wa-hero{
+  display:grid;
+  grid-template-columns:176px minmax(0,1fr);
+  align-items:center;
+  gap:4px 2px;
+  min-height:188px;
+  padding:6px 26px 6px 0;
+  overflow:visible;
+}
+
+.wa-char{
+  position:relative;
+  height:188px;
+  width:100%;
+  display:grid;place-items:center;
+  isolation:isolate;
+  /* Must stay visible — GIF frames + float motion extend past the slot */
+  overflow:visible;
+  border:0;
+  outline:none;
   box-shadow:none;
 }
-.wa-skip{
-  margin:2px auto 0;padding:4px;
-  background:none;border:0;cursor:pointer;
-  font-size:11px;color:#7d86a3;text-decoration:underline;
-  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+.wa-char-glow{
+  position:absolute;
+  left:50%;top:52%;
+  width:130%;height:130%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  border:0;
+  background:radial-gradient(circle,rgba(0,253,145,.32) 0%,rgba(0,253,145,.08) 42%,transparent 70%);
+  z-index:0;pointer-events:none;
 }
-.wa-skip svg{width:14px;height:14px;flex:none}
+/* Soft aura only — no hard ring/border around the character slot */
+.wa-char-ring{
+  position:absolute;
+  left:50%;top:54%;
+  width:78%;aspect-ratio:1;
+  border-radius:50%;
+  border:0;
+  background:radial-gradient(circle,rgba(0,253,145,.16),transparent 68%);
+  box-shadow:none;
+  z-index:1;pointer-events:none;
+  animation:waRingPulse 3.8s ease-in-out infinite;
+}
+/*
+  GIF is 800×450. Size by height so the figure fills the tall red-box slot.
+  Width may spill past the column; overflow:visible keeps every frame unclipped.
+*/
+.wa-fighter{
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:2;
+  display:block;
+  width:auto;
+  height:100%;
+  max-width:none;
+  transform:translate(-50%,-50%);
+  transform-origin:50% 50%;
+  pointer-events:none;
+  filter:drop-shadow(0 10px 16px rgba(0,0,0,.55));
+  animation:waCharFloat 3.2s ease-in-out infinite;
+}
+.wa-fighter img{
+  display:block;
+  width:auto;
+  height:100%;
+  max-width:none;
+  object-fit:contain;
+  object-position:center center;
+}
 
-@media (max-width:430px){
-  .wa-top{height:200px}
-  .wa-fighter,
-  .wa-fighter.ia-live{
-    width:48%!important;max-width:180px!important;
-    right:1%!important;top:8px!important;bottom:4px!important;
-  }
-  .wa-fighter > img{transform:translate(-50%,-50%) scale(1.62)!important}
-  .wa-body{padding-top:18px}
+.wa-intro{min-width:0;text-align:left;padding-top:2px}
+.wa-kicker{
+  margin:0;
+  font-size:16px;font-weight:700;line-height:1.15;color:#fff;
+  letter-spacing:-.01em;
+}
+.wa-brand{
+  display:inline-block;margin:1px 0 8px;
+  font-size:clamp(28px,8vw,36px);font-weight:900;font-style:italic;
+  letter-spacing:-.04em;line-height:1;
+  color:var(--wa-neon);
+  text-transform:uppercase;
+  text-shadow:
+    0 0 12px rgba(0,253,145,.75),
+    0 0 28px rgba(0,253,145,.4);
+  position:relative;
+}
+.wa-brand-swoosh{
+  display:block;
+  width:92%;
+  height:10px;
+  margin-top:3px;
+  color:var(--wa-neon);
+  filter:drop-shadow(0 0 6px rgba(0,253,145,.8));
+}
+.wa-sub{
+  margin:0;
+  max-width:22ch;
+  font-size:12.5px;line-height:1.4;color:#fff;font-weight:500;
+  opacity:.92;
+}
+
+/* Dual CTAs — flat modern neon */
+.wa-dual{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.wa-btn{
+  position:relative;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:46px;padding:0 16px;
+  border-radius:14px;
+  border:1px solid rgba(0,253,145,.55);
+  color:#04160f;
+  font-size:13px;font-weight:700;line-height:1;
+  letter-spacing:-.01em;
+  text-decoration:none;cursor:pointer;
+  background:var(--wa-neon);
+  box-shadow:0 6px 18px -10px rgba(0,253,145,.55);
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease,
+    color .2s ease;
+}
+.wa-btn::before{content:none;display:none}
+.wa-btn-ic{
+  flex:none;
+  width:auto;height:auto;
+  border-radius:0;
+  display:grid;place-items:center;
+  background:transparent;
+  color:inherit;
+  box-shadow:none;
+}
+.wa-btn-ic svg{width:17px;height:17px;display:block;stroke-width:2}
+.wa-btn > span:not(.wa-btn-ic){
+  flex:0 1 auto;min-width:0;text-align:center;white-space:nowrap;
+  text-shadow:none;
+}
+.wa-btn:hover{
+  transform:translateY(-1px);
+  background:#3dffb0;
+  border-color:rgba(255,255,255,.35);
+  box-shadow:0 10px 24px -10px rgba(0,253,145,.6);
+}
+.wa-btn:active{transform:scale(.98);background:#00e085}
+
+/* WhatsApp follow bar */
+.wa-follow{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:12px 10px;
+  border-radius:16px;
+  border:2px solid var(--wa-neon);
+  background:
+    linear-gradient(105deg,rgba(0,253,145,.2) 0%,rgba(10,18,10,.98) 38%,#0a100a 100%);
+  text-decoration:none;
+  text-align:left;
+  box-shadow:
+    0 0 0 1px rgba(0,253,145,.2),
+    0 0 22px rgba(0,253,145,.5),
+    0 0 40px -8px rgba(0,253,145,.45),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  transition:none;
+}
+.wa-follow:hover,
+.wa-follow:focus,
+.wa-follow:active{
+  transform:none;
+  filter:none;
+  box-shadow:
+    0 0 0 1px rgba(0,253,145,.2),
+    0 0 22px rgba(0,253,145,.5),
+    0 0 40px -8px rgba(0,253,145,.45),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+.wa-follow::before,
+.wa-follow::after{
+  content:"";
+  position:absolute;
+  width:7px;height:7px;
+  background:var(--wa-neon);
+  clip-path:polygon(50% 0,61% 35%,100% 50%,61% 65%,50% 100%,39% 65%,0 50%,39% 35%);
+  filter:drop-shadow(0 0 4px rgba(0,253,145,.9));
+  pointer-events:none;
+}
+.wa-follow::before{top:7px;right:78px}
+.wa-follow::after{top:18px;right:68px;width:5px;height:5px;opacity:.75}
+.wa-follow-ic{
+  flex:none;
+  width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--wa-neon);
+  box-shadow:0 0 16px rgba(0,253,145,.65);
+}
+.wa-follow-ic svg{width:24px;height:24px;display:block}
+.wa-follow-copy{
+  flex:1;min-width:0;
+  display:flex;flex-direction:column;gap:2px;
+  padding-right:2px;
+}
+.wa-follow-copy b{
+  display:block;
+  font-size:12.5px;font-weight:800;line-height:1.25;color:#fff;
+  white-space:normal;overflow:visible;text-overflow:clip;
+  word-break:normal;
+}
+.wa-follow-copy small{
+  display:block;
+  font-size:11px;font-weight:600;line-height:1.25;color:rgba(220,255,210,.72);
+  white-space:normal;overflow:visible;text-overflow:clip;
+}
+.wa-follow-cta{
+  position:relative;
+  flex:none;
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  min-height:36px;padding:0 14px;
+  border-radius:12px;
+  border:1px solid rgba(0,253,145,.55);
+  background:var(--wa-neon);
+  color:#04160f;
+  font-size:13px;font-weight:700;
+  letter-spacing:-.01em;
+  box-shadow:0 6px 16px -10px rgba(0,253,145,.55);
+  text-shadow:none;
+  transition:transform .2s ease,background .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.wa-follow-cta::before,
+.wa-follow-cta::after{content:none;display:none}
+.wa-follow-cta:hover{
+  transform:translateY(-1px);
+  background:#3dffb0;
+  border-color:rgba(255,255,255,.35);
+  box-shadow:0 10px 22px -10px rgba(0,253,145,.6);
+  filter:none;
+}
+.wa-follow-cta > span,
+.wa-follow-cta > svg{position:relative;z-index:1}
+.wa-follow-cta svg{width:15px;height:15px}
+
+.wa-skip{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  align-self:center;
+  margin:2px 0 0;
+  padding:4px 6px;
+  background:none;border:0;cursor:pointer;
+  font-size:12px;font-weight:600;color:rgba(255,255,255,.85);text-decoration:underline;
+  text-underline-offset:2px;
+}
+.wa-skip svg{width:15px;height:15px;color:var(--wa-neon);flex:none;filter:drop-shadow(0 0 4px rgba(0,253,145,.6))}
+.wa-skip:hover{color:#fff}
+
+.wa-shapes,.wa-ic,.wa-bubble,.wa-tiles,.wa-tile,.hex,.glowline,.wa-top,.wa-body{display:none!important}
+
+@media (max-width:400px){
+  .wa-sheet{padding:14px 11px 10px;gap:11px;max-width:100%}
+  .wa-hero{grid-template-columns:148px minmax(0,1fr);min-height:168px;padding:4px 22px 4px 0}
+  .wa-char{height:168px}
+  .wa-fighter{height:100%}
+  .wa-kicker{font-size:14px}
+  .wa-brand{font-size:28px}
+  .wa-sub{font-size:11.5px}
+  .wa-btn{min-height:44px;font-size:12px;padding:0 12px;gap:7px;border-radius:12px}
+  .wa-btn-ic svg{width:15px;height:15px}
+  .wa-follow{padding:10px 8px}
+  .wa-follow-ic{width:40px;height:40px}
+  .wa-follow-copy b{font-size:11.5px}
+  .wa-follow-copy small{font-size:10.5px}
+  .wa-follow-cta{min-height:34px;padding:0 12px;font-size:12.5px}
+  .wa-follow::before{right:70px}
+  .wa-follow::after{right:60px}
 }
 @media (prefers-reduced-motion:reduce){
-  .wa-overlay,.wa-sheet,.wa-bubble,.wa-fighter,.wa-shapes i,.wa-actions .btn-wa::after{animation:none!important}
+  .wa-overlay,.wa-sheet,.wa-char-ring,.wa-fighter{animation:none!important}
+  .wa-fighter{transform:translate(-50%,-50%)}
 }

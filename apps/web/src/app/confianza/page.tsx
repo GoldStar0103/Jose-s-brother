@@ -153,7 +153,7 @@ export default async function TrustPage() {
           Prueba con la oferta de confianza: 110 diamantes x $15. Es la forma más barata de
           comprobar que somos reales, y por eso la tenemos.
         </p>
-        <Link href="/" className="btn primary wide" style={{ marginTop: 12 }}>
+        <Link href="/#oferta" className="btn primary wide" style={{ marginTop: 12 }}>
           Ver la oferta
         </Link>
       </section>

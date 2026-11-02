@@ -1,0 +1,536 @@
+/* Neon Support Chat Card — Figma Make export */
+
+.nsc-card {
+  --nsc-cyan: #00f5ff;
+  --nsc-green: #05ff54;
+  container-type: inline-size;
+  isolation: isolate;
+  position: relative;
+  width: calc(100% + 24px);
+  max-width: none;
+  margin: 16px -12px 12px;
+  aspect-ratio: 1560 / 843;
+  overflow: hidden;
+  border: 0.32cqw solid #00ecff;
+  border-radius: 6.9cqw;
+  color: #fff;
+  background:
+    radial-gradient(circle at 95% 10%, rgb(0 255 35 / 52%) 0, rgb(0 255 35 / 12%) 11%, transparent 22%),
+    /* Left glow ellipse removed — keeps mascot area on the flat dotted card bg */
+    radial-gradient(circle at 72% 58%, rgb(0 86 208 / 18%) 0, transparent 28%),
+    linear-gradient(128deg, #073258 0%, #031b37 33%, #010818 61%, #062b39 100%);
+  box-shadow:
+    inset 0 0 0 0.26cqw #0c2b74,
+    inset 0 0 1.1cqw 0.22cqw rgb(0 255 255 / 75%),
+    0 0 0.9cqw rgb(0 229 255 / 72%);
+  font-family: var(--font-montserrat), Outfit, Inter, sans-serif;
+  transform: none !important;
+}
+
+.nsc-card:hover {
+  transform: none !important;
+}
+
+.nsc-card::before,
+.nsc-card::after {
+  content: '';
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  inset: 0.48cqw;
+  border: 0.22cqw solid transparent;
+  border-radius: 6.2cqw;
+  background: linear-gradient(110deg, #00f7ff 2%, #1d72ff 32%, #00ff7b 80%, #8dff00) border-box;
+  mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  filter: drop-shadow(0 0 0.45cqw #00f7ff);
+}
+
+.nsc-card::after {
+  inset: 1.05cqw;
+  border-width: 0.1cqw;
+  opacity: 0.72;
+}
+
+.nsc-wedge {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 37cqw;
+  height: 37cqw;
+  clip-path: polygon(0 0, 100% 0, 23% 100%, 0 100%);
+  background:
+    linear-gradient(132deg, rgb(0 245 255 / 40%) 0%, rgb(0 105 220 / 28%) 26%, rgb(0 23 55 / 10%) 60%),
+    #053c70;
+  /* Soften so mascot area doesn't read as a bright panel */
+  opacity: 0.32;
+}
+
+.nsc-wedge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(31% 0, 42% 0, 13% 45%, 8% 45%);
+  background: rgb(0 122 211 / 55%);
+}
+
+.nsc-slashes {
+  position: absolute;
+  top: 0;
+  left: 52cqw;
+  width: 33cqw;
+  height: 10cqw;
+  opacity: 0.35;
+  transform: skewX(-42deg);
+  background: repeating-linear-gradient(90deg, transparent 0 5cqw, #075386 5cqw 8cqw);
+}
+
+.nsc-orb {
+  position: absolute;
+  top: 6.1cqw;
+  right: 1.9cqw;
+  width: 18cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 62% 45%, #0a3b4c 0, #031827 57%, #07111d 100%);
+  opacity: 0.82;
+  box-shadow: 0 0 5cqw rgb(0 255 69 / 22%);
+}
+
+.nsc-orb::before {
+  content: '';
+  position: absolute;
+  top: -5.15cqw;
+  right: 2cqw;
+  width: 7.1cqw;
+  height: 2.7cqw;
+  transform: skewX(-30deg);
+  background: repeating-linear-gradient(90deg, #9dff00 0 1.25cqw, transparent 1.25cqw 1.8cqw);
+  filter: drop-shadow(0 0 0.65cqw #62ff00);
+}
+
+/* Neon floor swoosh hidden — it read as a bright oval behind the mascot */
+.nsc-swoosh,
+.nsc-swoosh::after {
+  display: none !important;
+}
+
+.nsc-dot-field {
+  position: absolute;
+  z-index: 3;
+  background-image: radial-gradient(circle, #00efff 0 0.14cqw, transparent 0.17cqw);
+  background-size: 1.48cqw 1.48cqw;
+  filter: drop-shadow(0 0 0.25cqw #007fff);
+  pointer-events: none;
+}
+
+.nsc-dots-top-left {
+  top: 1.5cqw;
+  left: 0.3cqw;
+  width: 13cqw;
+  height: 24cqw;
+  mask-image: linear-gradient(110deg, #000 25%, transparent 85%);
+}
+
+.nsc-dots-bottom-left {
+  /* Keep dotted field under/around mascot, no bright patch */
+  left: 2cqw;
+  top: 18cqw;
+  width: 28cqw;
+  height: 42cqw;
+  opacity: 0.55;
+  background-size: 1.82cqw 1.82cqw;
+  mask-image: linear-gradient(145deg, transparent 0%, #000 28%, #000 70%, transparent 100%);
+}
+
+.nsc-dots-right {
+  right: 1.5cqw;
+  top: 12.4cqw;
+  width: 10cqw;
+  height: 14.5cqw;
+  background-size: 1.85cqw 1.85cqw;
+  mask-image: linear-gradient(250deg, #000 18%, transparent 88%);
+}
+
+/*
+  Align visual character center with promociones mascot (red guide).
+  Support GIF content is left-biased (~41.7% vs 50%), so nudge the slot
+  right and shift the image so the face lands on the guide line.
+*/
+.nsc-mascot {
+  position: absolute;
+  z-index: 4;
+  /* Wide enough for the full GIF subject; inset so ear/tail clear the neon edge */
+  left: 2.5%;
+  top: 5%;
+  width: 34%;
+  height: 64%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  filter: drop-shadow(0 1cqw 2cqw rgb(0 0 0 / 55%));
+}
+
+.nsc-mascot img {
+  display: block;
+  flex: none;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  object-fit: fill;
+  /* Mild right bias — keeps left extremities in frame without cropping the right side */
+  transform: translateX(4%);
+}
+
+.nsc-content {
+  position: absolute;
+  z-index: 5;
+  top: 3.05cqw;
+  left: 35.55cqw;
+  width: 62.8cqw;
+}
+
+.nsc-status-pill {
+  width: 21.4cqw;
+  height: 5.5cqw;
+  display: flex;
+  align-items: center;
+  gap: 1.45cqw;
+  padding-left: 1.65cqw;
+  border: 0.22cqw solid var(--nsc-cyan);
+  border-left-color: #15ff58;
+  border-radius: 4cqw;
+  background: linear-gradient(180deg, rgb(2 53 82 / 82%), rgb(1 20 39 / 96%));
+  box-shadow:
+    0 0 0.75cqw rgb(0 203 255 / 80%),
+    inset 0 0 1.4cqw rgb(0 155 255 / 18%);
+  font-size: 2.45cqw;
+  font-weight: 800;
+  letter-spacing: -0.08cqw;
+}
+
+.nsc-status-light,
+.nsc-live-light {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 3.35cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 37% 30%, #efffe7 0 14%, #9cff78 28%, #22ee4a 59%, #009f29 100%);
+  border: 0.23cqw solid #25ff49;
+  box-shadow:
+    0 0 0 0.55cqw rgb(0 255 69 / 22%),
+    0 0 1.15cqw 0.42cqw #23ff37;
+}
+
+.nsc-content h2 {
+  margin: 1.5cqw 0 0;
+  color: #fff;
+  font-size: 4.2cqw;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.12cqw;
+  text-shadow: 0 0.12cqw 0.12cqw rgb(0 0 0 / 55%);
+}
+
+.nsc-content h2 strong {
+  color: #83ff12;
+  font-size: 1.12em;
+  font-weight: 800;
+  letter-spacing: -0.14cqw;
+  text-shadow: 0 0 1cqw rgb(64 255 0 / 22%);
+}
+
+.nsc-copy {
+  margin: 1.1cqw 0 0;
+  color: #eefcff;
+  font-size: 2.7cqw;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.06cqw;
+}
+
+.nsc-copy-underline {
+  width: 19.8cqw;
+  height: 0.46cqw;
+  margin-top: 1.2cqw;
+  border-radius: 1cqw;
+  background: linear-gradient(90deg, #00efff, #00ff58);
+  box-shadow: 0 0 0.65cqw rgb(0 255 148 / 70%);
+}
+
+.nsc-button {
+  position: relative;
+  width: 63.4cqw;
+  height: 10.15cqw;
+  margin-top: 1.8cqw;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  border: 0.2cqw solid #caff77;
+  border-radius: 7cqw;
+  overflow: hidden;
+  color: #020600;
+  background:
+    radial-gradient(ellipse at 23% 22%, rgb(255 255 151 / 95%) 0, transparent 29%),
+    linear-gradient(180deg, #bfff35 0%, #7dff14 31%, #25ff31 62%, #96ff23 100%);
+  box-shadow:
+    0 0 0 0.56cqw #00df78,
+    0 0 0 0.92cqw rgb(0 255 114 / 32%),
+    0 0 1.5cqw 0.4cqw #00ff56,
+    inset 0 0 1.2cqw 0.2cqw #ffffa3;
+  transition:
+    filter 160ms ease,
+    transform 160ms ease;
+}
+
+.nsc-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(95deg, rgb(255 255 96 / 20%), transparent 42%, rgb(0 255 70 / 25%));
+  pointer-events: none;
+}
+
+.nsc-button:hover {
+  filter: brightness(1.08);
+}
+
+.nsc-button:active {
+  transform: scale(0.995);
+}
+
+.nsc-button:focus-visible {
+  outline: 0.32cqw solid white;
+  outline-offset: 0.85cqw;
+}
+
+.nsc-chat-icon {
+  position: relative;
+  z-index: 1;
+  width: 5.15cqw;
+  height: 4.45cqw;
+  margin-left: 4cqw;
+  border: 0.65cqw solid #020900;
+  border-radius: 50%;
+  transform: rotate(-8deg);
+  flex: none;
+}
+
+.nsc-chat-icon::after {
+  content: '';
+  position: absolute;
+  left: -0.33cqw;
+  bottom: -1.18cqw;
+  width: 1.8cqw;
+  height: 1.85cqw;
+  background: #020900;
+  clip-path: polygon(38% 0, 100% 0, 0 100%);
+}
+
+.nsc-chat-icon i {
+  position: absolute;
+  top: 1.52cqw;
+  width: 0.75cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #020900;
+}
+
+.nsc-chat-icon i:nth-child(1) {
+  left: 1.05cqw;
+}
+.nsc-chat-icon i:nth-child(2) {
+  left: 2.1cqw;
+}
+.nsc-chat-icon i:nth-child(3) {
+  left: 3.15cqw;
+}
+
+.nsc-button-divider {
+  z-index: 1;
+  width: 0.12cqw;
+  height: 4.75cqw;
+  margin-left: 2cqw;
+  background: #07330b;
+  flex: none;
+}
+
+.nsc-button-label {
+  z-index: 1;
+  margin-left: 1.4cqw;
+  font-size: 2.85cqw;
+  font-weight: 800;
+  letter-spacing: -0.08cqw;
+  white-space: nowrap;
+}
+
+.nsc-button-arrow {
+  position: absolute;
+  z-index: 1;
+  right: 1.6cqw;
+  top: 50%;
+  width: 5.8cqw;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  translate: 0 -50%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #001900, #006d13);
+  color: white;
+  font-size: 6.5cqw;
+  font-family: Arial, sans-serif;
+  font-weight: 400;
+  line-height: 0.65;
+  text-indent: -0.15cqw;
+  box-shadow: inset 0 0 1cqw rgb(0 0 0 / 38%);
+}
+
+.nsc-activity {
+  position: absolute;
+  z-index: 12;
+  left: -0.52cqw;
+  right: -0.52cqw;
+  bottom: -0.52cqw;
+  height: 10.25cqw;
+  display: flex;
+  align-items: center;
+  border: 0.4cqw solid transparent;
+  border-radius: 4.8cqw;
+  background:
+    linear-gradient(100deg, #04182c 0%, #001020 48%, #011b15 100%) padding-box,
+    linear-gradient(90deg, #00f3ff, #136aff 39%, #00ff73 100%) border-box;
+  box-shadow:
+    0 -0.45cqw 1cqw rgb(0 199 255 / 48%),
+    inset 0 0 1.4cqw rgb(0 29 75 / 82%);
+}
+
+.nsc-activity-label {
+  width: 30cqw;
+  display: flex;
+  align-items: center;
+  padding-left: 3.2cqw;
+  flex: none;
+}
+
+.nsc-bolt {
+  position: relative;
+  width: 3.4cqw;
+  height: 5cqw;
+  flex: 0 0 auto;
+  background: var(--nsc-cyan);
+  clip-path: polygon(54% 0, 13% 55%, 43% 55%, 27% 100%, 87% 39%, 57% 39%, 73% 0);
+  filter: drop-shadow(0 0 0.34cqw #00f0ff);
+}
+
+.nsc-bolt::after {
+  content: '';
+  position: absolute;
+  inset: 0.37cqw;
+  background: #032238;
+  clip-path: inherit;
+}
+
+.nsc-activity-label p {
+  margin: 0 0 0 1.6cqw;
+  font-size: 1.9cqw;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.04cqw;
+}
+
+.nsc-activity-label p span,
+.nsc-activity-label p strong {
+  display: block;
+}
+
+.nsc-activity-label p strong {
+  color: #00efbb;
+}
+
+.nsc-activity-divider {
+  width: 0.18cqw;
+  height: 4.85cqw;
+  background: var(--nsc-cyan);
+  box-shadow: 0 0 0.4cqw #00deff;
+  flex: none;
+}
+
+.nsc-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.7cqw;
+  margin-left: 2.4cqw;
+  min-width: 0;
+}
+
+.nsc-counter-digit {
+  width: 3.6cqw;
+  height: 4.4cqw;
+  display: grid;
+  place-items: center;
+  border: 0.2cqw solid #64a7e1;
+  border-radius: 1cqw;
+  background: linear-gradient(180deg, #153657, #09203c 58%, #143657);
+  color: white;
+  font-size: 2.7cqw;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 0.17cqw 0.15cqw #000;
+  box-shadow:
+    inset 0 0 0.65cqw rgb(97 166 230 / 18%),
+    0 0 0.65cqw rgb(0 126 255 / 38%);
+  flex: none;
+}
+
+.nsc-counter-dot {
+  color: #7dd3fc;
+  font-size: 3cqw;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.nsc-counter-plus {
+  margin-left: 0.15cqw;
+  color: #00f9b5;
+  font-size: 3.6cqw;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.nsc-live {
+  margin-left: auto;
+  margin-right: 1.4cqw;
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+  color: #00ff8a;
+  font-size: 2.2cqw;
+  font-weight: 800;
+  letter-spacing: -0.06cqw;
+  white-space: nowrap;
+  flex: none;
+}
+
+.nsc-live-light {
+  width: 3.2cqw;
+}
+
+@media (min-width: 1024px) {
+  .nsc-card {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nsc-button {
+    transition: none;
+  }
+}

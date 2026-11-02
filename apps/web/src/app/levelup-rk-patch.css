@@ -1,7 +1,7 @@
 /* LevelUp ranking strip (rev. R) — horizontal Top compradores bar.
    Rail dissolves so ranking/support can interleave with main column via order. */
 .rail{display:contents}
-.ranking.rk{order:1}
+.ranking.rk{order:0}
 .hero{order:2;margin-top:0}
 .promo{order:3}
 .supt{order:4;margin-top:30px}

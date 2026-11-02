@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="261.002" height="221.002" viewBox="0 0 261.002 221.002" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="Corner neon ribbon bottom left" d="M4.50101 4.50101L31.501 59.501C39.501 83.501 35.501 118.501 48.501 146.501C59.501 173.501 82.501 187.501 116.501 188.501H197.501C208.168 187.834 220.168 192.168 233.501 201.501L256.501 216.501" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" stroke="url(#paint0_linear_0_7)"/>
+<defs>
+<linearGradient id="paint0_linear_0_7" x1="4.50101" y1="110.501" x2="256.501" y2="110.501" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00F29E"/>
+<stop offset="0.35" stop-color="#00FF5A"/>
+<stop offset="0.55" stop-color="#BDFFB8"/>
+<stop offset="0.83" stop-color="#00ED5D"/>
+<stop offset="1" stop-color="#002C2C"/>
+</linearGradient>
+</defs>
+</svg>

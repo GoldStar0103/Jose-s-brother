@@ -1,4 +1,4 @@
-/** Monkei backdrop — floating 3D diamonds + sparks over the teal arena. */
+/** Monkei backdrop — floating cyan 3D diamonds + sparks over the teal arena. */
 
 type Diamond = {
   left: string;
@@ -6,26 +6,25 @@ type Diamond = {
   s: number;
   d: number;
   delay: string;
-  tone: 'teal' | 'gold' | 'ember' | 'ice';
   drift: string;
 };
 
 const DIAMONDS: Diamond[] = [
-  { left: '5%', top: '10%', s: 42, d: 16, delay: '0s', tone: 'teal', drift: '22s' },
-  { left: '78%', top: '8%', s: 28, d: 13, delay: '-4s', tone: 'gold', drift: '19s' },
-  { left: '88%', top: '32%', s: 34, d: 18, delay: '-2s', tone: 'ice', drift: '24s' },
-  { left: '12%', top: '38%', s: 24, d: 14, delay: '-7s', tone: 'ember', drift: '17s' },
-  { left: '48%', top: '22%', s: 20, d: 11, delay: '-3s', tone: 'teal', drift: '15s' },
-  { left: '68%', top: '52%', s: 46, d: 20, delay: '-6s', tone: 'gold', drift: '26s' },
-  { left: '22%', top: '62%', s: 30, d: 15, delay: '-1s', tone: 'ice', drift: '21s' },
-  { left: '8%', top: '78%', s: 36, d: 17, delay: '-9s', tone: 'teal', drift: '23s' },
-  { left: '82%', top: '72%', s: 26, d: 12, delay: '-5s', tone: 'ember', drift: '18s' },
-  { left: '42%', top: '84%', s: 22, d: 14, delay: '-8s', tone: 'gold', drift: '20s' },
-  { left: '58%', top: '40%', s: 18, d: 10, delay: '-2.5s', tone: 'ice', drift: '16s' },
-  { left: '34%', top: '48%', s: 38, d: 19, delay: '-11s', tone: 'teal', drift: '25s' },
+  { left: '5%', top: '10%', s: 42, d: 16, delay: '0s', drift: '22s' },
+  { left: '78%', top: '8%', s: 28, d: 13, delay: '-4s', drift: '19s' },
+  { left: '88%', top: '32%', s: 34, d: 18, delay: '-2s', drift: '24s' },
+  { left: '12%', top: '38%', s: 24, d: 14, delay: '-7s', drift: '17s' },
+  { left: '48%', top: '22%', s: 20, d: 11, delay: '-3s', drift: '15s' },
+  { left: '68%', top: '52%', s: 46, d: 20, delay: '-6s', drift: '26s' },
+  { left: '22%', top: '62%', s: 30, d: 15, delay: '-1s', drift: '21s' },
+  { left: '8%', top: '78%', s: 36, d: 17, delay: '-9s', drift: '23s' },
+  { left: '82%', top: '72%', s: 26, d: 12, delay: '-5s', drift: '18s' },
+  { left: '42%', top: '84%', s: 22, d: 14, delay: '-8s', drift: '20s' },
+  { left: '58%', top: '40%', s: 18, d: 10, delay: '-2.5s', drift: '16s' },
+  { left: '34%', top: '48%', s: 38, d: 19, delay: '-11s', drift: '25s' },
 ];
 
-/** HEXZ-style gem: light table, orange body, purple lower-right facet. */
+/** Faceted gem: sky-blue → deep-blue — matches the hero card's blue diamante. */
 const DiamondFaces = () => (
   <svg className="gem-svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
     <polygon points="24,10 76,10 66,36 34,36" fill="url(#gemTop)" />
@@ -50,28 +49,28 @@ function GemDefs() {
     <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true" focusable="false">
       <defs>
         <linearGradient id="gemTop" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#fff0d6" />
-          <stop offset="1" stopColor="#ffc47e" />
+          <stop offset="0" stopColor="#eafdff" />
+          <stop offset="1" stopColor="#8fe9ff" />
         </linearGradient>
         <linearGradient id="gemUL" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#ffc27a" />
-          <stop offset="1" stopColor="#f59a3a" />
+          <stop offset="0" stopColor="#8fe3ff" />
+          <stop offset="1" stopColor="#3cc6f5" />
         </linearGradient>
         <linearGradient id="gemUR" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#f7a444" />
-          <stop offset="1" stopColor="#e07a1a" />
+          <stop offset="0" stopColor="#5fd0ff" />
+          <stop offset="1" stopColor="#1f9fe0" />
         </linearGradient>
         <linearGradient id="gemLL" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#f28f2a" />
-          <stop offset="1" stopColor="#c9610d" />
+          <stop offset="0" stopColor="#38b6ec" />
+          <stop offset="1" stopColor="#1670ac" />
         </linearGradient>
         <linearGradient id="gemLC" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ffb04f" />
-          <stop offset="1" stopColor="#e8801c" />
+          <stop offset="0" stopColor="#5cc9fb" />
+          <stop offset="1" stopColor="#1a7fc0" />
         </linearGradient>
         <linearGradient id="gemLR" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#8a4ad8" />
-          <stop offset="1" stopColor="#3b1a86" />
+          <stop offset="0" stopColor="#1f88c7" />
+          <stop offset="1" stopColor="#0a3a5c" />
         </linearGradient>
       </defs>
     </svg>
@@ -81,7 +80,7 @@ function GemDefs() {
 function DiamondNode({ d }: { d: Diamond }) {
   return (
     <i
-      className={`d3 tone-${d.tone}`}
+      className="d3"
       style={{
         left: d.left,
         top: d.top,
@@ -102,11 +101,6 @@ function DiamondNode({ d }: { d: Diamond }) {
 
 type SweepDiamond = { s: number; spin: string; bob: string; sweep: string; delay: string };
 
-// A larger, amber/purple-faceted diamond that actually travels across the
-// screen (vs. the teal/gold/ember/ice field above, which only bobs in place)
-// — matches the HEXZ reference's hero diamond, drifting slowly bottom-left
-// to top-right on a multi-point path so the motion reads as organic rather
-// than a mechanical straight line.
 const SWEEP_DIAMONDS: SweepDiamond[] = [
   { s: 64, spin: '22s', bob: '13s', sweep: '78s', delay: '0s' },
   { s: 44, spin: '17s', bob: '10s', sweep: '96s', delay: '-46s' },
@@ -115,7 +109,7 @@ const SWEEP_DIAMONDS: SweepDiamond[] = [
 function SweepDiamondNode({ d }: { d: SweepDiamond }) {
   return (
     <i
-      className="d3-sweep tone-amber"
+      className="d3-sweep"
       style={{
         ['--s' as string]: `${d.s}px`,
         ['--spin' as string]: d.spin,

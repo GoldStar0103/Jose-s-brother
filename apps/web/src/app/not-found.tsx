@@ -39,7 +39,7 @@ export default function NotFound() {
         Consultar mi pedido
       </Link>
 
-      <Link className="btn wide" href="/" style={{ marginTop: 10 }}>
+      <Link className="btn wide" href="/promociones" style={{ marginTop: 10 }}>
         Ver las promociones del mes
       </Link>
     </main>

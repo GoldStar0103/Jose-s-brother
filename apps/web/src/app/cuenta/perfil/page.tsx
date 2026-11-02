@@ -3,8 +3,8 @@ import { getLinkedIdState, getMyProfile } from '@monkei/db';
 import { requireCustomerSession } from '../../../lib/customer-session.js';
 import { getDb } from '../../../lib/server.js';
 import { avatarUrl } from '../../../lib/assets.js';
-import { initials } from '../../../lib/format.js';
 import { AvatarForm, DisplayNameForm, LinkedIdForm } from './perfil-forms';
+import { PlayerAvatar } from '../../player-avatar';
 
 export const metadata: Metadata = {
   title: 'Editar perfil',
@@ -28,14 +28,7 @@ export default async function PerfilPage() {
 
       <div className="card">
         <div className="row" style={{ marginBottom: 12 }}>
-          {avatar ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatar} alt="" width={64} height={64} style={{ borderRadius: '50%', objectFit: 'cover' }} />
-          ) : (
-            <div className="avatar" aria-hidden="true" style={{ width: 64, height: 64, fontSize: 22 }}>
-              {initials(name || 'Jugador')}
-            </div>
-          )}
+          <PlayerAvatar url={avatar} size={64} />
         </div>
         <AvatarForm />
       </div>

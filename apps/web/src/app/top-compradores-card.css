@@ -1,0 +1,338 @@
+/* Top Compradores card — crop to card frame only, full shell width */
+
+.leaderboard.ranking.rk {
+  /* Card frame in source art: 95.7% × 76.46% of 2000×667 → ~1914×510 */
+  --tc-card-l: 2.15%;
+  --tc-card-t: 9.6%;
+  --tc-card-w: 95.7%;
+  --tc-card-h: 76.46%;
+  container-type: inline-size;
+  position: relative;
+  /* Match .site-header / shell width. Avoid % width through display:contents
+     (.col-main), which can leave this card short of the header and offer card. */
+  width: min(100vw, var(--shell-w)) !important;
+  max-width: var(--shell-w) !important;
+  left: 50%;
+  margin-left: calc(-0.5 * min(100vw, var(--shell-w))) !important;
+  margin-right: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  aspect-ratio: 1914 / 510;
+  flex: 0 0 auto !important;
+  min-width: min(100vw, var(--shell-w)) !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 4.2cqw !important;
+  transform: none !important;
+}
+
+.leaderboard.ranking.rk:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+.leaderboard.ranking.rk > .in {
+  display: none !important;
+}
+
+/* Original 2000×667 stage scaled so the card frame fills this section */
+.leaderboard__stage {
+  position: absolute;
+  container-type: inline-size;
+  width: calc(100% / 0.957);
+  aspect-ratio: 2000 / 667;
+  left: calc(100% * -0.0215 / 0.957);
+  top: calc(100% * -0.096 / 0.7646);
+  height: auto;
+}
+
+.leaderboard__artwork,
+.leaderboard__card,
+.artwork-crop__image {
+  position: absolute;
+  display: block;
+  max-width: none;
+  pointer-events: none;
+}
+
+.leaderboard__artwork {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.leaderboard__glow {
+  position: absolute;
+  left: 1.9%;
+  top: 9.9%;
+  width: 95.3%;
+  height: 75.6%;
+  border-radius: 5cqw;
+  background: #022029;
+  /* Outer glow clipped by .leaderboard overflow — no grey fringe */
+  box-shadow: none;
+}
+
+.leaderboard__card {
+  left: 2.15%;
+  top: 9.6%;
+  width: 95.7%;
+  height: 76.46%;
+}
+
+.artwork-crop {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 9999px;
+}
+
+.artwork-crop--crown {
+  left: 4.1%;
+  top: 18.3%;
+  width: 11.55%;
+  height: 36.88%;
+}
+
+.artwork-crop--crown .artwork-crop__image {
+  left: -35.5%;
+  top: -49.6%;
+  width: 865.8%;
+  height: 271.14%;
+}
+
+.leaderboard__heading-divider {
+  position: absolute;
+  left: 16.85%;
+  top: 18.89%;
+  width: 0.2%;
+  height: 29.84%;
+  background: linear-gradient(#f4b624, #fff69a 50%, #c6a238);
+}
+
+.leaderboard__heading {
+  position: absolute;
+  left: 19.25%;
+  top: 16.8%;
+  width: 32.5%;
+  z-index: 2;
+}
+
+.leaderboard__heading h2 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.leaderboard__heading h2 span {
+  display: block;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.leaderboard__top {
+  margin-bottom: -0.85cqw;
+  background-image: linear-gradient(#fff, #c4d0d5);
+  font-size: 3.3cqw;
+  line-height: 3.7cqw;
+}
+
+.leaderboard__buyers {
+  background-image: linear-gradient(
+    #fff 0%,
+    #d5dfe4 33.333%,
+    #fff 66.667%,
+    #bdc9cd 100%
+  );
+  font-size: 3.8cqw;
+  line-height: 4.35cqw;
+  letter-spacing: -0.075cqw;
+}
+
+.leaderboard__season {
+  display: flex;
+  align-items: center;
+  gap: 0.65cqw;
+  margin-top: 0.45cqw;
+}
+
+.leaderboard__season img {
+  width: 2.15cqw;
+  height: 2cqw;
+}
+
+.leaderboard__season p {
+  margin: 0;
+  color: transparent;
+  background: linear-gradient(#ffe981, #ffc33e);
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-size: 1.8cqw;
+  font-weight: 700;
+  line-height: 2.2cqw;
+  white-space: nowrap;
+}
+
+.ranking-button {
+  position: absolute;
+  left: 53.65%;
+  top: 20.99%;
+  z-index: 3;
+  display: flex;
+  width: 41.95%;
+  height: 23.99%;
+  align-items: center;
+  justify-content: center;
+  gap: 1.55cqw;
+  overflow: hidden;
+  border: 0.1cqw solid #ffe184 !important;
+  border-radius: 4.1cqw !important;
+  color: #f4f6f7 !important;
+  background:
+    linear-gradient(#26271d, #191d18) padding-box,
+    linear-gradient(#fff6a1, #fdbd31 33.333%, #ffdf6b 66.667%, #a16c0a) border-box !important;
+  box-shadow:
+    inset 0 0 0 0.45cqw #544a24,
+    inset 0 0 0 0.6cqw #9f8a48,
+    0 0.6cqw 0.6cqw rgba(0, 0, 0, 0.73) !important;
+  font-size: 2.4cqw;
+  font-weight: 700;
+  line-height: 2.9cqw;
+  text-decoration: none !important;
+  transition:
+    filter 160ms ease,
+    transform 160ms ease;
+}
+
+.ranking-button img {
+  width: 2.5cqw;
+  height: 2.2cqw;
+}
+
+.ranking-button:hover {
+  filter: brightness(1.12);
+  transform: none !important;
+}
+
+.ranking-button:active {
+  transform: translateY(0.15cqw) !important;
+}
+
+.ranking-button:focus-visible {
+  outline: 0.2cqw solid white;
+  outline-offset: 0.25cqw;
+}
+
+.buyer-divider {
+  position: absolute;
+  top: 58.62%;
+  width: 0.15%;
+  height: 18.89%;
+  background: #213844;
+  z-index: 2;
+}
+
+.buyer-divider--first {
+  left: 36.6%;
+}
+
+.buyer-divider--second {
+  left: 63.6%;
+}
+
+.leaderboard__ranking {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.buyer {
+  position: absolute;
+  top: 56.97%;
+  width: 21%;
+  height: 22.49%;
+  pointer-events: none;
+}
+
+.buyer--first {
+  left: 13.25%;
+}
+
+.buyer--second {
+  left: 39.8%;
+}
+
+.buyer--third {
+  left: 66.75%;
+}
+
+.artwork-crop--medal {
+  left: 0;
+  top: 0;
+  width: 7.5cqw;
+  height: 7.5cqw;
+}
+
+.artwork-crop--medal .artwork-crop__image {
+  width: 100cqw;
+  height: 33.35cqw;
+}
+
+.artwork-crop--medal-1 .artwork-crop__image {
+  left: -13.25cqw;
+  top: -19cqw;
+}
+
+.artwork-crop--medal-2 .artwork-crop__image {
+  left: -39.8cqw;
+  top: -19cqw;
+}
+
+.artwork-crop--medal-3 .artwork-crop__image {
+  left: -66.75cqw;
+  top: -19cqw;
+}
+
+.buyer__details {
+  position: absolute;
+  left: 9.25cqw;
+  top: 0.75cqw;
+  width: 12.25cqw;
+}
+
+.buyer__details h3 {
+  margin: 0;
+  color: #f4f6f7;
+  font-size: 2.1cqw;
+  font-weight: 700;
+  line-height: 2.5cqw;
+}
+
+.buyer__details p {
+  margin: 0;
+  color: transparent;
+  background: linear-gradient(#00cfe3, #06f8d2);
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-size: 3.4cqw;
+  font-weight: 800;
+  line-height: 3.8cqw;
+  letter-spacing: -0.075cqw;
+}
+
+@media (min-width: 1024px) {
+  /* Desktop: break out of .wrap's 24px padding to match the fixed header. */
+  .leaderboard.ranking.rk {
+    left: auto;
+    width: calc(100% + 48px) !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin-left: -24px !important;
+    margin-right: -24px !important;
+  }
+}

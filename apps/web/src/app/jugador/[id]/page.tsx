@@ -4,7 +4,8 @@ import { getPublicProfile } from '@monkei/db';
 import { siteName } from '@monkei/shared';
 import { getDb } from '../../../lib/server.js';
 import { avatarUrl, badgeArtworkUrl } from '../../../lib/assets.js';
-import { diamonds, initials } from '../../../lib/format.js';
+import { diamonds } from '../../../lib/format.js';
+import { PlayerAvatar } from '../../player-avatar';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,14 +26,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   return (
     <main className="page narrow">
       <div className="row" style={{ alignItems: 'center', gap: 12 }}>
-        {avatar ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={avatar} alt="" width={64} height={64} style={{ borderRadius: '50%', objectFit: 'cover' }} />
-        ) : (
-          <div className="avatar" aria-hidden="true" style={{ width: 64, height: 64, fontSize: 22 }}>
-            {initials(name)}
-          </div>
-        )}
+        <PlayerAvatar url={avatar} size={64} />
         <div>
           <h1 className="page-title" style={{ marginBottom: 0 }}>
             {name}
