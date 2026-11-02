@@ -10,12 +10,17 @@
   /* Slightly taller than Figma 1908/705 so the mascot reads clearly in the shell */
   aspect-ratio: 1908 / 780;
   overflow: hidden;
-  border-radius: 5.35cqw;
-  /* Force a raster clip — works around a desktop-GPU corner leak where
-     overflow:hidden + a fractional (cqw) border-radius lets composited
-     children show a sliver past the curve at each corner. Must be a LINEAR
-     gradient — a radial one defaults to an ellipse that falls short of the
-     corners on a wide card, clipping them away instead. */
+  /* border-radius: 5.35cqw used to self-reference the container this
+     element establishes, which isn't allowed — with no ancestor
+     container it silently fell back to resolving against the viewport,
+     inflating the radius on desktop (measured 6.69% of the card instead
+     of the intended 5.35%) and showing a gap past the inner rim's own
+     (correctly-resolving, since it's a descendant) curve. A plain
+     percentage resolves against this element's own box instead; split
+     per axis, scaled by the card's own aspect-ratio (1908/780), so the
+     curve stays a true circle matching the intended 5.35% at any width. */
+  border-radius: 5.35% / 13.087%;
+  /* Secondary safeguard: forces a raster clip instead of a geometric one. */
   -webkit-mask-image: -webkit-linear-gradient(#fff, #fff);
   mask-image: linear-gradient(#fff, #fff);
   color: #f9f9fb;

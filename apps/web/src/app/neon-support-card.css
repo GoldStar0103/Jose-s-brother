@@ -12,12 +12,18 @@
   aspect-ratio: 1560 / 843;
   overflow: hidden;
   border: 0.32cqw solid #00ecff;
-  border-radius: 6.9cqw;
-  /* Force a raster clip — works around a desktop-GPU corner leak where
-     overflow:hidden + a fractional (cqw) border-radius lets composited
-     children show a sliver past the curve at each corner. Must be a LINEAR
-     gradient — a radial one defaults to an ellipse that falls short of the
-     corners on a wide card, clipping them away instead. */
+  /* border-radius: 6.9cqw used to self-reference the container this
+     element establishes, which isn't allowed — with no ancestor
+     container it silently fell back to resolving against the viewport,
+     inflating the radius on desktop (measured 8.6% of the card instead
+     of the intended 6.9%). A plain percentage resolves against this
+     element's own box instead; split per axis, scaled by the card's own
+     aspect-ratio (1560/843), so the curve stays a true circle matching
+     the intended 6.9% at any width. (The 0.32cqw border-width has the
+     same fallback, but the resulting sub-pixel difference is negligible
+     and percentages aren't valid for border-width, so it's left as-is.) */
+  border-radius: 6.9% / 12.769%;
+  /* Secondary safeguard: forces a raster clip instead of a geometric one. */
   -webkit-mask-image: -webkit-linear-gradient(#fff, #fff);
   mask-image: linear-gradient(#fff, #fff);
   color: #fff;
