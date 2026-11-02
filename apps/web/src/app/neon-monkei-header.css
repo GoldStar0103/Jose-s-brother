@@ -25,6 +25,11 @@
     0 0 12px rgb(0 245 239 / 0.55);
   isolation: isolate;
   box-sizing: border-box;
+  transition: transform 280ms ease;
+}
+
+.site-header.is-hidden {
+  transform: translateX(-50%) translateY(-130%);
 }
 
 .site-header::before {

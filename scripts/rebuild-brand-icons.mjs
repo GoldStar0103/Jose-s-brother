@@ -20,7 +20,6 @@ async function main() {
   }
 
   const logoPath = join(root, 'apps/web/src/assets/logo.png');
-  const webApp = join(root, 'apps/web/src/app');
   const logo = readFileSync(logoPath);
 
   // Square favicons on black — matches the live site chrome.
@@ -36,15 +35,21 @@ async function main() {
     console.log('wrote', out.replace(root + '\\', '').replace(root + '/', ''), `(${buf.length} bytes)`);
   };
 
-  await makeSquare(512, join(webApp, 'icon.png'));
-  await makeSquare(180, join(webApp, 'apple-icon.png'));
-
   // Admin panel tab icons (same mark — isolation is cookies/secrets, not art).
+  // No public/ counterpart and no explicit metadata.icons override, so the
+  // src/app convention files are the only route here — fine as-is.
   const adminApp = join(root, 'apps/admin/src/app');
   await makeSquare(512, join(adminApp, 'icon.png'));
   await makeSquare(180, join(adminApp, 'apple-icon.png'));
 
-  // Also publish under public/ — standalone Docker images serve these reliably.
+  // web's layout.tsx declares explicit metadata.icons pointing at /icon.png
+  // and /apple-icon.png, served from public/ (standalone Docker images serve
+  // these reliably). Don't also write src/app/icon.png or apple-icon.png —
+  // Next's file-convention route would then double up with the public/
+  // static file on the same URL, which 500s every GET /icon.png under
+  // `next dev` (production isn't affected, but no reason to carry the
+  // conflict). If web's metadata.icons is ever removed, restore those two
+  // src/app writes so Next has a convention-based route to fall back to.
   const webPublic = join(root, 'apps/web/public');
   await makeSquare(512, join(webPublic, 'icon.png'));
   await makeSquare(180, join(webPublic, 'apple-icon.png'));

@@ -16,6 +16,7 @@ import logo from '../assets/logo.png';
 import { AppBg } from './app-bg';
 import { SupportFab } from './support-fab';
 import { SiteHeader } from './site-header';
+import { HeaderScroll } from './header-scroll';
 import { BackButton } from './back-button';
 import { RevealInit } from './reveal';
 import './globals.css';
@@ -124,6 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <RevealInit />
         {channelUrl && <WhatsappChannelPopup channelUrl={channelUrl} brandName={brand} />}
         <SiteHeader />
+        <HeaderScroll />
         <div className="page-back">
           <BackButton />
         </div>

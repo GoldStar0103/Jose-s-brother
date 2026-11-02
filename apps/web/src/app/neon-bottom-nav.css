@@ -19,15 +19,29 @@
   overflow: hidden;
   border: 0;
   border-radius: 14px;
-  background: linear-gradient(90deg, #00f9ff 0%, #00bfff 25%, #3935ff 55%, #c000ff 82%, #e300ff 100%);
+  background:
+    linear-gradient(96deg, #05ff6e 0 9%, #00dfff 24%, #03d8ff 66%, #12ff4a 88%, #01caff 100%);
   box-shadow:
-    0 0 12px rgb(0 221 255 / 22%),
-    0 0 12px rgb(201 0 255 / 16%),
-    0 8px 24px -10px rgb(0 0 0 / 70%);
+    0 0 0 2px #052c34,
+    0 2px 0 1px #06161a,
+    inset 0 0 10px #efffff,
+    0 0 12px rgb(0 245 239 / 0.55);
   backdrop-filter: none;
   display: block;
   grid-template-columns: none;
   padding-bottom: 3px;
+  isolation: isolate;
+}
+
+.bnav.neon-nav::before {
+  position: absolute;
+  inset: 2px;
+  z-index: 2;
+  border: 1.5px solid rgb(225 255 255 / 0.72);
+  border-bottom-color: rgb(0 80 79 / 0.5);
+  border-radius: 11px;
+  content: '';
+  pointer-events: none;
 }
 
 .bnav.neon-nav::after {
@@ -37,8 +51,8 @@
   width: 4px;
   height: 31%;
   border-radius: 999px;
-  background: #c900ff;
-  box-shadow: 0 0 8px 3px #c900ff;
+  background: #00dfff;
+  box-shadow: 0 0 8px 3px #00dfff;
   content: '';
   pointer-events: none;
 }
@@ -51,11 +65,28 @@
   height: 100%;
   padding: 3px;
   overflow: hidden;
-  border: 1px solid rgb(104 216 238 / 70%);
-  border-radius: inherit;
+  border: 0;
+  border-radius: 11px;
   background:
-    linear-gradient(180deg, rgb(29 53 75 / 96%) 0%, rgb(9 23 37 / 98%) 34%, rgb(3 11 23 / 99%) 80%, rgb(9 6 25 / 99%) 100%),
-    linear-gradient(90deg, #092636, #020916 50%, #150526);
+    radial-gradient(ellipse at 1% 70%, rgb(0 255 128 / 0.34), transparent 12%),
+    radial-gradient(ellipse at 99% 80%, rgb(0 221 255 / 0.48), transparent 13%),
+    linear-gradient(90deg, transparent 0 31%, rgb(0 112 138 / 0.18) 46%, transparent 65%),
+    repeating-linear-gradient(133deg, transparent 0 14%, rgb(0 138 165 / 0.14) 14.2% 22%, transparent 22.2% 33%),
+    linear-gradient(100deg, #043848 0%, #01242e 26%, #022832 55%, #00313b 100%);
+  box-shadow:
+    inset 0 0 24px rgb(0 0 0 / 0.82),
+    inset 0 6px 14px rgb(0 205 255 / 0.16),
+    inset 0 -6px 16px rgb(0 255 145 / 0.12);
+}
+
+.neon-nav__surface::before {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(132deg, transparent 8%, rgb(2 171 197 / 0.18) 8.2% 15%, transparent 15.2% 36%, rgb(2 126 151 / 0.12) 36.2% 43%, transparent 43.2%),
+    radial-gradient(ellipse at center, transparent 0 25%, rgb(0 0 0 / 0.18) 75%);
+  content: '';
+  pointer-events: none;
 }
 
 .neon-nav__item {
@@ -165,11 +196,4 @@
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/* Keep hidden on desktop shells (same breakpoint as legacy .bnav) */
-@media (min-width: 1024px) {
-  .bnav.neon-nav {
-    display: none !important;
-  }
 }
