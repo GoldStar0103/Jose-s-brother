@@ -25,14 +25,18 @@
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
-  border-radius: 4.2cqw !important;
+  /* `cqw` here was resolving against the viewport, not this card — an
+     element can't query a container it establishes on itself, and no
+     ancestor container exists, so it silently fell back to vw. That
+     matched by coincidence on mobile (card width == viewport width) but
+     was way off on desktop, clipping into the card artwork's own border.
+     Use a plain percentage instead, tuned to the SVG card graphic's own
+     corner (rx 100 on a 1914x510 viewBox): 100/1914 horizontal, 100/510
+     vertical, so the CSS clip exactly follows the artwork's curve at any
+     width. */
+  border-radius: 5.2247% / 19.6078% !important;
   transform: none !important;
-  /* Force a raster clip for the rounded corners. On some desktop GPUs,
-     overflow:hidden + a fractional (cqw) border-radius lets the composited
-     artwork leak a sliver past the curve at each corner; mask-image makes
-     Chromium clip to the exact alpha mask instead of the geometric path.
-     Must be a LINEAR gradient — a radial one defaults to an ellipse that
-     falls short of the corners on a wide card, clipping them away instead. */
+  /* Secondary safeguard: forces a raster clip instead of a geometric one. */
   -webkit-mask-image: -webkit-linear-gradient(#fff, #fff);
   mask-image: linear-gradient(#fff, #fff);
 }
