@@ -145,13 +145,32 @@ export async function toggleCombo(formData: FormData): Promise<void> {
   revalidatePath('/combos');
 }
 
-export async function deleteCombo(formData: FormData): Promise<void> {
+export interface DeleteComboState {
+  error?: string;
+  ok?: string;
+}
+
+export async function deleteCombo(
+  _prev: DeleteComboState,
+  formData: FormData,
+): Promise<DeleteComboState> {
   const session = await requireSession();
   const comboKey = String(formData.get('comboKey') ?? '');
-  if (!comboKey) return;
+  if (!comboKey) return {};
 
-  await store().deleteCombo(comboKey, session.adminUserId);
+  const { deactivatedInstead } = await store().deleteCombo(comboKey, session.adminUserId);
   revalidatePath('/combos');
+
+  // A combo tied to a Vault offer can't be hard-deleted (the FK that protects
+  // that price comparison is `restrict` on purpose) — it was turned off
+  // instead, which is what gets it off the storefront. Say so, rather than
+  // leaving the admin to wonder why "Eliminar" didn't remove it.
+  if (deactivatedInstead) {
+    return {
+      ok: 'No se pudo eliminar porque está vinculado a una oferta de la Bóveda — se apagó en su lugar y ya no aparece en la tienda.',
+    };
+  }
+  return { ok: 'Combo eliminado.' };
 }
 
 export async function saveCampaign(

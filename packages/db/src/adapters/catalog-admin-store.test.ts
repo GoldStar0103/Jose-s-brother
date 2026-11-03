@@ -14,7 +14,7 @@ import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { asc, eq, sql as raw } from 'drizzle-orm';
 import { reviewComboDraft, type ComboDraft } from '@monkei/engine';
 import { createDb, type Database } from '../index.js';
-import { auditLog, baseProducts, campaigns, comboItems, combos } from '../schema.js';
+import { auditLog, baseProducts, campaigns, comboItems, combos, vaultOffers } from '../schema.js';
 import { DrizzleCatalogAdminStore } from './catalog-admin-store.js';
 import { listStorefront } from './storefront-queries.js';
 
@@ -59,7 +59,7 @@ afterAll(async () => {
 beforeEach(async () => {
   if (!PG_AVAILABLE) return;
   await db.execute(
-    raw`TRUNCATE orders, order_items, payments, combo_items, combos, campaigns, base_products, audit_log RESTART IDENTITY CASCADE`,
+    raw`TRUNCATE orders, order_items, payments, vault_offers, combo_items, combos, campaigns, base_products, audit_log RESTART IDENTITY CASCADE`,
   );
 
   for (const [d, cost] of [
@@ -200,6 +200,50 @@ describe.skipIf(!PG_AVAILABLE)('activation', () => {
 
   it('fails loudly on an unknown combo', async () => {
     await expect(store().setComboActive('no_existe', true, null)).rejects.toThrow(/No combo/);
+  });
+});
+
+describe.skipIf(!PG_AVAILABLE)('deleteCombo', () => {
+  it('hard-deletes a combo nothing else points at', async () => {
+    await save(draft());
+    const result = await store().deleteCombo('pack_insano', null);
+
+    expect(result).toEqual({ deactivatedInstead: false });
+    expect(await db.select().from(combos)).toHaveLength(0);
+
+    const actions = (await db.select().from(auditLog)).map((a) => a.action);
+    expect(actions).toContain('combo.deleted');
+  });
+
+  // Real incident, 2026-11-02: the client deleted old packs that were still
+  // referenced by a Vault offer. Postgres rejected the delete
+  // (`vault_offers.combo_id` is `onDelete: 'restrict'` on purpose, so the
+  // Vault's "normal price vs. Vault price" comparison can never go stale) —
+  // but the combo stayed fully active and visibly on sale with no indication
+  // anything had gone wrong. Deleting such a combo must now get it off the
+  // storefront by deactivating it instead, and say so.
+  it('deactivates instead of hard-deleting a combo tied to a Vault offer', async () => {
+    const { comboId } = await save(draft());
+    await db.insert(vaultOffers).values({ comboId, vaultPriceMxnCents: 50_000 });
+
+    const result = await store().deleteCombo('pack_insano', null);
+
+    expect(result).toEqual({ deactivatedInstead: true });
+
+    const [combo] = await db.select().from(combos).where(eq(combos.key, 'pack_insano'));
+    expect(combo).toBeDefined();
+    expect(combo?.active).toBe(false);
+
+    const keys = (await listStorefront(db)).flatMap((c) => c.combos.map((x) => x.key));
+    expect(keys).not.toContain('pack_insano');
+
+    const actions = (await db.select().from(auditLog)).map((a) => a.action);
+    expect(actions).not.toContain('combo.deleted');
+    expect(actions).toContain('combo.deactivated');
+  });
+
+  it('fails loudly on an unknown combo', async () => {
+    await expect(store().deleteCombo('no_existe', null)).rejects.toThrow(/No combo/);
   });
 });
 

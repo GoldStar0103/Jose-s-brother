@@ -16,6 +16,30 @@ import type { AvailableProduct, CampaignDraft, ComboDraft } from '@monkei/engine
 import type { Database } from '../index.js';
 import { auditLog, baseProducts, campaigns, comboItems, combos } from '../schema.js';
 
+/**
+ * Postgres' `restrict_violation` class (23001) — raised when a row can't be
+ * deleted because something else still points at it with `onDelete:
+ * 'restrict'`. `vault_offers.combo_id` is the one case for a combo: it is
+ * `restrict` on purpose (see schema.ts) so a combo can never disappear out
+ * from under a live "normal price vs. Vault price" comparison.
+ *
+ * Checked by SQLSTATE code on the plain error object, not `instanceof
+ * postgres.PostgresError`: that check is reliable in a single-realm process
+ * (e.g. a Vitest run against the real driver), but Next's dev-mode Server
+ * Action bundling loads the `postgres` package into its own module realm, so
+ * the class identity `instanceof` depends on silently stops matching there
+ * and the error falls through uncaught — confirmed by reproducing this exact
+ * delete through the real admin UI.
+ */
+function isRestrictViolation(err: unknown): boolean {
+  return (
+    typeof err === 'object' &&
+    err !== null &&
+    'code' in err &&
+    (err as { code?: unknown }).code === '23001'
+  );
+}
+
 export interface CampaignOption {
   id: string;
   key: string;
@@ -226,27 +250,46 @@ export class DrizzleCatalogAdminStore {
   /**
    * Remove a combo the owner no longer wants cluttering the list.
    *
-   * Safe to hard-delete: `orders.comboId` is `onDelete: 'set null'` and the
-   * order also keeps a denormalised `comboKey`/name, so past orders still show
-   * what was bought after the combo itself is gone. `combo_items` cascades.
+   * Safe to hard-delete in general: `orders.comboId` is `onDelete: 'set
+   * null'` and the order also keeps a denormalised `comboKey`/name, so past
+   * orders still show what was bought after the combo itself is gone.
+   * `combo_items` cascades.
+   *
+   * One case can't be hard-deleted, though: a combo still referenced by a
+   * `vault_offers` row (`onDelete: 'restrict'`, by design — see schema.ts).
+   * That used to surface as a raw, uncaught Postgres error with the delete
+   * silently not happening and the combo staying live on the storefront with
+   * no explanation. It's now caught here and treated as "turn it off
+   * instead": deactivating is always safe and gets it off the storefront
+   * immediately, which is what deleting it was for in the first place.
    */
-  async deleteCombo(comboKey: string, adminUserId: string | null): Promise<void> {
-    await this.db.transaction(async (tx) => {
-      const [deleted] = await tx
-        .delete(combos)
-        .where(eq(combos.key, comboKey))
-        .returning({ id: combos.id, name: combos.name });
+  async deleteCombo(
+    comboKey: string,
+    adminUserId: string | null,
+  ): Promise<{ deactivatedInstead: boolean }> {
+    try {
+      await this.db.transaction(async (tx) => {
+        const [deleted] = await tx
+          .delete(combos)
+          .where(eq(combos.key, comboKey))
+          .returning({ id: combos.id, name: combos.name });
 
-      if (!deleted) throw new Error(`No combo with key ${comboKey}`);
+        if (!deleted) throw new Error(`No combo with key ${comboKey}`);
 
-      await tx.insert(auditLog).values({
-        adminUserId,
-        action: 'combo.deleted',
-        entityType: 'combo',
-        entityId: deleted.id,
-        detail: { key: comboKey, name: deleted.name },
+        await tx.insert(auditLog).values({
+          adminUserId,
+          action: 'combo.deleted',
+          entityType: 'combo',
+          entityId: deleted.id,
+          detail: { key: comboKey, name: deleted.name },
+        });
       });
-    });
+      return { deactivatedInstead: false };
+    } catch (err) {
+      if (!isRestrictViolation(err)) throw err;
+      await this.setComboActive(comboKey, false, adminUserId);
+      return { deactivatedInstead: true };
+    }
   }
 
   async saveCampaign(
