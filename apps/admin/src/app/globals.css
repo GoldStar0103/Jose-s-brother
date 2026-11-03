@@ -8,8 +8,8 @@
   --border: #2a2f4a;
   --text: #e8eaf6;
   --muted: #8b91b5;
-  --accent: #8b5cf6;
-  --accent-hover: #7c3aed;
+  --accent: #05ff6e;
+  --accent-hover: #00e665;
   --ok: #22c55e;
   --warn: #f59e0b;
   --bad: #ef4444;
@@ -56,7 +56,7 @@ a { color: inherit; text-decoration: none; }
   font-weight: 800;
   font-size: 17px;
   letter-spacing: -0.02em;
-  background: linear-gradient(90deg, #a78bfa, #22d3ee);
+  background: linear-gradient(90deg, #05ff6e, #00dfff);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -72,7 +72,7 @@ a { color: inherit; text-decoration: none; }
   gap: 8px;
 }
 .nav-link:hover { background: var(--surface-2); color: var(--text); }
-.nav-link.active { background: var(--accent); color: #fff; }
+.nav-link.active { background: var(--accent); color: #0b0d18; }
 
 .nav-count {
   background: var(--bad);
@@ -157,7 +157,8 @@ tbody tr:hover td { background: var(--surface-2); }
 }
 .btn:hover { border-color: var(--accent); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+/* Dark text, not white: the brand green is too light for white-on-green to pass contrast. */
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #0b0d18; }
 .btn.primary:hover { background: var(--accent-hover); }
 .btn.danger { color: var(--bad); }
 .btn.danger:hover { border-color: var(--bad); }

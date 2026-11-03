@@ -12,8 +12,10 @@ const nextConfig = {
 
   // See the storefront's config for why: Server Actions default to a 1MB
   // body, well under a real flyer image or MAX_UPLOAD_BYTES (8MB,
-  // packages/shared/src/upload.ts). Set above 8MB for multipart overhead.
-  experimental: { serverActions: { bodySizeLimit: '10mb' } },
+  // packages/shared/src/upload.ts). 10MB left too little multipart-overhead
+  // margin above that 8MB app limit, so a flyer just over 8MB crashed the
+  // panel instead of getting the app's own clean rejection message.
+  experimental: { serverActions: { bodySizeLimit: '16mb' } },
 
   // See the storefront's config: tracing must start at the workspace root or
   // the symlinked @monkei/* packages are left out of the standalone bundle.

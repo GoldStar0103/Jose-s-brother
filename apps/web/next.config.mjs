@@ -19,10 +19,13 @@ const nextConfig = {
    * up to `MAX_UPLOAD_BYTES` (8MB, packages/shared/src/upload.ts) but never
    * got the chance: the framework rejected anything over 1MB before that
    * validation ran, surfacing as a generic "Algo salió mal" error boundary
-   * with no indication it was a size limit. Set above 8MB for multipart
-   * encoding overhead.
+   * with no indication it was a size limit. 10MB still left barely any
+   * multipart-overhead margin above the 8MB app limit, so a file just over
+   * 8MB (very easy for a phone photo or a flyer graphic) crashed the same
+   * way instead of hitting the app's own graceful "pesa más de 8 MB"
+   * message. Doubled to give real headroom.
    */
-  experimental: { serverActions: { bodySizeLimit: '10mb' } },
+  experimental: { serverActions: { bodySizeLimit: '16mb' } },
 
   /**
    * Standalone bundles the server and only the files it traced into
