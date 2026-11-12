@@ -73,7 +73,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         )}
         <div className="card counter">
           <div className="counter-value">{profile.levelPassesCompleted}</div>
-          <div className="counter-label">Level Pass completados</div>
+          <div className="counter-label">MONKEI Pass completados</div>
         </div>
       </div>
     </main>

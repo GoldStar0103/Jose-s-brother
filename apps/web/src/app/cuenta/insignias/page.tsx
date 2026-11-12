@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
 const CATEGORY_LABELS: Record<string, string> = {
   special: 'Especiales',
   ranking: 'Ranking',
-  level_pass: 'Level Pass',
+  level_pass: 'MONKEI Pass',
   event: 'Eventos',
 };
 

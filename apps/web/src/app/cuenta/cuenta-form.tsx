@@ -109,7 +109,7 @@ export function CuentaForm() {
       <form className="card" action={signupAction}>
         <p className="hint">
           Este ID es el que cuenta para el ranking. Puedes recargar otros IDs con la misma cuenta:
-          igual suman al Level Pass y La Bóveda. Solo puedes cambiarlo una vez por temporada.
+          igual suman al MONKEI Pass y La Bóveda. Solo puedes cambiarlo una vez por temporada.
         </p>
 
         <label className="field">

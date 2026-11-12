@@ -11,6 +11,10 @@ import { usePathname } from 'next/navigation';
  * `pixelId` is checked to be digits by the server before it gets here — it is
  * interpolated into an inline script, and a configuration value must never be
  * able to become code.
+ *
+ * `autoConfig: false` turns off Meta's automatic button/URL event guessing.
+ * Without it, Events Manager invents Purchase hits from homepage "Comprar"
+ * buttons with no value/currency — exactly the Diagnostics error we hit.
  */
 export function MetaPixel({ pixelId }: { pixelId: string }) {
   const pathname = usePathname();
@@ -33,6 +37,7 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('set','autoConfig',false,'${pixelId}');
 fbq('init','${pixelId}');fbq('track','PageView');`}
     </Script>
   );

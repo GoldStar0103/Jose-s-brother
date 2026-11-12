@@ -443,7 +443,7 @@ export function Checkout({
         <div className="alert warn" style={{ marginBottom: 12 }}>
           Estás comprando como invitado.{' '}
           <a href="/cuenta">Crea tu cuenta Mi {brandName}</a> — cualquier ID que recargues con la
-          cuenta suma al Level Pass y La Bóveda. El ranking usa un solo ID.
+          cuenta suma al MONKEI Pass y La Bóveda. El ranking usa un solo ID.
         </div>
       )}
 

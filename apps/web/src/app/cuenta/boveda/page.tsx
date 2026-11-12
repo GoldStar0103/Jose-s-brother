@@ -62,7 +62,7 @@ export default async function BovedaPage() {
       </p>
 
       {/*
-        Same honesty as the Level Pass hero: no illustrated key art exists for
+        Same honesty as the MONKEI Pass hero: no illustrated key art exists for
         this yet (combos have no per-offer image field at all today — flyers
         are a campaign-level asset, not per-combo), so this is the same
         CSS-only treatment, not a placeholder standing in for something the
@@ -93,9 +93,9 @@ export default async function BovedaPage() {
           </>
         ) : (
           <>
-            <span className="season-pill locked">🔒 Completa el Level Pass</span>
+            <span className="season-pill locked">🔒 Completa el MONKEI Pass</span>
             <p className="hint" style={{ marginTop: 10 }}>
-              Alcanza el último checkpoint del Level Pass para desbloquear precios exclusivos en 6
+              Alcanza el último checkpoint del MONKEI Pass para desbloquear precios exclusivos en 6
               promociones, válidos hasta que cierre la temporada.
             </p>
             <Link href="/cuenta/level-pass" className="btn sm primary" style={{ marginTop: 6 }}>

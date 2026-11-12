@@ -65,8 +65,9 @@ export function buildPurchaseEvent(order: ConversionOrder, siteOrigin: string) {
       ...(order.fbc ? { fbc: order.fbc } : {}),
     },
     custom_data: {
+      // ISO 4217 — Meta Diagnostics rejects missing/invalid currency (needs ≥90%).
       currency: 'MXN',
-      value: order.priceMxnCents / 100,
+      value: Number((Math.max(0, order.priceMxnCents) / 100).toFixed(2)),
       content_type: 'product',
       content_ids: [order.comboKey],
       num_items: 1,

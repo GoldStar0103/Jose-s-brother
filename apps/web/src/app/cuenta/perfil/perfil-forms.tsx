@@ -57,7 +57,7 @@ export function LinkedIdForm({
       </label>
       <p className="hint">
         Solo este ID suma al ranking de la temporada. Puedes recargar otros IDs y igual suman al
-        Level Pass y La Bóveda.
+        MONKEI Pass y La Bóveda.
         {seasonNumber
           ? canChange
             ? ` Puedes cambiarlo una vez en la Temporada ${seasonNumber}.`

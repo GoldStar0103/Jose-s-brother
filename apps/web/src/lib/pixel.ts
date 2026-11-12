@@ -40,6 +40,9 @@ export interface PixelParams {
   content_ids?: string[];
   content_name?: string;
   content_type?: 'product';
+  /** Browser Purchase should mirror CAPI so Diagnostics sees value+currency+order. */
+  order_id?: string;
+  num_items?: number;
 }
 
 /**

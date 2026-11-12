@@ -367,7 +367,7 @@ export default async function OrderPage({
         <div className="card" style={{ marginBottom: 16 }}>
           <h2 className="mini-title">Crea tu cuenta Mi {siteName()}</h2>
           <p className="hint">
-            Las próximas recargas con tu cuenta — en cualquier ID — suman al Level Pass y La
+            Las próximas recargas con tu cuenta — en cualquier ID — suman al MONKEI Pass y La
             Bóveda. El ranking usa el ID que ligues en tu perfil.
           </p>
           <Link className="btn primary wide" href="/cuenta">

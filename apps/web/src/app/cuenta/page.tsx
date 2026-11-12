@@ -49,7 +49,7 @@ export default async function CuentaPage() {
             </h1>
             <p className="hx-hero-lead">
               Entra con tu correo — sin contraseña. Un ID para el ranking. Cualquier recarga con tu
-              cuenta suma al Level Pass y La Bóveda.
+              cuenta suma al MONKEI Pass y La Bóveda.
             </p>
           </div>
         </section>
@@ -120,7 +120,7 @@ export default async function CuentaPage() {
             Editar perfil
           </Link>
           <p className="hint" style={{ margin: 0 }}>
-            Recargas a otros IDs también suman LP y La Bóveda.
+            Recargas a otros IDs también suman MP y La Bóveda.
           </p>
         </div>
       </div>
@@ -136,7 +136,7 @@ export default async function CuentaPage() {
         </div>
         <div className="counter">
           <div className="counter-value">{overview.lp}</div>
-          <div className="counter-label">LP esta temporada</div>
+          <div className="counter-label">MP esta temporada</div>
         </div>
       </div>
 
@@ -162,13 +162,13 @@ export default async function CuentaPage() {
         <div className="hx-pass-head">
           <div>
             <h2 className="mini-title" style={{ margin: 0 }}>
-              Level Pass
+              MONKEI Pass
             </h2>
             {overview.season ? (
               <p className="hint" style={{ marginTop: 4 }}>
                 {nextCheckpoint
-                  ? `${overview.lp} / ${nextCheckpoint.lp} LP · siguiente ${diamonds(nextCheckpoint.rewardDiamonds)} 💎`
-                  : 'Pass completado'}
+                  ? `${overview.lp} / ${nextCheckpoint.lp} MP · siguiente ${diamonds(nextCheckpoint.rewardDiamonds)} 💎`
+                  : 'MONKEI Pass completado'}
               </p>
             ) : (
               <p className="hint">Todavía no hay una temporada activa.</p>
@@ -207,7 +207,7 @@ export default async function CuentaPage() {
           <p className="hint" style={{ margin: '2px 0 0' }}>
             {overview.vault.unlocked
               ? `${overview.vault.offers.length} ofertas exclusivas`
-              : 'Completa el Level Pass para abrir precios de temporada'}
+              : 'Completa el MONKEI Pass para abrir precios de temporada'}
           </p>
         </span>
         <span className="spacer" />
@@ -228,7 +228,7 @@ export default async function CuentaPage() {
                 <span className="hint">{o.comboName}</span>
                 <div className="spacer" />
                 <span className="hint">{ORDER_STATUS_LABELS[o.status] ?? o.status}</span>
-                {o.lpEarned !== null && <span className="hint">+{o.lpEarned} LP</span>}
+                {o.lpEarned !== null && <span className="hint">+{o.lpEarned} MP</span>}
               </div>
             </div>
           ))}

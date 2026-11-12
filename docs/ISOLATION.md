@@ -31,7 +31,7 @@ mode. Treat it as a security incident if it happens.
   ride into the other if both are open.
 - Brand art: `apps/web/src/assets/logo.png`. Favicons and the OG logo data URL
   are rebuilt from it with `node scripts/rebuild-brand-icons.mjs`.
-- "Level Pass" is a **product feature name**, not the LevelUp brand. Leave it.
+- "MONKEI Pass" / "MONKEI Points" are **product feature names** (formerly Level Pass / Level Points). Keep the Monkei branding in customer-facing copy.
 
 ## Infra names (also Monkei)
 

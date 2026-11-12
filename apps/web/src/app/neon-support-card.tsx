@@ -5,7 +5,8 @@ function DotField({ className }: { className: string }) {
 }
 
 function digitChars(count: number): string[] {
-  const raw = String(Math.max(count, 169357));
+  const n = Math.max(0, Math.floor(count));
+  const raw = String(n);
   return raw.length > 3 ? `${raw.slice(0, -3)}.${raw.slice(-3)}`.split('') : raw.split('');
 }
 
@@ -76,7 +77,7 @@ export function NeonSupportCard({
 
         <span aria-hidden="true" className="nsc-activity-divider" />
 
-        <div className="nsc-counter" aria-label={`${Math.max(processedCount, 169357)} recargas procesadas`}>
+        <div className="nsc-counter" aria-label={`${Math.max(0, Math.floor(processedCount))} recargas procesadas`}>
           {chars.map((ch, index) =>
             ch === '.' ? (
               <span className="nsc-counter-dot" key={`d-${index}`}>

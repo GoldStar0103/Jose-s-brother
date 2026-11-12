@@ -431,7 +431,7 @@ export class DrizzleLevelPassStore implements LevelPassSweepStore, RewardFulfill
               comboKey: LEVEL_PASS_REWARD_COMBO_KEY,
               comboSnapshot: {
                 comboKey: LEVEL_PASS_REWARD_COMBO_KEY,
-                name: `Recompensa Level Pass — ${reward.checkpointLp} LP`,
+                name: `Recompensa MONKEI Pass — ${reward.checkpointLp} MP`,
                 advertisedDiamonds: reward.rewardDiamonds,
                 deliveredDiamonds: items.reduce((sum, i) => sum + i.diamondsBase, 0),
                 recipe: items.map((i) => ({
@@ -543,7 +543,7 @@ export class DrizzleLevelPassStore implements LevelPassSweepStore, RewardFulfill
         seasonId: row.seasonId,
         sourceType: 'level_pass_checkpoint_event',
         sourceId: row.checkpointEventId,
-        note: 'Diamantes de recompensa del Level Pass entregados',
+        note: 'Diamantes de recompensa del MONKEI Pass entregados',
       });
     });
   }

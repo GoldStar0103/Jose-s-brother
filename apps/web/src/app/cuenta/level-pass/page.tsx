@@ -9,7 +9,7 @@ import { ChestMark, GemMark } from '../../icons';
 import { CuentaForm } from '../cuenta-form';
 
 export const metadata: Metadata = {
-  title: 'Level Pass',
+  title: 'MONKEI Pass',
   description: 'Tu progreso, tus checkpoints y tus recompensas de la temporada.',
   alternates: { canonical: '/cuenta/level-pass' },
 };
@@ -28,7 +28,7 @@ export default async function LevelPassPage() {
       <main className="page narrow">
         <section className="hx-hero" style={{ minHeight: 240, marginLeft: 0, marginRight: 0 }}>
           <div className="hx-hero-copy hx-rise">
-            <p className="hx-kicker">Level Pass</p>
+            <p className="hx-kicker">MONKEI Pass</p>
             <h1>
               Recarga diamantes, <span className="grad">gana recompensas</span>
             </h1>
@@ -52,7 +52,7 @@ export default async function LevelPassPage() {
         <p className="hint" style={{ marginBottom: 8 }}>
           <Link href="/cuenta">← Mi cuenta</Link>
         </p>
-        <h1 className="page-title">Level Pass</h1>
+        <h1 className="page-title">MONKEI Pass</h1>
         <p className="page-sub">Todavía no hay una temporada activa. Vuelve cuando empiece la próxima.</p>
       </main>
     );
@@ -80,13 +80,13 @@ export default async function LevelPassPage() {
       <section className="hx-hero" style={{ minHeight: 260, marginLeft: 0, marginRight: 0, paddingTop: 8 }}>
         <div className="hx-hero-copy hx-rise">
           <p className="hx-kicker">
-            Level Pass · Temporada {season.seasonNumber}
+            MONKEI Pass · Temporada {season.seasonNumber}
           </p>
           <h1>
             Recarga diamantes, <span className="grad">gana recompensas</span>
           </h1>
           <p className="hx-hero-lead">
-            Cada recarga suma Level Points. Completa el Pass y se abre La Bóveda.
+            Cada recarga suma MONKEI Points. Completa el MONKEI Pass y se abre La Bóveda.
           </p>
           <span className="season-pill">{days} día{days === 1 ? '' : 's'} restantes</span>
         </div>
@@ -106,7 +106,7 @@ export default async function LevelPassPage() {
         </div>
         <div className="lp-progress-value">
           {overview.lp}
-          {nextCheckpoint && <span className="hint"> / {nextCheckpoint.lp} LP</span>}
+          {nextCheckpoint && <span className="hint"> / {nextCheckpoint.lp} MP</span>}
         </div>
         <div className="progress-track">
           <div className="progress-fill" style={{ width: `${pct}%` }} />
@@ -114,11 +114,11 @@ export default async function LevelPassPage() {
         {nextCheckpoint ? (
           <p className="hint" style={{ marginTop: 8 }}>
             Siguiente recompensa: <strong>{diamonds(nextCheckpoint.rewardDiamonds)} 💎</strong> ·{' '}
-            {nextCheckpoint.lp - overview.lp} LP restantes
+            {nextCheckpoint.lp - overview.lp} MP restantes
           </p>
         ) : (
           <p className="hint" style={{ marginTop: 8 }}>
-            Completaste el Level Pass de esta temporada.
+            Completaste el MONKEI Pass de esta temporada.
           </p>
         )}
       </div>
@@ -140,7 +140,7 @@ export default async function LevelPassPage() {
               <div className="hx-node-icon" aria-hidden="true">
                 {isFinal ? <ChestMark className="icon" /> : <GemMark className="icon" />}
               </div>
-              <div className="hx-node-lp">{cp.lp.toLocaleString('es-MX')} LP</div>
+              <div className="hx-node-lp">{cp.lp.toLocaleString('es-MX')} MP</div>
               <div className="hx-node-reward">
                 {diamonds(cp.rewardDiamonds)} 💎
                 {isFinal && <div className="hint">+ La Bóveda</div>}
@@ -160,7 +160,7 @@ export default async function LevelPassPage() {
       <div className="card hx-statbar" style={{ marginTop: 18 }}>
         <div className="counter">
           <div className="counter-value">{overview.lp}</div>
-          <div className="counter-label">LP esta temporada</div>
+          <div className="counter-label">MP esta temporada</div>
         </div>
         <div className="counter">
           <div className="counter-value">{diamonds(overview.seasonalDiamonds)}</div>
@@ -181,7 +181,7 @@ export default async function LevelPassPage() {
           <p className="hint" style={{ margin: '2px 0 0' }}>
             {overview.vault.unlocked
               ? `${overview.vault.offers.length} oferta${overview.vault.offers.length === 1 ? '' : 's'} disponible${overview.vault.offers.length === 1 ? '' : 's'}`
-              : 'Completa el Level Pass para desbloquear precios exclusivos.'}
+              : 'Completa el MONKEI Pass para desbloquear precios exclusivos.'}
           </p>
         </span>
         <span className="spacer" />
@@ -197,7 +197,7 @@ export default async function LevelPassPage() {
               <div key={cp.lp} className="card lp-history-row">
                 <span>
                   {diamonds(cp.rewardDiamonds)} 💎
-                  <span className="hint"> · Checkpoint {cp.lp.toLocaleString('es-MX')} LP</span>
+                  <span className="hint"> · Checkpoint {cp.lp.toLocaleString('es-MX')} MP</span>
                 </span>
                 <span className="spacer" />
                 <span className={`hint lp-history-status lp-history-status-${cp.status}`}>

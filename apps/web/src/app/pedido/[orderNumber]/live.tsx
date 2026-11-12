@@ -45,12 +45,17 @@ export function PurchasePixel({
     } catch {
       // Private mode: fire anyway; the eventId still deduplicates server-side.
     }
+    // Meta Diagnostics flags Purchase without value+currency (ISO 4217). Always
+    // send both as concrete fields — never omit, never NaN.
+    const amount = Number.isFinite(value) ? Math.round(value * 100) / 100 : 0;
     trackPixel(
       'Purchase',
       {
-        value,
+        value: amount,
         currency: 'MXN',
         content_type: 'product',
+        order_id: orderNumber,
+        num_items: 1,
         ...(comboKey ? { content_ids: [comboKey] } : {}),
       },
       eventId,
