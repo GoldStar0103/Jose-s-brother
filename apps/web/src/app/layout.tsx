@@ -27,6 +27,7 @@ import './levelup-ia-live.css';
 import './levelup-rk-patch.css';
 import './levelup-bridge.css';
 import './levelup-wa-popup.css';
+import './vip-group-popup.css';
 import './levelup-home-polish.css';
 import './monkei-theme.css';
 import './monkei-3d.css';

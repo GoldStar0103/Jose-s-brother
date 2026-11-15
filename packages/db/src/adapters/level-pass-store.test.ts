@@ -40,7 +40,7 @@ import { DrizzleCatalogSyncStore } from './catalog-sync-store.js';
 import { DrizzleOrderingStore } from './ordering-store.js';
 import { saveFxRate } from './payment-settings.js';
 import { saveLevelPassCheckpoints, DEFAULT_LEVEL_PASS_CHECKPOINTS } from './level-pass-settings.js';
-import { syncCatalog, syncLevelPass } from '@monkei/engine';
+import { creditOrdersForLinkedPlayerId, syncCatalog, syncLevelPass } from '@monkei/engine';
 import { DrizzleLevelPassStore } from './level-pass-store.js';
 import type { LevelPassDecision } from '@monkei/engine';
 
@@ -653,6 +653,112 @@ describe('findUnprocessedOrders', () => {
     const store = new DrizzleLevelPassStore(db);
     const pending = await store.findUnprocessedOrders({ completedAfter: new Date('2026-01-01'), limit: 10 });
     expect(pending).toEqual([]);
+  });
+});
+
+describe('findCreditableOrdersForPlayerId / creditOrdersForLinkedPlayerId', () => {
+  const paid = {
+    costUsd: '1.0000',
+    method: 'transfer_manual' as const,
+    gateway: null,
+    amountReceivedCents: 10_000,
+  };
+
+  it('retroactively credits a guest order once the matching Free Fire ID gets linked', async () => {
+    await seedActiveSeason();
+    const guestOrder = await placeOrder('700001');
+    await completeOrder(guestOrder.id, { completedAt: new Date('2026-02-05T00:00:00Z'), ...paid });
+
+    const store = new DrizzleLevelPassStore(db);
+    const deps = {
+      store,
+      lookbackMs: 14 * 24 * 60 * 60_000,
+      batchSize: 50,
+      now: () => new Date('2026-02-06T00:00:00Z'),
+    };
+
+    // Swept before anyone is linked: the exact "no_linked_account" terminal
+    // skip the brother's bug report is about.
+    expect(await syncLevelPass(deps)).toMatchObject({ examined: 1, applied: 0, skipped: 1 });
+    const [beforeLink] = await db.select().from(orders).where(eq(orders.id, guestOrder.id));
+    expect(beforeLink?.levelPassSkippedAt).not.toBeNull();
+
+    // Customer creates an account and links exactly that ID afterward.
+    const profile = await seedProfile('700001');
+    const result = await creditOrdersForLinkedPlayerId({ store }, '700001');
+    expect(result).toMatchObject({ examined: 1, credited: 1, failed: 0 });
+
+    expect(await store.hasProcessedOrder(guestOrder.id)).toBe(true);
+    const [stats] = await db
+      .select()
+      .from(seasonPlayerStats)
+      .where(eq(seasonPlayerStats.playerProfileId, profile.id));
+    expect(stats?.lp ?? 0).toBeGreaterThan(0);
+    expect(stats?.seasonalDiamonds).toBe(100);
+  });
+
+  it('never double-credits an order that was already applied through the normal sweep', async () => {
+    await seedActiveSeason();
+    const profile = await seedProfile('700002');
+    const order = await placeOrder('700002');
+    await completeOrder(order.id, { completedAt: new Date('2026-02-05T00:00:00Z'), ...paid });
+
+    const store = new DrizzleLevelPassStore(db);
+    const deps = {
+      store,
+      lookbackMs: 14 * 24 * 60 * 60_000,
+      batchSize: 50,
+      now: () => new Date('2026-02-06T00:00:00Z'),
+    };
+    expect(await syncLevelPass(deps)).toMatchObject({ examined: 1, applied: 1, skipped: 0 });
+
+    const [stats1] = await db
+      .select()
+      .from(seasonPlayerStats)
+      .where(eq(seasonPlayerStats.playerProfileId, profile.id));
+    const lpAfterRealCredit = stats1?.lp ?? 0;
+    expect(lpAfterRealCredit).toBeGreaterThan(0);
+
+    // Re-linking the same already-credited ID must find nothing left to credit.
+    const result = await creditOrdersForLinkedPlayerId({ store }, '700002');
+    expect(result).toEqual({ examined: 0, credited: 0, failed: 0 });
+
+    const [stats2] = await db
+      .select()
+      .from(seasonPlayerStats)
+      .where(eq(seasonPlayerStats.playerProfileId, profile.id));
+    expect(stats2?.lp).toBe(lpAfterRealCredit);
+  });
+
+  it('leaves a different player ID untouched', async () => {
+    await seedActiveSeason();
+    const otherGuestOrder = await placeOrder('700003');
+    await completeOrder(otherGuestOrder.id, { completedAt: new Date('2026-02-05T00:00:00Z'), ...paid });
+
+    const store = new DrizzleLevelPassStore(db);
+    const deps = {
+      store,
+      lookbackMs: 14 * 24 * 60 * 60_000,
+      batchSize: 50,
+      now: () => new Date('2026-02-06T00:00:00Z'),
+    };
+    await syncLevelPass(deps); // marks 700003 terminal — nobody linked to it
+
+    await seedProfile('700004'); // an unrelated ID gets linked
+    const result = await creditOrdersForLinkedPlayerId({ store }, '700004');
+    expect(result).toEqual({ examined: 0, credited: 0, failed: 0 });
+    expect(await store.hasProcessedOrder(otherGuestOrder.id)).toBe(false);
+  });
+
+  it('does not credit a guest order that completed before the current season started', async () => {
+    const order = await placeOrder('700005');
+    await completeOrder(order.id, { completedAt: new Date('2025-02-01T00:00:00Z'), ...paid });
+    await seedActiveSeason(); // starts 2026-01-01 — well after the order completed
+
+    const store = new DrizzleLevelPassStore(db);
+    await seedProfile('700005');
+    const result = await creditOrdersForLinkedPlayerId({ store }, '700005');
+    expect(result).toEqual({ examined: 0, credited: 0, failed: 0 });
   });
 });
 

@@ -2,7 +2,14 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { changeLinkedPlayerId, setFeaturedBadges, updateAvatar, updateDisplayName } from '@monkei/db';
+import {
+  changeLinkedPlayerId,
+  DrizzleLevelPassStore,
+  setFeaturedBadges,
+  updateAvatar,
+  updateDisplayName,
+} from '@monkei/db';
+import { creditOrdersForLinkedPlayerId } from '@monkei/engine';
 import { ValidationUnsupportedError } from '@monkei/provider';
 import { createCustomerSessionToken } from '../../lib/customer-auth.js';
 import { callerIp, getDb, getProvider, validationLimiter } from '../../lib/server.js';
@@ -113,6 +120,15 @@ export async function saveLinkedPlayerId(
             ? 'Esta temporada ya cambiaste tu ID. Solo se puede una vez.'
             : 'El ID de Free Fire debe tener entre 6 y 15 números.',
     };
+  }
+
+  // Same reasoning as signup: this ID may have paid, unmatched orders from
+  // before it was linked to anyone — catch them up now. Never blocks the
+  // profile update.
+  try {
+    await creditOrdersForLinkedPlayerId({ store: new DrizzleLevelPassStore(getDb()) }, result.playerId);
+  } catch (err) {
+    console.error(`[level-pass] Could not retroactively credit linked ID change for ${session.playerProfileId}`, err);
   }
 
   const secret = process.env.CUSTOMER_SESSION_SECRET;

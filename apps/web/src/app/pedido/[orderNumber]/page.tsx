@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { findCustomerOrder, type CustomerOrder, type CustomerOrderStatus } from '@monkei/db';
+import { findCustomerOrder, getVipGroupUrl, type CustomerOrder, type CustomerOrderStatus } from '@monkei/db';
 import { siteName } from '@monkei/shared';
 import { getCustomerSession } from '../../../lib/customer-session';
 import { callerIp, getDb, lookupLimiter } from '../../../lib/server';
 import { applyStripeReport, getStripe, STRIPE } from '../../../lib/stripe';
+import { applyMercadoPagoReport, getMercadoPago, MERCADOPAGO } from '../../../lib/mercadopago';
 import { AutoRefresh, PurchasePixel } from './live';
 import { diamonds, mxn } from '../../../lib/format';
-import { vipGroupUrl } from '../../../lib/vip';
 import { supportUrl } from '../../../lib/support';
+import { VipGroupPopup } from '../../vip-group-popup';
 
 export const dynamic = 'force-dynamic';
 
@@ -128,6 +129,22 @@ const SPEI_WAITING = {
     'Usa los datos de abajo para transferir desde tu banco. En cuanto se acredite, tu recarga entra sola — puede tardar unas horas.',
   tone: 'warn',
 };
+/**
+ * Shown for an OXXO/SPEI gateway order before the gateway has handed back a
+ * voucher/CLABE to display (or, for Mercado Pago's SPEI, always — that
+ * adapter's `getCharge` does not surface CLABE details at all, see
+ * `reconcileMercadoPago`'s own comment). Also what a customer sees if the
+ * gateway's hosted payment tab never loaded or was lost — this page cannot
+ * know why, only that nothing has arrived yet, so it says what is true and
+ * gives them a way forward instead of asking for a comprobante nobody asked
+ * them to produce.
+ */
+const GATEWAY_CONFIRMING = {
+  label: 'Confirmando tu pago',
+  detail:
+    'Si ya pagaste en la ventana de pago, esto puede tardar unos minutos — esta página se actualiza sola. Si la ventana no cargó o la cerraste, vuelve a la tienda e inténtalo de nuevo: tu pedido queda guardado con el mismo número.',
+  tone: 'warn',
+};
 
 type BankTransfer = {
   hostedInstructionsUrl: string | null;
@@ -178,6 +195,47 @@ async function reconcileCard(
   }
 }
 
+/**
+ * Ask Mercado Pago directly when a SPEI/OXXO order is still waiting.
+ *
+ * Mirrors `reconcileCard` above for the same reason: the webhook is the real
+ * confirmation but can lag, and a customer who already paid (or whose
+ * Checkout Pro tab never made it back here on its own — common when it opens
+ * inside an in-app browser, e.g. a social app's embedded tab, that mishandles
+ * Mercado Pago's own app-link handoff) is staring at this exact page. Only
+ * `voucherUrl` is read back — unlike Stripe's adapter, this one's `getCharge`
+ * does not populate `bankTransfer` (no CLABE to show here yet for SPEI); see
+ * mercadopago.ts's own `getCharge`.
+ */
+async function reconcileMercadoPago(order: CustomerOrder): Promise<{ voucherUrl: string | null }> {
+  const none = { voucherUrl: null };
+  const gateway = getMercadoPago();
+  if (!gateway || order.gateway !== MERCADOPAGO || !order.gatewayChargeId) return none;
+  if (order.status !== 'esperando_pago') return none;
+
+  try {
+    const snapshot = await gateway.getCharge(order.gatewayChargeId);
+    if (!snapshot) return none;
+
+    const issued = Boolean(snapshot.voucherUrl);
+    if (snapshot.state !== 'pending' || issued) {
+      await applyMercadoPagoReport({
+        gatewayChargeId: snapshot.gatewayChargeId,
+        state: snapshot.state,
+        amountReceivedCents: snapshot.amountReceivedCents,
+        reference: snapshot.reference ?? null,
+        voucherIssued: issued,
+      });
+    }
+    if (snapshot.state !== 'pending') return none;
+    return { voucherUrl: snapshot.voucherUrl ?? null };
+  } catch (err) {
+    // The webhook will get there. Showing the page matters more.
+    console.error(`[pedido] could not re-check ${order.orderNumber} with Mercado Pago`, err);
+    return none;
+  }
+}
+
 export default async function OrderPage({
   params,
   searchParams,
@@ -208,31 +266,41 @@ export default async function OrderPage({
     notFound();
   }
 
-  const { voucherUrl, bankTransfer } = await reconcileCard(order);
-  if (order.status === 'esperando_pago' && order.gateway === STRIPE) {
+  const [stripeResult, mpResult] = await Promise.all([reconcileCard(order), reconcileMercadoPago(order)]);
+  const voucherUrl = stripeResult.voucherUrl ?? mpResult.voucherUrl;
+  const { bankTransfer } = stripeResult;
+  if (order.status === 'esperando_pago' && (order.gateway === STRIPE || order.gateway === MERCADOPAGO)) {
     // The re-check may just have confirmed it.
     order = (await findCustomerOrder(getDb(), orderNumber, id)) ?? order;
   }
 
-  const byCard = order.gateway === STRIPE;
+  // True for every gateway-redirect method (Stripe or Mercado Pago, whichever
+  // actually handled it — `order.gateway` alone used to be checked against
+  // Stripe only, which silently fell through to the manual-transfer "sube tu
+  // comprobante" copy for every Mercado Pago order, a method with no
+  // comprobante step at all).
+  const isGatewayPayment =
+    order.paymentMethod === 'card' || order.paymentMethod === 'oxxo' || order.paymentMethod === 'spei';
   const status =
-    order.status === 'esperando_pago' && byCard
+    order.status === 'esperando_pago' && isGatewayPayment
       ? voucherUrl
         ? OXXO_WAITING
         : bankTransfer
           ? SPEI_WAITING
-          : CARD_WAITING
+          : order.paymentMethod === 'card'
+            ? CARD_WAITING
+            : GATEWAY_CONFIRMING
       : STATUS[order.status];
 
   // Paid orders fire the browser Purchase; everything else is not a sale yet.
   const paid = order.status === 'procesando' || order.status === 'completado';
   // Keep refreshing while something is about to change on its own, including
   // an issued OXXO voucher or SPEI reference: those now open in a separate
-  // tab (Stripe's own hosted page), so refreshing this one no longer disturbs
-  // anyone trying to read a barcode or copy a CLABE off of it — the client
-  // asked for this specifically so people can watch their order advance here
-  // while they pay in the other tab.
-  const refreshing = order.status === 'procesando' || (byCard && order.status === 'esperando_pago');
+  // tab (the gateway's own hosted page), so refreshing this one no longer
+  // disturbs anyone trying to read a barcode or copy a CLABE off of it — the
+  // client asked for this specifically so people can watch their order
+  // advance here while they pay in the other tab.
+  const refreshing = order.status === 'procesando' || (isGatewayPayment && order.status === 'esperando_pago');
   const pct =
     order.advertisedDiamonds === 0
       ? 0
@@ -245,12 +313,13 @@ export default async function OrderPage({
   // Only once the diamonds are actually in their account. Inviting someone to
   // the VIP group while their order is still processing would read as a sales
   // pitch at the exact moment they are waiting to find out if we delivered.
-  const vipUrl = order.status === 'completado' ? vipGroupUrl() : null;
+  const vipUrl = order.status === 'completado' ? await getVipGroupUrl(getDb()) : null;
   const session = await getCustomerSession();
 
   return (
     <main className="page narrow">
       {refreshing && <AutoRefresh everyMs={5_000} />}
+      {vipUrl && <VipGroupPopup orderNumber={order.orderNumber} groupUrl={vipUrl} />}
       {paid && (
         <PurchasePixel
           orderNumber={order.orderNumber}

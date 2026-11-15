@@ -9,11 +9,12 @@
  * decimal string; formatting is the UI's job, never arithmetic.
  */
 
-import { and, count, desc, eq, gte, inArray, isNull, lt, notInArray, sql } from 'drizzle-orm';
+import { and, count, desc, eq, gte, inArray, isNotNull, isNull, lt, notInArray, sql } from 'drizzle-orm';
 import type { Database } from '../index.js';
 import { baseProducts, campaigns, combos, orderItems, orders, payments } from '../schema.js';
 import { mexicoCityDayRange } from './mexico-city-time.js';
 import { getSalesTotals } from './accounting-queries.js';
+import { NOT_A_SALE } from './conversion-store.js';
 
 // ── the approval queue ────────────────────────────────────────────────────────
 
@@ -525,10 +526,25 @@ export async function getOrderDetail(db: Database, orderId: string): Promise<Ord
 // ── dashboard ─────────────────────────────────────────────────────────────────
 
 export interface DashboardStats {
+  /**
+   * All-time, not just today: how many orders are sitting in that status
+   * right now, however old. A screen reading this next to "today" figures
+   * (an ad platform's daily results, say) is comparing two different things —
+   * see `paidToday` below for the actually-comparable number.
+   */
   awaitingApproval: number;
   processing: number;
   needsReview: number;
   completedToday: number;
+  /**
+   * Orders whose payment cleared today (Mexico City calendar day), excluding
+   * the same `NOT_A_SALE` statuses the Meta/TikTok conversion reporter
+   * excludes — this is the actual count of "sales" the ad platforms were (or
+   * will be) told about today, delivered or not yet. Use this, not
+   * `awaitingApproval`/`processing`/`needsReview`, to sanity-check an ad
+   * account's reported purchases against what really happened today.
+   */
+  paidToday: number;
   revenueTodayCents: number;
   /**
    * Gross revenue minus recharge cost minus the estimated payment-platform
@@ -575,6 +591,18 @@ export async function getDashboardStats(db: Database, now = new Date()): Promise
   // reimplemented so the two screens can never quietly disagree.
   const { netSalesCents } = await getSalesTotals(db, { start: startOfDay, end: endOfDay });
 
+  const [paidTodayRow] = await db
+    .select({ n: count() })
+    .from(orders)
+    .where(
+      and(
+        isNotNull(orders.paidAt),
+        gte(orders.paidAt, startOfDay),
+        lt(orders.paidAt, endOfDay),
+        notInArray(orders.status, [...NOT_A_SALE]),
+      ),
+    );
+
   const inactive = await db
     .select({ key: combos.key, name: combos.name })
     .from(combos)
@@ -593,6 +621,7 @@ export async function getDashboardStats(db: Database, now = new Date()): Promise
     processing: (byStatus['processing'] ?? 0) + (byStatus['partially_delivered'] ?? 0),
     needsReview: byStatus['needs_review'] ?? 0,
     completedToday: today?.n ?? 0,
+    paidToday: paidTodayRow?.n ?? 0,
     revenueTodayCents: Number(today?.revenue ?? 0),
     netRevenueTodayCents: netSalesCents,
     inactiveCombos: inactive,

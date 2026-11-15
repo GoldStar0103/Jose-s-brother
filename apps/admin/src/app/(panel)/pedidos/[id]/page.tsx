@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getOrderDetail, getOrderLpSummary } from '@monkei/db';
+import { getOrderDetail, getOrderLpSummary, previewLevelPassBackfill } from '@monkei/db';
 import { getDb } from '../../../../lib/db';
 import { requireSession } from '../../../../lib/session';
 import { orderWhatsappMessage, waUrl } from '../../../../lib/whatsapp';
@@ -8,6 +8,7 @@ import { ReviewPanel } from './review-panel';
 import { ReleasePaymentButton } from './release-payment-button';
 import { ReverseOrderForm } from './reverse-order-form';
 import { LpOverrideForm } from './lp-override-form';
+import { LpBackfillForm } from './lp-backfill-form';
 import {
   dateTime,
   diamonds,
@@ -77,6 +78,11 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   const db = getDb();
   const [order, lp] = await Promise.all([getOrderDetail(db, id), getOrderLpSummary(db, id)]);
   if (!order) notFound();
+
+  // Only worth checking once there is no LP transaction at all — an order
+  // that already has one (even overridden to 0) is not what this is for.
+  const lpBackfillPreview =
+    !lp && order.status === 'completed' ? await previewLevelPassBackfill(db, order.orderId) : null;
 
   const snapshot = order.comboSnapshot as { name?: string; advertisedDiamonds?: number };
   const chatUrl = waUrl(
@@ -287,6 +293,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           overrideReason={lp.overrideReason}
         />
       )}
+
+      {lpBackfillPreview && <LpBackfillForm orderId={order.orderId} preview={lpBackfillPreview} />}
 
       {/* The only action available on a delivered order, and the only way out
           of `completed` in the state machine. */}

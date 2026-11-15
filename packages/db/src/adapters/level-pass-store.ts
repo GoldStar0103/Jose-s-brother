@@ -7,7 +7,7 @@
  * correctness and readability win over a cleverer join here.
  */
 
-import { and, desc, eq, gte, inArray, isNull, ne, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, inArray, isNull, lt, ne, sql } from 'drizzle-orm';
 import { defaultOrderNumber, LEVEL_PASS_REWARD_COMBO_KEY } from '@monkei/engine';
 import type {
   GrantableRewardOrder,
@@ -15,6 +15,7 @@ import type {
   LevelPassCurrentState,
   LevelPassDecision,
   LevelPassOrderFinancials,
+  LevelPassRetroactiveStore,
   LevelPassSweepStore,
   PendingCheckpointReward,
   ResolvedRewardCatalogEntry,
@@ -43,7 +44,9 @@ import { getFxRate } from './payment-settings.js';
 import { getLevelPassCheckpoints } from './level-pass-settings.js';
 import { toNumericString } from './mapping.js';
 
-export class DrizzleLevelPassStore implements LevelPassSweepStore, RewardFulfillmentStore {
+export class DrizzleLevelPassStore
+  implements LevelPassSweepStore, RewardFulfillmentStore, LevelPassRetroactiveStore
+{
   constructor(private readonly db: Database) {}
 
   async findActiveSeason(): Promise<{ id: string; endsAt: Date } | null> {
@@ -255,8 +258,6 @@ export class DrizzleLevelPassStore implements LevelPassSweepStore, RewardFulfill
     completedAfter: Date;
     limit: number;
   }): Promise<LevelPassOrderFinancials[]> {
-    const fxRate = await getFxRate(this.db);
-
     const candidates = await this.db
       .select({
         orderId: orders.id,
@@ -284,7 +285,74 @@ export class DrizzleLevelPassStore implements LevelPassSweepStore, RewardFulfill
       .orderBy(orders.completedAt)
       .limit(input.limit);
 
+    return this.hydrateFinancials(candidates);
+  }
+
+  /**
+   * See `LevelPassRetroactiveStore`'s contract: unlike `findUnprocessedOrders`,
+   * this deliberately does NOT filter out `levelPassSkippedAt` — a row marked
+   * there was only ever "nobody to credit", which linking this exact ID just
+   * changed. Scoped to the currently active season (see `creditOrdersForLinkedPlayerId`'s
+   * own comment for why a closed season is out of scope here).
+   */
+  async findCreditableOrdersForPlayerId(playerId: string): Promise<LevelPassOrderFinancials[]> {
+    const [season] = await this.db
+      .select({ startsAt: seasons.startsAt, endsAt: seasons.endsAt })
+      .from(seasons)
+      .where(eq(seasons.status, 'active'))
+      .orderBy(desc(seasons.seasonNumber))
+      .limit(1);
+    if (!season) return [];
+
+    const candidates = await this.db
+      .select({
+        orderId: orders.id,
+        playerId: orders.playerId,
+        buyerProfileId: orders.playerProfileId,
+        priceMxnCents: orders.priceMxnCents,
+      })
+      .from(orders)
+      .leftJoin(levelPassLpTransactions, eq(levelPassLpTransactions.orderId, orders.id))
+      .where(
+        and(
+          eq(orders.playerId, playerId),
+          eq(orders.status, 'completed'),
+          gte(orders.completedAt, season.startsAt),
+          lt(orders.completedAt, season.endsAt),
+          isNull(levelPassLpTransactions.id),
+          ne(orders.comboKey, LEVEL_PASS_REWARD_COMBO_KEY),
+        ),
+      )
+      .orderBy(orders.completedAt);
+
+    return this.hydrateFinancials(candidates);
+  }
+
+  /** One order's financials, for the admin's single-order backfill action. */
+  async getOrderFinancials(orderId: string): Promise<LevelPassOrderFinancials | null> {
+    const [row] = await this.db
+      .select({
+        orderId: orders.id,
+        playerId: orders.playerId,
+        buyerProfileId: orders.playerProfileId,
+        priceMxnCents: orders.priceMxnCents,
+      })
+      .from(orders)
+      .where(eq(orders.id, orderId))
+      .limit(1);
+    if (!row) return null;
+
+    const [financials] = await this.hydrateFinancials([row]);
+    return financials ?? null;
+  }
+
+  /** Shared order-items/payment lookup behind both of the candidate queries above. */
+  private async hydrateFinancials(
+    candidates: { orderId: string; playerId: string; buyerProfileId: string | null; priceMxnCents: number }[],
+  ): Promise<LevelPassOrderFinancials[]> {
     if (candidates.length === 0) return [];
+
+    const fxRate = await getFxRate(this.db);
     const orderIds = candidates.map((c) => c.orderId);
 
     const itemRows = await this.db

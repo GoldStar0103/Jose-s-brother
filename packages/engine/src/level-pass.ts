@@ -228,12 +228,37 @@ export async function processOrderCompletion(
   const season = await deps.store.findActiveSeason();
   if (!season) return { status: 'no_active_season' };
 
-  const state = await deps.store.getPlayerState(season.id, order.playerId, order.buyerProfileId);
+  return creditOrderForSeason(deps, order, season.id);
+}
+
+/**
+ * The same crediting decision as `processOrderCompletion`, against a season
+ * named explicitly rather than "whichever is active right now".
+ *
+ * Exists for the admin's manual, per-order backfill: a guest order from an
+ * already-CLOSED season that only gets a matching account afterward is out of
+ * reach of `creditOrdersForLinkedPlayerId` on purpose (crediting it into
+ * today's active season would attribute a sale to the wrong leaderboard), but
+ * an admin who has confirmed which closed season it actually belongs to
+ * should still be able to credit it into that correct one. Shares every other
+ * rule — idempotency, checkpoint math, `applyDecision` — with the normal path,
+ * so this is not a second, divergent way to award LP.
+ */
+export async function creditOrderForSeason(
+  deps: LevelPassDeps,
+  order: LevelPassOrderFinancials,
+  seasonId: string,
+): Promise<LevelPassOutcome> {
+  if (await deps.store.hasProcessedOrder(order.orderId)) {
+    return { status: 'already_processed' };
+  }
+
+  const state = await deps.store.getPlayerState(seasonId, order.playerId, order.buyerProfileId);
   if (!state) return { status: 'no_linked_account' };
 
   const checkpoints = await deps.store.getCheckpointConfig();
   const decision = decideLevelPassOutcome(state, order, checkpoints, deps.roundingRule);
-  await deps.store.applyDecision(season.id, state.playerProfileId, order, decision);
+  await deps.store.applyDecision(seasonId, state.playerProfileId, order, decision);
 
   return { status: 'applied', decision };
 }
@@ -303,6 +328,68 @@ export async function syncLevelPass(deps: LevelPassSweepDeps): Promise<LevelPass
     } catch (err) {
       result.failed++;
       console.error(`[level-pass] Could not process order ${order.orderId}: ${String(err)}`);
+    }
+  }
+
+  return result;
+}
+
+/**
+ * A store that can find past orders worth re-examining for one Free Fire ID,
+ * for `creditOrdersForLinkedPlayerId` below.
+ */
+export interface LevelPassRetroactiveStore extends LevelPassStore {
+  /**
+   * Completed, not-yet-credited orders for this exact `playerId`, scoped to
+   * the currently active season. Implementations should include orders the
+   * sweep already gave up on (`no_linked_account`) — that terminal skip only
+   * meant nobody was linked to this ID *yet*.
+   */
+  findCreditableOrdersForPlayerId(playerId: string): Promise<LevelPassOrderFinancials[]>;
+}
+
+export interface CreditLinkedPlayerResult {
+  examined: number;
+  credited: number;
+  failed: number;
+}
+
+/**
+ * Catch up a Free Fire ID the moment it becomes linked to an account — at
+ * signup, or when an existing account's linked ID changes.
+ *
+ * This exists because `syncLevelPass`'s sweep runs on a short delay and marks
+ * an order `no_linked_account` as soon as it finds nobody to credit, and that
+ * skip is deliberately terminal (see `syncLevelPass`'s own comment) so the
+ * sweep never wastes a batch slot re-examining it forever. That is correct
+ * for the sweep, but it means a guest purchase made before the matching
+ * account existed would otherwise never earn its LP/ranking credit even
+ * after the customer links that exact ID — which is exactly the gap this
+ * closes, by reusing the same `processOrderCompletion` path a timely order
+ * goes through, so LP, season stats and the ranking table all update through
+ * one real code path instead of a second, parallel one.
+ *
+ * Deliberately scoped to the currently active season only (see
+ * `findCreditableOrdersForPlayerId`'s contract) — crediting an order from an
+ * already-closed season against today's season would inflate the wrong
+ * leaderboard with a sale that never happened during it. A guest purchase
+ * from a past, closed season is a separate, harder case (that season's
+ * standings are already final) and is intentionally left alone here.
+ */
+export async function creditOrdersForLinkedPlayerId(
+  deps: LevelPassDeps & { store: LevelPassRetroactiveStore },
+  playerId: string,
+): Promise<CreditLinkedPlayerResult> {
+  const candidates = await deps.store.findCreditableOrdersForPlayerId(playerId);
+  const result: CreditLinkedPlayerResult = { examined: candidates.length, credited: 0, failed: 0 };
+
+  for (const order of candidates) {
+    try {
+      const outcome = await processOrderCompletion(deps, order);
+      if (outcome.status === 'applied') result.credited++;
+    } catch (err) {
+      result.failed++;
+      console.error(`[level-pass] Could not retroactively credit order ${order.orderId}: ${String(err)}`);
     }
   }
 

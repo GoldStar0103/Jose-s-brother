@@ -3,10 +3,12 @@
 import { revalidatePath } from 'next/cache';
 import { applyReviewAction, approvePayment, type ReviewAction, type ReviewFailureCode } from '@monkei/engine';
 import {
+  backfillLevelPassForOrder,
   DrizzlePaymentStore,
   DrizzleReviewStore,
   overrideOrderLp,
   reverseCompletedOrder,
+  type LevelPassBackfillBlockReason,
 } from '@monkei/db';
 import { getDb } from '../../../../lib/db';
 import { requireSession } from '../../../../lib/session';
@@ -288,5 +290,56 @@ export async function reverseOrder(_prev: ReverseState, formData: FormData): Pro
     ok: plan
       ? `Pedido revertido — se quitaron ${plan.lpRemoved} LP y ${plan.rankingDiamondsRemoved} 💎 del ranking.`
       : 'Pedido revertido. No tenía progreso de Level Pass que deshacer.',
+  };
+}
+
+export interface BackfillLpState {
+  ok?: string;
+  error?: string;
+}
+
+const BACKFILL_EXPLAIN: Record<LevelPassBackfillBlockReason | 'not_found', string> = {
+  not_found: 'Ese pedido ya no existe.',
+  not_completed: 'Este pedido ya no está completado — recarga la página.',
+  reward_order: 'Esto es una recompensa del MONKEI Pass, no una venta — no genera LP.',
+  already_credited: 'Este pedido ya tiene Level Points otorgados — recarga la página.',
+  no_season_covers_order: 'No hay ninguna temporada registrada que cubra la fecha de este pedido.',
+  still_no_linked_account:
+    'Ese ID de Free Fire todavía no está vinculado a ninguna cuenta. Vincúlalo primero y vuelve a intentar.',
+};
+
+/**
+ * The manual counterpart to the automatic catch-up that fires when a customer
+ * links their Free Fire ID (see `creditOrdersForLinkedPlayerId` in the
+ * engine): that automatic path only ever reaches the currently active
+ * season. This is for the harder case — a guest order from an
+ * already-CLOSED season whose buyer only made an account afterward — which
+ * needs a human to confirm it belongs to that exact season before anything
+ * is written, not a sweep.
+ */
+export async function backfillLevelPass(_prev: BackfillLpState, formData: FormData): Promise<BackfillLpState> {
+  const session = await requireSession();
+
+  const orderId = String(formData.get('orderId') ?? '');
+  const reason = String(formData.get('reason') ?? '').trim();
+  if (!orderId) return { error: 'Falta el pedido.' };
+  if (reason.length < 3) {
+    return { error: 'Escribe el motivo: queda en el registro de auditoría.' };
+  }
+
+  const result = await backfillLevelPassForOrder(getDb(), {
+    orderId,
+    adminUserId: session.adminUserId,
+    reason,
+  });
+
+  if (!result.ok) return { error: BACKFILL_EXPLAIN[result.reason] };
+
+  revalidatePath(`/pedidos/${orderId}`);
+  revalidatePath('/clientes');
+  revalidatePath('/temporadas');
+
+  return {
+    ok: `Acreditado: ${result.decision.awardedLp} LP en la temporada ${result.seasonNumber}.`,
   };
 }

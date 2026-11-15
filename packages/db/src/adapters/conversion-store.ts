@@ -12,8 +12,13 @@ import type { ConversionOrder, ConversionStore } from '@monkei/engine';
 import type { Database } from '../index.js';
 import { orders } from '../schema.js';
 
-/** Paid and then unwound. Reporting these would count refunds as sales. */
-const NOT_A_SALE = ['cancelled', 'refund_required'] as const;
+/**
+ * Paid and then unwound. Reporting these would count refunds as sales.
+ * Exported so other read models (the admin dashboard's "paid today" figure)
+ * can use the exact same definition of "a real sale" that Meta gets told
+ * about, instead of quietly drifting into their own.
+ */
+export const NOT_A_SALE = ['cancelled', 'refund_required'] as const;
 
 export class DrizzleConversionStore implements ConversionStore {
   constructor(private readonly db: Database) {}

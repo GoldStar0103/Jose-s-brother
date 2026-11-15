@@ -10,6 +10,7 @@ import {
   saveFxRate,
   savePaymentDetails,
   savePaymentMethodsEnabled,
+  saveVipGroupUrl,
 } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
@@ -68,6 +69,31 @@ export async function saveSettings(
   revalidatePath('/ajustes');
 
   return { saved: true };
+}
+
+// ── VIP WhatsApp group link ─────────────────────────────────────────────────
+
+export interface VipGroupFormState {
+  saved?: boolean;
+  url?: string | null;
+  error?: string;
+}
+
+export async function saveVipGroupLink(
+  _prev: VipGroupFormState,
+  formData: FormData,
+): Promise<VipGroupFormState> {
+  await requireSession();
+
+  const result = await saveVipGroupUrl(getDb(), String(formData.get('url') ?? ''));
+  if (!result.ok) {
+    return {
+      error: 'Ese enlace no parece un enlace de invitación de WhatsApp válido. Revisa que lo copiaste completo.',
+    };
+  }
+
+  revalidatePath('/ajustes');
+  return { saved: true, url: result.url };
 }
 
 // ── two-factor authentication (TOTP) ────────────────────────────────────────

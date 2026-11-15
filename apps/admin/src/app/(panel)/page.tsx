@@ -153,23 +153,28 @@ export default async function DashboardPage() {
 
       <div className="stat-grid">
         <Link href="/aprobaciones" className="card">
-          <div className="stat-label">Esperando aprobación</div>
+          <div className="stat-label">Esperando aprobación (total)</div>
           <div className={`stat-value${stats.awaitingApproval > 0 ? ' bad' : ''}`}>
             {stats.awaitingApproval}
           </div>
         </Link>
 
         <div className="card">
-          <div className="stat-label">Procesando</div>
+          <div className="stat-label">Procesando (total)</div>
           <div className="stat-value">{stats.processing}</div>
         </div>
 
         <Link href="/pedidos?filtro=needs_attention" className="card">
-          <div className="stat-label">Requieren revisión</div>
+          <div className="stat-label">Requieren revisión (total)</div>
           <div className={`stat-value${stats.needsReview > 0 ? ' bad' : ''}`}>
             {stats.needsReview}
           </div>
         </Link>
+
+        <div className="card">
+          <div className="stat-label">Pagados hoy</div>
+          <div className="stat-value ok">{stats.paidToday}</div>
+        </div>
 
         <div className="card">
           <div className="stat-label">Completados hoy</div>
@@ -206,6 +211,12 @@ export default async function DashboardPage() {
           Contabilidad
         </Link>
         .
+      </p>
+      <p className="hint">
+        "Esperando aprobación", "Procesando" y "Requieren revisión" son totales actuales —
+        incluyen pedidos de cualquier día, no solo los de hoy. Para comparar contra lo que reporta
+        Meta/TikTok Ads, usa "Pagados hoy": es el mismo conteo de ventas que les avisamos hoy
+        (incluye pedidos que ya se pagaron aunque todavía no se entreguen).
       </p>
     </>
   );

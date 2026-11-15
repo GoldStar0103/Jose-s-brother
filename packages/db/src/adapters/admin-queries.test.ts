@@ -610,6 +610,45 @@ describe.skipIf(!PG_AVAILABLE)('getDashboardStats', () => {
     expect(stats.revenueTodayCents).toBe(0);
   });
 
+  it('counts a paid order today even if it has not been delivered yet', async () => {
+    const order = await placeOrder('pack_insano');
+    await db
+      .update(orders)
+      .set({ status: 'processing', paidAt: new Date() })
+      .where(eq(orders.id, order.id));
+
+    const stats = await getDashboardStats(db);
+
+    // Not "completed" yet, so it must not show up there — but it was a real
+    // sale today, which is what an ad platform's own "today" figure reflects.
+    expect(stats.completedToday).toBe(0);
+    expect(stats.paidToday).toBe(1);
+  });
+
+  it('excludes a paid order from yesterday out of paidToday', async () => {
+    const order = await placeOrder('pack_insano');
+    await db
+      .update(orders)
+      .set({ status: 'completed', paidAt: raw`now() - interval '2 days'` })
+      .where(eq(orders.id, order.id));
+
+    const stats = await getDashboardStats(db);
+
+    expect(stats.paidToday).toBe(0);
+  });
+
+  it('excludes a paid-then-refunded order from paidToday, same as the ad-platform reporter does', async () => {
+    const order = await placeOrder('pack_insano');
+    await db
+      .update(orders)
+      .set({ status: 'refund_required', paidAt: new Date() })
+      .where(eq(orders.id, order.id));
+
+    const stats = await getDashboardStats(db);
+
+    expect(stats.paidToday).toBe(0);
+  });
+
   it('surfaces combos blocked from sale', async () => {
     const stats = await getDashboardStats(db);
     expect(stats.inactiveCombos.map((c) => c.key)).toEqual(['pack_good']);

@@ -14,10 +14,12 @@ import {
   consumeOtpCode,
   createOtpCode,
   createPlayerProfile,
+  DrizzleLevelPassStore,
   findActiveOtpCode,
   findProfileByEmail,
   incrementOtpAttempts,
 } from '@monkei/db';
+import { creditOrdersForLinkedPlayerId } from '@monkei/engine';
 import {
   createCustomerSessionToken,
   generateOtpCode,
@@ -167,6 +169,15 @@ export async function completeSignup(_prev: CompleteSignupState, formData: FormD
   }
 
   await awardFounderBadgeIfEligible(db, result.profile.id);
+
+  // This exact Free Fire ID may already have paid, unmatched orders sitting
+  // from before this account existed — catch them up now rather than never;
+  // see `creditOrdersForLinkedPlayerId`'s own comment. Never blocks signup.
+  try {
+    await creditOrdersForLinkedPlayerId({ store: new DrizzleLevelPassStore(db) }, playerId);
+  } catch (err) {
+    console.error(`[level-pass] Could not retroactively credit new account ${result.profile.id}`, err);
+  }
 
   const token = createCustomerSessionToken(
     { playerProfileId: result.profile.id, playerId: result.profile.playerId },

@@ -5,11 +5,13 @@ import {
   getFxRate,
   getPaymentDetails,
   getPaymentMethodsEnabled,
+  getVipGroupUrl,
 } from '@monkei/db';
 import { getDb } from '../../../lib/db';
 import { requireSession } from '../../../lib/session';
 import { SettingsForm } from './settings-form';
 import { TwoFactorForm } from './two-factor-form';
+import { VipGroupForm } from './vip-group-form';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,10 +26,11 @@ export const dynamic = 'force-dynamic';
 export default async function SettingsPage() {
   const session = await requireSession();
 
-  const [payTo, fxRate, methodsEnabled, [admin]] = await Promise.all([
+  const [payTo, fxRate, methodsEnabled, vipGroupUrl, [admin]] = await Promise.all([
     getPaymentDetails(getDb()),
     getFxRate(getDb()),
     getPaymentMethodsEnabled(getDb()),
+    getVipGroupUrl(getDb()),
     getDb()
       .select({ totpSecret: adminUsers.totpSecret })
       .from(adminUsers)
@@ -52,6 +55,8 @@ export default async function SettingsPage() {
           fxRate: String(fxRate || DEFAULT_FX_RATE),
         }}
       />
+
+      <VipGroupForm currentUrl={vipGroupUrl} />
 
       <TwoFactorForm enabled={admin?.totpSecret != null} />
     </>
