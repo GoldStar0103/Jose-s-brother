@@ -23,9 +23,9 @@
   align-items:center!important;
   justify-content:center!important;
   padding:14px;
-  background:rgba(0,0,0,.78);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
+  background:rgba(4,8,10,.45);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
   overflow:hidden;
   animation:ovIn .28s ease-out both;
 }
