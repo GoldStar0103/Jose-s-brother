@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const STORAGE_KEY = 'monkei_whatsapp_popup_hide_until';
 
@@ -12,6 +13,10 @@ function todayMexicoCity(): string {
 /**
  * Neon welcome / WhatsApp channel modal — pixel-matched to the Monkei
  * neon-green reference. Animated project monkey stays in the left slot.
+ *
+ * Suppressed on an order page (`/pedido/...`): that page shows the
+ * `VipGroupPopup` for a completed order instead, and the two competing for
+ * the same attention is exactly what the client asked to stop seeing.
  */
 export function WhatsappChannelPopup({
   channelUrl,
@@ -20,9 +25,13 @@ export function WhatsappChannelPopup({
   channelUrl: string;
   brandName: string;
 }) {
+  const pathname = usePathname();
+  const suppressed = pathname?.startsWith('/pedido/') ?? false;
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (suppressed) return;
+
     let hideUntil: string | null = null;
     try {
       hideUntil = localStorage.getItem(STORAGE_KEY);
@@ -36,9 +45,9 @@ export function WhatsappChannelPopup({
 
     const timer = setTimeout(() => setVisible(true), force ? 0 : 1200);
     return () => clearTimeout(timer);
-  }, []);
+  }, [suppressed]);
 
-  if (!visible) return null;
+  if (!visible || suppressed) return null;
 
   const dismiss = () => setVisible(false);
   const dismissForToday = () => {
