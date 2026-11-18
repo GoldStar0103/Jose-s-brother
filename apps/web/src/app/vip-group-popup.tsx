@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 /**
  * One-time nudge to join the VIP WhatsApp group, shown the moment a customer
@@ -10,10 +11,25 @@ import { useEffect, useState } from 'react';
  * storefront found converts into sign-ups far more often than a card alone.
  *
  * Shown once per order, not once per visit — a customer bookmarking their
- * order link and checking it again later should not see this again.
+ * order link and checking it again later should not see this again. The
+ * "shown" flag is only written once the customer actually dismisses it or
+ * taps through, not the moment it mounts — see the dismiss()/join handling
+ * below.
+ *
+ * Rendered through a portal straight into `document.body`: this component
+ * lives inside the page content, which sits inside `.wrap`
+ * (`levelup-home.css`), and `.wrap` has `position:relative;z-index:1` —
+ * enough to start its own CSS stacking context. Without the portal, this
+ * popup's own `z-index:200` only competes within that stacking context, so
+ * anything else holding `z-index:200` at the true top level (e.g. the
+ * site-wide welcome popup, if not yet dismissed for the day) silently paints
+ * over this one completely, even though both declare the same z-index.
  */
 export function VipGroupPopup({ orderNumber, groupUrl }: { orderNumber: string; groupUrl: string }) {
   const [visible, setVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const key = `mk:vip-popup:${orderNumber}`;
@@ -23,22 +39,25 @@ export function VipGroupPopup({ orderNumber, groupUrl }: { orderNumber: string; 
       /* Private browsing or blocked storage — fall through and show it once. */
     }
 
-    const timer = setTimeout(() => {
-      setVisible(true);
-      try {
-        window.localStorage.setItem(key, '1');
-      } catch {
-        /* ignore */
-      }
-    }, 1200);
+    const timer = setTimeout(() => setVisible(true), 1200);
     return () => clearTimeout(timer);
   }, [orderNumber]);
 
-  if (!visible) return null;
+  if (!visible || !mounted) return null;
 
-  const dismiss = () => setVisible(false);
+  const markShown = () => {
+    try {
+      window.localStorage.setItem(`mk:vip-popup:${orderNumber}`, '1');
+    } catch {
+      /* ignore */
+    }
+  };
+  const dismiss = () => {
+    markShown();
+    setVisible(false);
+  };
 
-  return (
+  return createPortal(
     <div className="vipp-overlay" role="dialog" aria-modal="true" aria-labelledby="vippTitle">
       <div className="vipp-sheet">
         <button type="button" className="vipp-close" aria-label="Cerrar" onClick={dismiss}>
@@ -66,6 +85,7 @@ export function VipGroupPopup({ orderNumber, groupUrl }: { orderNumber: string; 
           Ahora no
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
