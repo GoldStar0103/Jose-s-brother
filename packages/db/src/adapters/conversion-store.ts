@@ -7,7 +7,7 @@
  * it that Meta could match, so reporting it would only add noise.
  */
 
-import { and, asc, eq, gt, isNotNull, isNull, lt, notInArray, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, isNotNull, isNull, lt, sql } from 'drizzle-orm';
 import type { ConversionOrder, ConversionStore } from '@monkei/engine';
 import type { Database } from '../index.js';
 import { orders } from '../schema.js';
@@ -53,7 +53,11 @@ export class DrizzleConversionStore implements ConversionStore {
           isNull(orders.capiSentAt),
           lt(orders.capiAttempts, input.maxAttempts),
           isNotNull(orders.userAgent),
-          notInArray(orders.status, [...NOT_A_SALE]),
+          // Not just "paid" — delivered. A paid order can still end in
+          // refund_required/cancelled before fulfilment finishes, and once
+          // this reports a Purchase there is no way to tell Meta to forget
+          // it, so this waits for the one status that can't un-happen.
+          eq(orders.status, 'completed'),
         ),
       )
       .orderBy(asc(orders.paidAt))

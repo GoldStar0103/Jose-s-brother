@@ -292,8 +292,13 @@ export default async function OrderPage({
             : GATEWAY_CONFIRMING
       : STATUS[order.status];
 
-  // Paid orders fire the browser Purchase; everything else is not a sale yet.
-  const paid = order.status === 'procesando' || order.status === 'completado';
+  // Only a fully delivered order fires the browser Purchase. Firing it as
+  // soon as the payment is confirmed ('procesando') double-counted orders
+  // that later turned out to need a refund/cancellation before delivery —
+  // the payment was taken, Meta was told about a sale, and then the order
+  // never completed. Meta has no way to un-hear that event, so the only fix
+  // is to not tell it until delivery is actually done.
+  const paid = order.status === 'completado';
   // Keep refreshing while something is about to change on its own, including
   // an issued OXXO voucher or SPEI reference: those now open in a separate
   // tab (the gateway's own hosted page), so refreshing this one no longer

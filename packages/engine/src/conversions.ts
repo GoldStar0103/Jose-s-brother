@@ -10,9 +10,10 @@
  *
  * Rules:
  *
- *   1. Only orders whose payment was actually confirmed. A pending order is
- *      not a sale, and teaching the ad account that it is would optimise the
- *      budget towards people who abandon at the payment step.
+ *   1. Only orders that actually reached `completed`. A pending order is not
+ *      a sale, and neither is a paid one that still ends in a refund before
+ *      delivery — and once this reports a Purchase there is no way to tell
+ *      Meta to un-count it, so it waits for the status that can't unwind.
  *   2. Never block anything that matters. This runs in the sweep, catches its
  *      own failures, and a dead token costs attribution, not deliveries.
  *   3. Give up eventually. Meta refuses events older than seven days, and a
